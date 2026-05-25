@@ -1,0 +1,151 @@
+---
+/**
+ * BaseLayout — the only top-level wrapper. Every page reuses it.
+ *
+ * Responsibilities:
+ *  - <head> meta tags (description, OG, Twitter, canonical, hreflang)
+ *  - Structured data (JSON-LD) — caller passes optional `jsonLd` prop
+ *  - Theme + colour-scheme bootstrap (prevents FOUC by reading localStorage
+ *    BEFORE the body renders)
+ *  - Slots for header / page content / footer
+ */
+import '../styles/global.css';
+import { strings, SITE_URL, type Lang } from '../i18n/strings';
+import { STORE_LINKS } from '../lib/constants';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import StoreBadge from '../components/StoreBadge.astro';
+
+interface Props {
+  lang?: Lang;
+  title: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+  /** Optional alternate language path so we can emit hreflang. */
+  altLangPath?: string;
+  /** Optional JSON-LD payload(s) for schema.org markup. */
+  jsonLd?: object | object[];
+  /** Hides the global app-download CTA strip when set (e.g. on legal pages). */
+  hideDownloadStrip?: boolean;
+}
+
+const {
+  lang = 'hu',
+  title,
+  description,
+  canonical,
+  ogImage = '/og-default.png',
+  altLangPath,
+  jsonLd,
+  hideDownloadStrip = false,
+} = Astro.props;
+
+const t = strings[lang];
+const metaDescription = description ?? t.description;
+const url = canonical ?? new URL(Astro.url.pathname, SITE_URL).toString();
+
+const jsonLdEntries = jsonLd
+  ? Array.isArray(jsonLd) ? jsonLd : [jsonLd]
+  : [];
+---
+
+<!doctype html>
+<html lang={lang === 'en' ? 'en' : 'hu'} class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fbfaff" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0c18" />
+
+    <title>{title}</title>
+    <meta name="description" content={metaDescription} />
+    <link rel="canonical" href={url} />
+
+    <!-- hreflang alternates -->
+    {altLangPath && lang === 'hu' && (
+      <link rel="alternate" hreflang="en" href={new URL(`/en${altLangPath}`, SITE_URL).toString()} />
+    )}
+    {altLangPath && lang === 'en' && (
+      <link rel="alternate" hreflang="hu" href={new URL(altLangPath, SITE_URL).toString()} />
+    )}
+    <link rel="alternate" hreflang="x-default" href={url} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:image" content={new URL(ogImage, SITE_URL).toString()} />
+    <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'hu_HU'} />
+    <meta property="og:site_name" content={t.brand} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={metaDescription} />
+    <meta name="twitter:image" content={new URL(ogImage, SITE_URL).toString()} />
+
+    <!-- Favicon / icon -->
+    <link rel="icon" type="image/png" href="/icons/app-icon.png" />
+    <link rel="apple-touch-icon" href="/icons/app-icon.png" />
+
+    <!-- Fonts: Geist (display) + Inter (body). Both via Google Fonts with preconnect. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" />
+
+    <!-- Theme bootstrap (no FOUC) -->
+    <script is:inline>
+      (function () {
+        try {
+          const saved = localStorage.getItem('nevnap-theme');
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const theme = saved ?? (prefersDark ? 'dark' : 'light');
+          if (theme === 'dark') document.documentElement.classList.add('dark');
+        } catch (_) {}
+      })();
+    </script>
+
+    {jsonLdEntries.map((entry) => (
+      <script type="application/ld+json" set:html={JSON.stringify(entry)} />
+    ))}
+  </head>
+  <body class="font-body">
+    <a href="#main" class="skip-link">
+      {lang === 'hu' ? 'Ugrás a fő tartalomhoz' : 'Skip to main content'}
+    </a>
+
+    <Header lang={lang} altLangPath={altLangPath} />
+
+    <main id="main" class="relative" tabindex="-1">
+      <slot />
+    </main>
+
+    {!hideDownloadStrip && (
+      <section
+        aria-labelledby="download-heading"
+        class="border-t border-zinc-200/60 dark:border-white/5 mt-24 py-16"
+      >
+        <div class="container mx-auto px-6 text-center">
+          <h2 id="download-heading" class="text-3xl md:text-4xl font-extrabold tracking-tight">
+            {lang === 'hu'
+              ? 'Töltsd le a NévnapTárX appot ingyen'
+              : 'Download NévnapTárX free'}
+          </h2>
+          <p class="mt-3 text-zinc-600 dark:text-zinc-300 max-w-xl mx-auto">
+            {lang === 'hu'
+              ? '1500 név, napi értesítés, név-jelentések — egy modern app a zsebedben.'
+              : '1500 names, daily reminders, name meanings — a modern app in your pocket.'}
+          </p>
+          <div class="mt-8 flex items-center justify-center gap-4 flex-wrap" role="group" aria-label={lang === 'hu' ? 'Letöltési linkek' : 'Download links'}>
+            <StoreBadge store="apple" href={STORE_LINKS.appStore} lang={lang} />
+            <StoreBadge store="google" href={STORE_LINKS.playStore} lang={lang} />
+          </div>
+        </div>
+      </section>
+    )}
+
+    <Footer lang={lang} />
+  </body>
+</html>

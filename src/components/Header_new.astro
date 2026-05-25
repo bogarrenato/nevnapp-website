@@ -1,0 +1,82 @@
+---
+/**
+ * Sticky top header — brand, primary nav, language switcher, theme slider
+ * and a Download dropdown that lists both stores.
+ */
+import { strings, localizedPath, type Lang } from '../i18n/strings';
+import DownloadDropdown from './DownloadDropdown.astro';
+import ThemeSlider from './ThemeSlider.astro';
+
+interface Props {
+  lang: Lang;
+  altLangPath?: string;
+}
+const { lang, altLangPath } = Astro.props;
+const t = strings[lang];
+const otherLang: Lang = lang === 'hu' ? 'en' : 'hu';
+
+const navItems = [
+  { href: localizedPath(lang, '/'), label: t.nav.today },
+  { href: localizedPath(lang, '/names'), label: t.nav.names },
+  { href: localizedPath(lang, '/calendar'), label: t.nav.calendar },
+];
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+const navAriaLabel = lang === 'hu' ? 'Fő navigáció' : 'Main navigation';
+---
+
+<header class="sticky top-0 z-40 backdrop-blur-xl bg-white/70 dark:bg-zinc-950/70 border-b border-zinc-200/60 dark:border-white/5">
+  <div class="container mx-auto px-6 py-3 flex items-center justify-between gap-6">
+    <a
+      href={localizedPath(lang, '/')}
+      class="flex items-center gap-2 group rounded-xl"
+      aria-label={t.brand}
+    >
+      <img
+        src="/icons/app-icon.png"
+        alt=""
+        width="36"
+        height="36"
+        class="rounded-xl shadow-md shadow-primary-500/20 group-hover:scale-105 transition"
+      />
+      <span class="font-display text-lg font-extrabold tracking-tight">{t.brand}</span>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-6 text-sm font-medium" aria-label={navAriaLabel}>
+      {navItems.map((item) => {
+        const isActive = item.href === currentPath;
+        return (
+          <a
+            href={item.href}
+            class:list={[
+              'transition hover:text-primary-500',
+              isActive && 'text-primary-500',
+            ]}
+            aria-current={isActive ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        );
+      })}
+    </nav>
+
+    <div class="flex items-center gap-3">
+      {altLangPath && (
+        <a
+          href={otherLang === 'hu' ? altLangPath : `/en${altLangPath}`}
+          class="px-2.5 py-1 text-xs font-semibold uppercase tracking-wider rounded-full border border-zinc-200 dark:border-white/10 hover:border-primary-500 hover:text-primary-500 transition"
+          hreflang={otherLang === 'hu' ? 'hu-HU' : 'en-US'}
+          aria-label={otherLang === 'hu' ? 'Magyar nyelv' : 'English language'}
+        >
+          {otherLang.toUpperCase()}
+        </a>
+      )}
+
+      <ThemeSlider lang={lang} />
+
+      <span class="hidden sm:inline-block">
+        <DownloadDropdown lang={lang} variant="ghost" id="header-download" label={t.nav.download} />
+      </span>
+    </div>
+  </div>
+</header>

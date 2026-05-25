@@ -1,0 +1,92 @@
+---
+/**
+ * Above-the-fold hero. Displays today's primary nameday in giant gradient
+ * type, with the two main CTAs (App Store + name browser).
+ *
+ * a11y notes:
+ *  - <h1> is the page's main heading and includes both date + name text
+ *  - The "today" kicker chip uses <time datetime="..."> for SR + machine
+ *  - Decorative blob divs are aria-hidden + pointer-events-none
+ */
+import { strings, interpolate, localizedPath, type Lang } from '../i18n/strings';
+import { STORE_LINKS } from '../lib/constants';
+import DownloadDropdown from './DownloadDropdown.astro';
+import { getTodayEntry } from '../lib/names';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = strings[lang];
+
+const today = new Date();
+const entry = getTodayEntry(today);
+const primaryNames = entry?.primary ?? [];
+
+const todayFormatted = lang === 'hu'
+  ? `${t.months[today.getMonth()]} ${today.getDate()}.`
+  : `${t.months[today.getMonth()]} ${today.getDate()}`;
+
+const todayIso = today.toISOString().slice(0, 10);
+const heroTitle = primaryNames.length
+  ? interpolate(t.hero.title, { name: primaryNames.join(' és ') })
+  : t.hero.titleEmpty;
+
+const kicker = interpolate(t.hero.kicker, { date: todayFormatted });
+---
+
+<section class="relative" aria-labelledby="hero-title">
+  <!-- Blobs: saját overflow-hidden wrapperben, hogy a dropdown szabad lehessen -->
+  <div aria-hidden="true" class="absolute inset-0 overflow-hidden pointer-events-none">
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute -top-32 -right-32 w-[26rem] h-[26rem] rounded-full opacity-50 dark:opacity-40 blur-3xl animate-blob"
+    style="background: radial-gradient(circle, var(--color-violet-500), transparent 70%);"
+  ></div>
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute -bottom-40 -left-32 w-[28rem] h-[28rem] rounded-full opacity-40 dark:opacity-30 blur-3xl animate-blob-delay"
+    style="background: radial-gradient(circle, var(--color-coral-500), transparent 70%);"
+  ></div>
+  </div><!-- /blobs wrapper -->
+
+  <div class="container mx-auto px-6 pt-16 pb-24 md:pt-24 md:pb-32 relative">
+    <div class="max-w-3xl">
+      <p class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-100/70 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 text-sm font-semibold animate-float-in">
+        <svg class="size-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+          <path d="M19 4h-2V2h-2v2H9V2H7v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/>
+        </svg>
+        <span class="sr-only">{lang === 'hu' ? 'Mai dátum:' : 'Today is:'}</span>
+        <time datetime={todayIso}>{kicker}</time>
+      </p>
+
+      <h1
+        id="hero-title"
+        class="mt-6 text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.03] animate-float-in"
+        style="animation-delay: 80ms"
+      >
+        {primaryNames.length ? (
+          lang === 'hu' ? (
+            <>Ma <span class="gradient-text">{primaryNames.join(' és ')}</span> névnapja van</>
+          ) : (
+            <>Today is <span class="gradient-text">{primaryNames.join(' & ')}</span>'s nameday</>
+          )
+        ) : (
+          <span class="gradient-text">{heroTitle}</span>
+        )}
+      </h1>
+
+      <p class="mt-6 text-lg md:text-xl text-zinc-600 dark:text-zinc-300 max-w-2xl animate-float-in" style="animation-delay: 160ms">
+        {t.hero.subtitle}
+      </p>
+
+      <div class="mt-10 flex flex-wrap gap-3 animate-float-in" style="animation-delay: 240ms" role="group" aria-label={lang === 'hu' ? 'Fő műveletek' : 'Primary actions'}>
+        <DownloadDropdown lang={lang} variant="primary" id="hero-download" label={t.hero.ctaPrimary} />
+        <a
+          href={localizedPath(lang, '/nevek')}
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-full glass font-semibold hover:bg-white/80 dark:hover:bg-zinc-900/80 transition"
+        >
+          {t.hero.ctaSecondary}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

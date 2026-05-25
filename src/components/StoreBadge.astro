@@ -1,0 +1,58 @@
+---
+/**
+ * Reusable App Store / Google Play badge.
+ *
+ * Two-line layout matching Apple/Google brand guidelines, but tinted to our
+ * own brand colour (the official badges aren't allowed to be recoloured).
+ *
+ * a11y notes:
+ *  - SVG is `aria-hidden` because the visible text already names the store
+ *  - `aria-label` describes the destination for screen readers
+ *  - `rel="noopener"` for external links opening new tab semantics
+ */
+import type { Lang } from '../i18n/strings';
+
+interface Props {
+  store: 'apple' | 'google';
+  href: string;
+  lang: Lang;
+}
+const { store, href, lang } = Astro.props;
+
+const labelByLang = {
+  apple: { hu: 'Letöltés App Store-ból', en: 'Download on the App Store' },
+  google: { hu: 'Letöltés Google Play-ről', en: 'Get it on Google Play' },
+} as const;
+
+const lineByLang = {
+  hu: 'Letöltés',
+  en: 'Get it on',
+} as const;
+
+const storeName = store === 'apple' ? 'App Store' : 'Google Play';
+const label = labelByLang[store][lang];
+---
+
+<a
+  href={href}
+  rel="noopener"
+  aria-label={label}
+  class="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-zinc-900 text-white hover:bg-zinc-800 transition shadow-lg shadow-zinc-900/10 focus-visible:ring-2 focus-visible:ring-primary-400"
+>
+  {store === 'apple' ? (
+    <svg class="size-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+      <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+    </svg>
+  ) : (
+    <svg class="size-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+      <path d="M3.61 1.81C3.23 2.19 3 2.78 3 3.54v16.91c0 .76.23 1.36.61 1.74l.05.05L13.5 12.5v-.99L3.66 1.76l-.05.05z"/>
+      <path d="M16.8 15.81L13.5 12.5v-.99L16.8 8.2l.07.04 3.91 2.22c1.12.63 1.12 1.67 0 2.31l-3.91 2.22-.07.02z" opacity=".85"/>
+      <path d="M16.87 15.85L13.5 12.5 3.61 22.39c.37.37.97.42 1.65.05l11.62-6.59" opacity=".95"/>
+      <path d="M16.87 9.15L5.26 2.55c-.69-.37-1.29-.32-1.65.05L13.5 12.5l3.37-3.35z" opacity=".75"/>
+    </svg>
+  )}
+  <span class="text-left leading-tight">
+    <span class="block text-[10px] uppercase tracking-widest opacity-70">{lineByLang[lang]}</span>
+    <span class="block text-sm font-semibold">{storeName}</span>
+  </span>
+</a>

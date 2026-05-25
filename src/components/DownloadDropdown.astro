@@ -1,0 +1,185 @@
+---
+/**
+ * Dropdown CTA that reveals both App Store and Google Play options.
+ * Drop-in replacement for any single-store "Download" button.
+ *
+ * Variants:
+ *  - `variant="primary"` — gradient pill, used as the hero/main CTA
+ *  - `variant="ghost"` — subtle bordered chip, used in the header
+ *
+ * a11y notes:
+ *  - <button aria-expanded aria-controls> toggles the popover
+ *  - <ul role="menu"> + <li role="none"> + <a role="menuitem">
+ *  - Escape closes; click-outside closes (handled by inline script at the end)
+ *  - Visually hidden text on the icon button explains the action to SR
+ */
+import { STORE_LINKS } from '../lib/constants';
+import type { Lang } from '../i18n/strings';
+
+interface Props {
+  lang: Lang;
+  variant?: 'primary' | 'ghost';
+  /** Unique id so multiple instances on a page don't clash. */
+  id?: string;
+  /** Override the trigger text — defaults to a localized "Download" label. */
+  label?: string;
+  /** Which side the menu opens toward. 'right' keeps it inside viewport when button is at the far right. */
+  align?: 'left' | 'right';
+}
+const { lang, variant = 'primary', id = 'download-dd', label, align = 'left' } = Astro.props;
+
+const triggerLabel = label ?? (lang === 'hu' ? 'Töltsd le ingyen' : 'Download free');
+const menuLabel = lang === 'hu' ? 'Letöltési lehetőségek' : 'Download options';
+const tagAppStore = lang === 'hu' ? 'iPhone és iPad' : 'iPhone & iPad';
+const tagPlayStore = lang === 'hu' ? 'Android' : 'Android';
+const dlLabel = lang === 'hu' ? 'Letöltés' : 'Get it on';
+
+const triggerClass = variant === 'primary'
+  ? 'inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-primary-500 to-violet-500 text-white font-semibold shadow-lg shadow-primary-500/40 hover:shadow-primary-500/60 hover:scale-[1.02] transition'
+  : 'inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full bg-gradient-to-r from-primary-500 to-violet-500 text-white shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition';
+---
+
+<div class="relative inline-block" data-download-dd={id}>
+  <button
+    type="button"
+    id={`${id}-trigger`}
+    aria-haspopup="menu"
+    aria-expanded="false"
+    aria-controls={`${id}-menu`}
+    class={triggerClass}
+  >
+    <span>{triggerLabel}</span>
+    <svg
+      class="size-4 transition-transform duration-200 data-[open=true]:rotate-180"
+      data-chevron
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+  </button>
+
+  <div
+    id={`${id}-menu`}
+    role="menu"
+    aria-label={menuLabel}
+    aria-labelledby={`${id}-trigger`}
+    hidden
+    class={`absolute z-50 mt-3 min-w-[16rem] ${align === 'right' ? 'right-0 origin-top-right' : 'left-0 origin-top-left'} rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-900 shadow-2xl shadow-zinc-900/15 overflow-hidden`}
+  >
+    <ul class="list-none divide-y divide-zinc-200/60 dark:divide-white/5">
+      <li role="none">
+        <a
+          role="menuitem"
+          href={STORE_LINKS.appStore}
+          rel="noopener"
+          class="flex items-center gap-3 px-4 py-3 hover:bg-zinc-100 dark:hover:bg-white/5 focus:bg-zinc-100 dark:focus:bg-white/5 transition"
+        >
+          <span aria-hidden="true" class="size-10 grid place-items-center rounded-xl bg-zinc-900 text-white">
+            <svg class="size-5" viewBox="0 0 24 24" fill="currentColor" focusable="false">
+              <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+            </svg>
+          </span>
+          <span class="flex-1 text-left">
+            <span class="block text-[10px] uppercase tracking-widest text-zinc-500">{dlLabel}</span>
+            <span class="block text-sm font-semibold">App Store</span>
+            <span class="block text-xs text-zinc-500">{tagAppStore}</span>
+          </span>
+          <svg class="size-4 text-zinc-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+            <path d="M5 12h14M13 6l6 6-6 6"/>
+          </svg>
+        </a>
+      </li>
+      <li role="none">
+        <a
+          role="menuitem"
+          href={STORE_LINKS.playStore}
+          rel="noopener"
+          class="flex items-center gap-3 px-4 py-3 hover:bg-zinc-100 dark:hover:bg-white/5 focus:bg-zinc-100 dark:focus:bg-white/5 transition"
+        >
+          <span aria-hidden="true" class="size-10 grid place-items-center rounded-xl bg-zinc-900 text-white">
+            <svg class="size-5" viewBox="0 0 24 24" fill="currentColor" focusable="false">
+              <path d="M3.61 1.81C3.23 2.19 3 2.78 3 3.54v16.91c0 .76.23 1.36.61 1.74l.05.05L13.5 12.5v-.99L3.66 1.76l-.05.05z"/>
+              <path d="M16.8 15.81L13.5 12.5v-.99L16.8 8.2l.07.04 3.91 2.22c1.12.63 1.12 1.67 0 2.31l-3.91 2.22-.07.02z" opacity=".85"/>
+              <path d="M16.87 15.85L13.5 12.5 3.61 22.39c.37.37.97.42 1.65.05l11.62-6.59" opacity=".95"/>
+              <path d="M16.87 9.15L5.26 2.55c-.69-.37-1.29-.32-1.65.05L13.5 12.5l3.37-3.35z" opacity=".75"/>
+            </svg>
+          </span>
+          <span class="flex-1 text-left">
+            <span class="block text-[10px] uppercase tracking-widest text-zinc-500">{dlLabel}</span>
+            <span class="block text-sm font-semibold">Google Play</span>
+            <span class="block text-xs text-zinc-500">{tagPlayStore}</span>
+          </span>
+          <svg class="size-4 text-zinc-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+            <path d="M5 12h14M13 6l6 6-6 6"/>
+          </svg>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  /**
+   * Tiny dropdown controller. No framework needed — Astro stays islands-free.
+   * Handles:
+   *   - Toggle on trigger click
+   *   - Close on outside click
+   *   - Close on Escape (and refocus trigger)
+   *   - Arrow keys to move focus between menu items
+   *   - aria-expanded sync + chevron rotation
+   */
+  function initDropdown(root: HTMLElement) {
+    const trigger = root.querySelector<HTMLButtonElement>('button[aria-haspopup="menu"]');
+    const menu = root.querySelector<HTMLElement>('[role="menu"]');
+    if (!trigger || !menu) return;
+
+    const items = Array.from(menu.querySelectorAll<HTMLAnchorElement>('a[role="menuitem"]'));
+    const chevron = trigger.querySelector<SVGElement>('[data-chevron]');
+
+    const open = () => {
+      menu.hidden = false;
+      trigger.setAttribute('aria-expanded', 'true');
+      chevron?.setAttribute('data-open', 'true');
+      items[0]?.focus();
+    };
+    const close = (refocus = true) => {
+      menu.hidden = true;
+      trigger.setAttribute('aria-expanded', 'false');
+      chevron?.removeAttribute('data-open');
+      if (refocus) trigger.focus();
+    };
+    const toggle = () => (menu.hidden ? open() : close());
+
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggle();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!menu.hidden && !root.contains(e.target as Node)) close(false);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (menu.hidden) return;
+      if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const focused = document.activeElement as HTMLElement | null;
+        const idx = items.indexOf(focused as HTMLAnchorElement);
+        const next = e.key === 'ArrowDown'
+          ? items[(idx + 1) % items.length]
+          : items[(idx - 1 + items.length) % items.length];
+        next?.focus();
+      }
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-download-dd]').forEach(initDropdown);
+</script>

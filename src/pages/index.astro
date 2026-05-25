@@ -1,0 +1,153 @@
+---
+/**
+ * Hungarian landing page — the SEO crown jewel.
+ *
+ * Targets: "mai névnap", "magyar névnaptár", "név jelentése" head queries.
+ * Inlines today's nameday + meaning so it ranks even before any clicks.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import TodayCard from '../components/TodayCard.astro';
+import UpcomingStrip from '../components/UpcomingStrip.astro';
+import { strings, SITE_URL } from '../i18n/strings';
+import { getTodayEntry, getMeaning } from '../lib/names';
+
+const t = strings.hu;
+const today = new Date();
+const entry = getTodayEntry(today);
+const primaryNames = entry?.primary ?? [];
+
+const pageTitle = primaryNames.length
+  ? `Mai névnap: ${primaryNames.join(' és ')} — ${t.months[today.getMonth()]} ${today.getDate()}. | ${t.brand}`
+  : `Mai névnap — ${t.months[today.getMonth()]} ${today.getDate()}. | ${t.brand}`;
+
+const pageDescription = primaryNames.length
+  ? `Ma ${primaryNames.join(' és ')} névnapja van. Jelentés, eredet, köszöntők és napi névnap értesítések a NévnapTárX modern névnap-naptár appal.`
+  : t.description;
+
+// JSON-LD: Website + Today's Event
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: t.brand,
+    url: SITE_URL,
+    description: t.tagline,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${SITE_URL}/nev/{name}`,
+      'query-input': 'required name=name',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'MobileApplication',
+    name: t.brand,
+    operatingSystem: 'iOS, Android',
+    applicationCategory: 'UtilityApplication',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'HUF' },
+    aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.8', ratingCount: '50' },
+  },
+  primaryNames.length ? {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: `${primaryNames.join(' és ')} névnapja`,
+    startDate: today.toISOString().split('T')[0],
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
+    location: { '@type': 'Country', name: 'Hungary' },
+    description: primaryNames.map((n) => getMeaning(n)).filter(Boolean).join(' '),
+  } : null,
+].filter(Boolean) as object[];
+---
+
+<BaseLayout
+  lang="hu"
+  title={pageTitle}
+  description={pageDescription}
+  altLangPath="/"
+  jsonLd={jsonLd}
+>
+  <Hero lang="hu" />
+  <TodayCard lang="hu" />
+  <UpcomingStrip lang="hu" />
+
+  <!-- SEO content block — invisible to most users but rich for Google -->
+  <section class="container mx-auto px-6 mt-24 max-w-3xl">
+    <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Mi a magyar névnap?</h2>
+    <div class="mt-6 space-y-4 text-zinc-700 dark:text-zinc-300 leading-relaxed">
+      <p>
+        A <strong>magyar névnap-naptár</strong> hagyománya évszázados — minden napra esik egy
+        vagy több keresztnév, melyet a családok, barátok kis ünnepléssel jelölnek. A
+        NévnapTárX modern, 2026-os névnap appja <strong>1500 magyar nevet</strong> tartalmaz,
+        mindegyikhez részletes jelentéssel, eredettel és napi értesítéssel.
+      </p>
+      <p>
+        Akár <strong>mai névnap</strong>, <strong>holnapi névnap</strong> vagy egy konkrét
+        név (pl. <em>Anna</em>, <em>Bence</em>, <em>Csilla</em>) jelentése érdekel, itt
+        gyorsan megtalálod. Az alkalmazás <strong>iOS-re és Androidra</strong> is elérhető,
+        ingyenesen.
+      </p>
+    </div>
+
+    <div class="mt-12 grid sm:grid-cols-3 gap-4">
+      {[
+        { label: '1500+', text: 'magyar név' },
+        { label: '366', text: 'naptári nap' },
+        { label: '0 Ft', text: 'ingyenes letöltés' },
+      ].map((stat) => (
+        <div class="glass rounded-2xl p-5 text-center">
+          <p class="text-3xl font-extrabold gradient-text">{stat.label}</p>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">{stat.text}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Ko-fi Support Section -->
+  <section class="container mx-auto px-6 mt-20 max-w-4xl" aria-labelledby="support-heading">
+    <div class="relative overflow-hidden rounded-3xl p-8 md:p-12 bg-gradient-to-br from-amber-500/10 via-orange-400/5 to-yellow-400/10 border border-amber-400/20">
+      <!-- Decorative ambient blobs -->
+      <div aria-hidden="true" class="absolute -top-16 -right-16 size-56 rounded-full bg-amber-400/15 blur-3xl pointer-events-none"></div>
+      <div aria-hidden="true" class="absolute -bottom-12 -left-12 size-40 rounded-full bg-orange-400/10 blur-2xl pointer-events-none"></div>
+
+      <div class="relative flex flex-col md:flex-row items-start md:items-center gap-8">
+        <!-- Icon -->
+        <div aria-hidden="true" class="shrink-0 size-20 rounded-2xl bg-amber-400/15 border border-amber-400/30 grid place-items-center text-4xl shadow-lg shadow-amber-400/10">
+          ☕
+        </div>
+
+        <!-- Text -->
+        <div class="flex-1 min-w-0">
+          <p class="text-xs uppercase tracking-widest font-semibold text-amber-500 dark:text-amber-400">{t.support.eyebrow}</p>
+          <h2 id="support-heading" class="mt-2 text-2xl md:text-3xl font-extrabold tracking-tight">
+            {t.support.heading}
+          </h2>
+          <p class="mt-3 text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-xl">
+            {t.support.body}
+          </p>
+        </div>
+
+        <!-- CTA -->
+        <div class="shrink-0 flex flex-col items-start md:items-end gap-2">
+          <a
+            href="https://ko-fi.com/bogarrenato"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group relative inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-amber-400 hover:bg-amber-300 active:bg-amber-500 text-zinc-900 font-extrabold text-sm shadow-xl shadow-amber-400/30 hover:shadow-amber-400/50 hover:scale-105 transition-all"
+          >
+            <!-- Animated ring behind button -->
+            <span aria-hidden="true" class="absolute -inset-1 rounded-full bg-amber-400/30 animate-ping opacity-60 group-hover:opacity-80"></span>
+            <span aria-hidden="true" class="text-lg">☕</span>
+            {t.support.cta}
+            <svg class="size-4 transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" focusable="false">
+              <path d="M5 12h14M13 6l6 6-6 6"/>
+            </svg>
+          </a>
+          <p class="text-xs text-zinc-500 dark:text-zinc-500 pl-1">{t.support.subtext}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

@@ -1,0 +1,62 @@
+---
+/**
+ * Horizontal/grid strip of the next 7 days' namedays. Each card links to
+ * the primary name's detail page (or to the day page when no nameday).
+ *
+ * a11y notes:
+ *  - Whole strip is a labelled <section>
+ *  - Each card uses <time datetime="..."> for machine-readable date
+ *  - aria-label on the card communicates both date + names to SR users
+ */
+import { strings, localizedPath, interpolate, type Lang } from '../i18n/strings';
+import { UPCOMING_GRADIENTS, UPCOMING_DAYS_COUNT } from '../lib/constants';
+import { getUpcoming, dateKey } from '../lib/names';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = strings[lang];
+
+// 1 (tomorrow) … N (next week)
+const upcoming = getUpcoming(UPCOMING_DAYS_COUNT + 1).slice(1);
+---
+
+<section class="container mx-auto px-6 mt-20" aria-labelledby="upcoming-heading">
+  <div class="flex items-end justify-between mb-6">
+    <h2 id="upcoming-heading" class="text-2xl md:text-3xl font-extrabold tracking-tight">{t.today.upcomingHeading}</h2>
+    <p class="text-xs uppercase tracking-widest text-zinc-500">
+      {interpolate(t.upcoming.inDays, { n: UPCOMING_DAYS_COUNT })}
+    </p>
+  </div>
+
+  <ul class="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 list-none">
+    {upcoming.map((u, i) => {
+      const dayLabel = u.daysAhead === 1
+        ? t.upcoming.tomorrow
+        : interpolate(t.upcoming.inDays, { n: u.daysAhead });
+      const dateLabel = `${t.monthsShort[u.date.getMonth()]} ${u.date.getDate()}.`;
+      const names = u.entry?.primary ?? [];
+      const isoDate = u.date.toISOString().slice(0, 10);
+      const namesText = names.length
+        ? names.join(', ')
+        : (lang === 'hu' ? 'Nincs névnap' : 'No nameday');
+      const href = names[0]
+        ? localizedPath(lang, `/nev/${encodeURIComponent(names[0])}`)
+        : localizedPath(lang, `/napi/${dateKey(u.date.getMonth() + 1, u.date.getDate())}`);
+      return (
+        <li>
+          <a
+            href={href}
+            class={`card-lift block rounded-3xl p-5 text-white bg-gradient-to-br ${UPCOMING_GRADIENTS[i % UPCOMING_GRADIENTS.length]} shadow-lg shadow-zinc-900/10`}
+            aria-label={`${dayLabel}, ${dateLabel} — ${namesText}`}
+          >
+            <div class="flex items-start justify-between text-xs opacity-90 mb-3">
+              <span class="px-2.5 py-1 rounded-full bg-white/25 backdrop-blur font-semibold">{dayLabel}</span>
+              <time datetime={isoDate}>{dateLabel}</time>
+            </div>
+            <p class="text-xl md:text-2xl font-extrabold leading-tight">{namesText}</p>
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+</section>

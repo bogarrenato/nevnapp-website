@@ -1,0 +1,58 @@
+---
+/**
+ * English landing page. Hu still hosts the heavy long-tail SEO work
+ * (1500 név × keresztnév jelentés is HU-only), but having a polished
+ * en/ root lets us attract expats and English-language press.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
+import TodayCard from '../../components/TodayCard.astro';
+import UpcomingStrip from '../../components/UpcomingStrip.astro';
+import { strings, SITE_URL } from '../../i18n/strings';
+import { getTodayEntry } from '../../lib/names';
+
+const t = strings.en;
+const today = new Date();
+const entry = getTodayEntry(today);
+const primaryNames = entry?.primary ?? [];
+const pageTitle = primaryNames.length
+  ? `Today's Hungarian nameday: ${primaryNames.join(' & ')} | ${t.brand}`
+  : `Hungarian nameday today | ${t.brand}`;
+
+const jsonLd = [{
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: t.brand,
+  url: `${SITE_URL}/en`,
+  description: t.tagline,
+  inLanguage: 'en-US',
+}];
+---
+
+<BaseLayout
+  lang="en"
+  title={pageTitle}
+  description={t.description}
+  altLangPath="/"
+  jsonLd={jsonLd}
+>
+  <Hero lang="en" />
+  <TodayCard lang="en" />
+  <UpcomingStrip lang="en" />
+
+  <section class="container mx-auto px-6 mt-24 max-w-3xl">
+    <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">What's a Hungarian nameday?</h2>
+    <div class="mt-6 space-y-4 text-zinc-700 dark:text-zinc-300 leading-relaxed">
+      <p>
+        In Hungary, every day of the year is associated with one or two given names —
+        a <strong>nameday</strong> (<em>névnap</em>). Family and friends celebrate the
+        person whose name matches the day with a small gift, a call, or a sweet message.
+      </p>
+      <p>
+        <strong>NévnapTárX</strong> is a modern 2026 nameday calendar app with
+        <strong>1500 Hungarian names</strong>, full meanings, and daily reminders —
+        free on iOS and Android.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

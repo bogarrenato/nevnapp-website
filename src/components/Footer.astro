@@ -1,0 +1,83 @@
+---
+/**
+ * Site footer — secondary navigation + social + legal placeholder.
+ * Pure presentation, no client JS.
+ *
+ * a11y notes:
+ *  - <footer role="contentinfo"> implicit from tag
+ *  - Each grouping uses <h2> (visually small) so SR users can jump by heading
+ *  - Social icons are aria-hidden; surrounding text names the platform
+ */
+import { strings, localizedPath, interpolate, type Lang } from '../i18n/strings';
+import { STORE_LINKS, SOCIAL, BRAND } from '../lib/constants';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = strings[lang];
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-zinc-200/60 dark:border-white/5 mt-24 bg-white/30 dark:bg-zinc-950/50 backdrop-blur-sm">
+  <div class="container mx-auto px-6 py-12 grid gap-10 md:grid-cols-4">
+    <div class="md:col-span-1">
+      <div class="flex items-center gap-2">
+        <img src="/icons/app-icon.png" alt="" width="36" height="36" class="rounded-xl" />
+        <span class="font-display text-lg font-extrabold">{t.brand}</span>
+      </div>
+      <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">{t.footer.tagline}</p>
+    </div>
+
+    <nav aria-labelledby="footer-product" class="text-sm">
+      <h2 id="footer-product" class="text-xs uppercase tracking-widest font-semibold text-zinc-500">{t.footer.sections.product}</h2>
+      <ul class="mt-4 space-y-2">
+        <li><a href={STORE_LINKS.appStore} rel="noopener" class="hover:text-primary-500 transition">App Store</a></li>
+        <li><a href={STORE_LINKS.playStore} rel="noopener" class="hover:text-primary-500 transition">Google Play</a></li>
+        <li><a href={localizedPath(lang, '/')} class="hover:text-primary-500 transition">{t.footer.links.today}</a></li>
+      </ul>
+    </nav>
+
+    <nav aria-labelledby="footer-explore" class="text-sm">
+      <h2 id="footer-explore" class="text-xs uppercase tracking-widest font-semibold text-zinc-500">{t.footer.sections.explore}</h2>
+      <ul class="mt-4 space-y-2">
+        <li><a href={localizedPath(lang, '/nevek')} class="hover:text-primary-500 transition">{t.footer.links.allNames}</a></li>
+        <li><a href={localizedPath(lang, '/naptar')} class="hover:text-primary-500 transition">{t.footer.links.calendar}</a></li>
+      </ul>
+    </nav>
+
+    <nav aria-labelledby="footer-social" class="text-sm">
+      <h2 id="footer-social" class="text-xs uppercase tracking-widest font-semibold text-zinc-500">{t.footer.sections.social}</h2>
+      <ul class="mt-4 space-y-2">
+        <li>
+          <a href={SOCIAL.tiktok} rel="me noopener" class="hover:text-primary-500 transition inline-flex items-center gap-2">
+            <svg class="size-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.43z"/></svg>
+            TikTok
+          </a>
+        </li>
+        <li>
+          <a href={SOCIAL.instagram} rel="me noopener" class="hover:text-primary-500 transition inline-flex items-center gap-2">
+            <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            Instagram
+          </a>
+        </li>
+        <li>
+          <a href={SOCIAL.beacons} rel="me noopener" class="hover:text-primary-500 transition inline-flex items-center gap-2">
+            <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            Beacons
+          </a>
+        </li>
+        <li>
+          <a href={`mailto:${BRAND.email}`} class="hover:text-primary-500 transition">{BRAND.email}</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="border-t border-zinc-200/60 dark:border-white/5">
+    <div class="container mx-auto px-6 py-5 text-xs text-zinc-500 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p>{interpolate(t.footer.copyright, { year })}</p>
+      <p>
+        Made with <span class="text-coral-500">♥</span> in Budapest — <a href="https://nevnap.app" class="hover:text-primary-500">nevnap.app</a>
+      </p>
+    </div>
+  </div>
+</footer>
