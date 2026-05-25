@@ -17,6 +17,7 @@ import {
   getRelatedNames,
   isPrimary,
 } from '../../lib/names';
+import { getGreetings, KIND_LABELS_HU } from '../../lib/greetings';
 
 export function getStaticPaths() {
   return getAllNames().map((name) => ({
@@ -39,6 +40,31 @@ const title = `${name} névnap, jelentése${datesLabel ? ` — ${datesLabel}` : 
 const description = meaning
   ? `A ${name} név jelentése, eredete és magyar névnapjai. ${meaning.slice(0, 130)}…`
   : `Mikor van ${name} névnapja? Eredet, jelentés és modern névnap-naptár app a NévnapTárX-tól.`;
+
+const greetings = getGreetings(name, 'hu', 8);
+
+const datesText = dates.length
+  ? dates.map((d) => `${t.months[d.month - 1]} ${d.day}.`).join(', ')
+  : '';
+
+const faqEntries: Array<{ q: string; a: string }> = [
+  {
+    q: interpolate(t.namePage.faqQ1, { name }),
+    a: dates.length === 0
+      ? interpolate(t.namePage.faqA1None, { name })
+      : interpolate(dates.length === 1 ? t.namePage.faqA1Single : t.namePage.faqA1Multi, { name, dates: datesText }),
+  },
+  {
+    q: interpolate(t.namePage.faqQ2, { name }),
+    a: meaning
+      ? interpolate(t.namePage.faqA2WithMeaning, { meaning })
+      : interpolate(t.namePage.faqA2NoMeaning, { name }),
+  },
+  {
+    q: interpolate(t.namePage.faqQ3, { name }),
+    a: interpolate(t.namePage.faqA3, { name }),
+  },
+];
 
 const jsonLd = [
   {
@@ -70,6 +96,16 @@ const jsonLd = [
       repeatFrequency: 'P1Y',
     })),
   } : null,
+,
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqEntries.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  }
 ].filter(Boolean) as object[];
 ---
 
@@ -154,6 +190,53 @@ const jsonLd = [
       />
     </aside>
 
+    {/* Köszöntők szekció — SEO long-tail keyword target */}
+    <section class="mt-16" aria-labelledby="greetings-heading">
+      <h2 id="greetings-heading" class="text-2xl md:text-3xl font-extrabold tracking-tight">
+        {interpolate(t.namePage.greetingsHeading, { name })}
+      </h2>
+      <p class="mt-3 text-zinc-600 dark:text-zinc-400">
+        {interpolate(t.namePage.greetingsIntro, { name })}
+      </p>
+      <ul class="mt-6 space-y-4 list-none" lang="hu">
+        {greetings.map((g, i) => (
+          <li class="group relative rounded-2xl border border-zinc-200 dark:border-white/10 bg-white/60 dark:bg-white/5 backdrop-blur p-5 hover:border-primary-500/40 transition">
+            <div class="flex items-start justify-between gap-3 mb-2">
+              <span class="text-xs uppercase tracking-widest font-semibold text-primary-600 dark:text-primary-400">
+                {KIND_LABELS_HU[g.kind]}
+              </span>
+              <button
+                type="button"
+                class="copy-btn text-xs text-zinc-500 hover:text-primary-500 transition opacity-60 group-hover:opacity-100"
+                data-copy-text={g.text}
+                aria-label={`${t.namePage.copyGreeting} — ${KIND_LABELS_HU[g.kind]}`}
+              >
+                📋 {t.namePage.copyGreeting}
+              </button>
+            </div>
+            <p class="text-base md:text-lg leading-relaxed whitespace-pre-line text-zinc-800 dark:text-zinc-200">
+              {g.text}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    {/* FAQ szekció + FAQPage schema (a frontmatterben már része a jsonLd-nek) */}
+    <section class="mt-16" aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-2xl md:text-3xl font-extrabold tracking-tight">
+        {interpolate(t.namePage.faqHeading, { name })}
+      </h2>
+      <dl class="mt-6 space-y-4">
+        {faqEntries.map((f) => (
+          <div class="rounded-2xl border border-zinc-200 dark:border-white/10 p-5">
+            <dt class="font-bold text-zinc-900 dark:text-zinc-100">{f.q}</dt>
+            <dd class="mt-2 text-zinc-700 dark:text-zinc-300 leading-relaxed">{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
     {related.length > 0 && (
       <section class="mt-16" aria-labelledby="related-heading">
         <h2 id="related-heading" class="text-xl md:text-2xl font-extrabold tracking-tight">{t.namePage.relatedHeading}</h2>
@@ -172,4 +255,26 @@ const jsonLd = [
       </section>
     )}
   </article>
+
+<script is:inline>
+  document.addEventListener('click', function (e) {
+    var btn = e.target && e.target.closest('.copy-btn');
+    if (!btn) return;
+    var text = btn.getAttribute('data-copy-text') || '';
+    if (!text) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text);
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+    var original = btn.innerHTML;
+    btn.innerHTML = '✓ ' + (document.documentElement.lang === 'en' ? 'Copied' : 'Másolva');
+    setTimeout(function () { btn.innerHTML = original; }, 1500);
+  });
+</script>
 </BaseLayout>

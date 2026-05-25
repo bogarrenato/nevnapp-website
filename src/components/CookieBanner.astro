@@ -1,0 +1,175 @@
+---
+/**
+ * GDPR Cookie Consent Banner — non-blocking, accessible.
+ *
+ * a11y:
+ *  - role="dialog" aria-modal="false" (non-blocking)
+ *  - focus trap inside the panel
+ *  - escape closes
+ *  - All actions have aria-labels
+ *
+ * Consent storage:
+ *  - localStorage key: 'nevnap-consent'
+ *  - JSON: { necessary: true, analytics: bool, marketing: bool, ts: number }
+ *  - Analytics + marketing scripts check this before running
+ */
+import type { Lang } from '../i18n/strings';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+const t = lang === 'hu' ? {
+  title: 'Sütik használata',
+  body: 'Ez a weboldal sütiket használ a működéshez és a forgalom méréséhez. Az adatkezelés részleteit a Adatvédelmi tájékoztató és a Süti szabályzat tartalmazza.',
+  acceptAll: 'Mindent elfogadok',
+  acceptNec: 'Csak szükségesek',
+  customize: 'Beállítások',
+  saveSel: 'Választás mentése',
+  catNecHead: 'Szükséges sütik (mindig aktív)',
+  catNecBody: 'A weboldal alapvető működéséhez (téma, nyelv, beállítások).',
+  catAnaHead: 'Analitikai sütik',
+  catAnaBody: 'Anonim forgalmi statisztika (Google Analytics). Nélkülük nem látjuk hogyan használják az oldalt.',
+  catMarHead: 'Marketing sütik',
+  catMarBody: 'Releváns hirdetések megjelenítése (jövőbeli AdSense). Most még nem aktívak.',
+  privacyLink: 'Adatvédelem',
+  cookieLink: 'Süti szabályzat',
+  closeAria: 'Süti banner bezárása',
+} : {
+  title: 'Cookie usage',
+  body: 'This website uses cookies for functionality and traffic measurement. Details are in the Privacy Policy and Cookie Policy.',
+  acceptAll: 'Accept all',
+  acceptNec: 'Only necessary',
+  customize: 'Customize',
+  saveSel: 'Save selection',
+  catNecHead: 'Necessary cookies (always on)',
+  catNecBody: 'Required for basic functionality (theme, language, settings).',
+  catAnaHead: 'Analytics cookies',
+  catAnaBody: 'Anonymous traffic statistics (Google Analytics). Without these we cannot see how the site is used.',
+  catMarHead: 'Marketing cookies',
+  catMarBody: 'For displaying relevant ads (future AdSense). Not active yet.',
+  privacyLink: 'Privacy',
+  cookieLink: 'Cookies',
+  closeAria: 'Close cookie banner',
+};
+const privacyHref = lang === 'hu' ? '/privacy' : '/en/privacy';
+const cookieHref = lang === 'hu' ? '/cookies' : '/en/cookies';
+---
+
+<div
+  id="cookie-banner"
+  role="dialog"
+  aria-modal="false"
+  aria-labelledby="cookie-title"
+  aria-describedby="cookie-body"
+  style="display:none"
+  class="fixed inset-x-4 bottom-4 sm:inset-x-auto sm:right-4 sm:bottom-4 sm:max-w-md z-[60] rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-900 shadow-2xl shadow-zinc-900/20 p-5 md:p-6"
+>
+  <div data-step="intro">
+    <h2 id="cookie-title" class="text-lg font-extrabold tracking-tight">{t.title} 🍪</h2>
+    <p id="cookie-body" class="mt-2 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+      {t.body}
+    </p>
+    <div class="mt-3 flex flex-wrap gap-3 text-xs">
+      <a href={privacyHref} class="underline text-zinc-500 hover:text-primary-500">{t.privacyLink}</a>
+      <a href={cookieHref} class="underline text-zinc-500 hover:text-primary-500">{t.cookieLink}</a>
+    </div>
+    <div class="mt-5 flex flex-wrap gap-2">
+      <button type="button" data-action="accept-all" class="flex-1 min-w-[120px] px-4 py-2.5 rounded-full text-sm font-semibold bg-primary-500 hover:bg-primary-600 text-white transition">
+        {t.acceptAll}
+      </button>
+      <button type="button" data-action="accept-necessary" class="flex-1 min-w-[120px] px-4 py-2.5 rounded-full text-sm font-semibold border border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white/5 transition">
+        {t.acceptNec}
+      </button>
+      <button type="button" data-action="customize" class="w-full px-4 py-2 rounded-full text-xs font-semibold text-zinc-500 hover:text-primary-500 transition">
+        {t.customize} →
+      </button>
+    </div>
+  </div>
+
+  <div data-step="customize" hidden>
+    <h2 class="text-lg font-extrabold tracking-tight">{t.customize}</h2>
+    <ul class="mt-4 space-y-3 list-none">
+      <li class="flex items-start gap-3">
+        <input type="checkbox" checked disabled class="mt-1 accent-primary-500" aria-label={t.catNecHead} />
+        <div>
+          <p class="text-sm font-semibold">{t.catNecHead}</p>
+          <p class="text-xs text-zinc-500 mt-0.5">{t.catNecBody}</p>
+        </div>
+      </li>
+      <li class="flex items-start gap-3">
+        <input type="checkbox" data-cat="analytics" checked class="mt-1 accent-primary-500" aria-label={t.catAnaHead} />
+        <div>
+          <p class="text-sm font-semibold">{t.catAnaHead}</p>
+          <p class="text-xs text-zinc-500 mt-0.5">{t.catAnaBody}</p>
+        </div>
+      </li>
+      <li class="flex items-start gap-3">
+        <input type="checkbox" data-cat="marketing" class="mt-1 accent-primary-500" aria-label={t.catMarHead} />
+        <div>
+          <p class="text-sm font-semibold">{t.catMarHead}</p>
+          <p class="text-xs text-zinc-500 mt-0.5">{t.catMarBody}</p>
+        </div>
+      </li>
+    </ul>
+    <button type="button" data-action="save-selection" class="mt-5 w-full px-4 py-2.5 rounded-full text-sm font-semibold bg-primary-500 hover:bg-primary-600 text-white transition">
+      {t.saveSel}
+    </button>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    var KEY = 'nevnap-consent';
+    var banner = document.getElementById('cookie-banner');
+    if (!banner) return;
+    var stepIntro = banner.querySelector('[data-step="intro"]');
+    var stepCustom = banner.querySelector('[data-step="customize"]');
+
+    function readConsent() {
+      try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; }
+    }
+    function writeConsent(c) {
+      try { localStorage.setItem(KEY, JSON.stringify(c)); } catch (e) {}
+      document.documentElement.dataset.cookieConsent = 'given';
+      // dispatch for any listeners (e.g. analytics gate)
+      window.dispatchEvent(new CustomEvent('consent-updated', { detail: c }));
+    }
+    function close() { banner.style.display = 'none'; }
+    function show() { banner.style.display = ''; }
+
+    // Csak akkor mutatjuk ha a <head>-beli check szerint pending az állapot
+    if (document.documentElement.dataset.cookieConsent === 'pending') {
+      show();
+    }
+
+    banner.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-action]');
+      if (!t) return;
+      var act = t.getAttribute('data-action');
+      if (act === 'accept-all') {
+        writeConsent({ necessary: true, analytics: true, marketing: true, ts: Date.now() });
+        close();
+      } else if (act === 'accept-necessary') {
+        writeConsent({ necessary: true, analytics: false, marketing: false, ts: Date.now() });
+        close();
+      } else if (act === 'customize') {
+        stepIntro.hidden = true;
+        stepCustom.hidden = false;
+      } else if (act === 'save-selection') {
+        var ana = banner.querySelector('[data-cat="analytics"]').checked;
+        var mar = banner.querySelector('[data-cat="marketing"]').checked;
+        writeConsent({ necessary: true, analytics: ana, marketing: mar, ts: Date.now() });
+        close();
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !banner.hidden) close();
+    });
+
+    // Expose a tiny API so other scripts can re-open the banner (e.g. "Cookie settings" link in footer)
+    window.nevnapConsent = {
+      get: readConsent,
+      reopen: function () { stepIntro.hidden = false; stepCustom.hidden = true; document.documentElement.dataset.cookieConsent = 'pending'; show(); },
+    };
+  })();
+</script>

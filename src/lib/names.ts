@@ -7,7 +7,7 @@
  *
  * All lookups are diacritic- and case-insensitive — the user types "anna"
  * and we find "Anna". The slug builder preserves diacritics for SEO-friendly
- * URLs (`/nev/Anna`), since modern search engines handle them fine.
+ * URLs (`/name/Anna`), since modern search engines handle them fine.
  */
 
 import nameDaysData from '../data/nevnapok.json';

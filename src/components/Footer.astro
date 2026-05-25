@@ -39,8 +39,8 @@ const year = new Date().getFullYear();
     <nav aria-labelledby="footer-explore" class="text-sm">
       <h2 id="footer-explore" class="text-xs uppercase tracking-widest font-semibold text-zinc-500">{t.footer.sections.explore}</h2>
       <ul class="mt-4 space-y-2">
-        <li><a href={localizedPath(lang, '/nevek')} class="hover:text-primary-500 transition">{t.footer.links.allNames}</a></li>
-        <li><a href={localizedPath(lang, '/naptar')} class="hover:text-primary-500 transition">{t.footer.links.calendar}</a></li>
+        <li><a href={localizedPath(lang, '/names')} class="hover:text-primary-500 transition">{t.footer.links.allNames}</a></li>
+        <li><a href={localizedPath(lang, '/calendar')} class="hover:text-primary-500 transition">{t.footer.links.calendar}</a></li>
       </ul>
     </nav>
 
@@ -79,5 +79,20 @@ const year = new Date().getFullYear();
         Made with <span class="text-coral-500">♥</span> in Budapest — <a href="https://nevnap.app" class="hover:text-primary-500">nevnap.app</a>
       </p>
     </div>
+  </div>
+
+  <!-- Legal & Compliance Links -->
+  <div class="container mx-auto px-6 mt-8 pt-8 border-t border-zinc-200/60 dark:border-white/5">
+    <nav aria-label={lang === 'hu' ? 'Jogi információk' : 'Legal'} class="flex flex-wrap gap-x-5 gap-y-2 text-xs text-zinc-500">
+      <a href={lang === 'hu' ? '/about' : '/en/about'} class="hover:text-primary-500">{lang === 'hu' ? 'Rólunk' : 'About'}</a>
+      <a href={lang === 'hu' ? '/contact' : '/en/contact'} class="hover:text-primary-500">{lang === 'hu' ? 'Kapcsolat' : 'Contact'}</a>
+      <a href={lang === 'hu' ? '/privacy' : '/en/privacy'} class="hover:text-primary-500">{lang === 'hu' ? 'Adatvédelem' : 'Privacy Policy'}</a>
+      <a href={lang === 'hu' ? '/cookies' : '/en/cookies'} class="hover:text-primary-500">{lang === 'hu' ? 'Sütik' : 'Cookies'}</a>
+      <a href={lang === 'hu' ? '/terms' : '/en/terms'} class="hover:text-primary-500">{lang === 'hu' ? 'Felhasználási feltételek' : 'Terms of Service'}</a>
+      {lang === 'hu' && <a href="/impresszum" class="hover:text-primary-500">Impresszum</a>}
+      <button type="button" class="hover:text-primary-500 cursor-pointer" onclick="window.nevnapConsent?.reopen()">
+        {lang === 'hu' ? 'Süti beállítások' : 'Cookie settings'}
+      </button>
+    </nav>
   </div>
 </footer>

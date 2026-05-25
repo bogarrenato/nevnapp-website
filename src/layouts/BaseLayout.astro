@@ -11,6 +11,7 @@
  */
 import '../styles/global.css';
 import { strings, SITE_URL, type Lang } from '../i18n/strings';
+import CookieBanner from '../components/CookieBanner.astro';
 import { STORE_LINKS } from '../lib/constants';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -111,21 +112,48 @@ const jsonLdEntries = jsonLd
       <script type="application/ld+json" set:html={JSON.stringify(entry)} />
     ))}
 
-  <!-- Google Analytics GA4 — csak produkcióban tölt be -->
+  <!-- Google Analytics GA4 — csak prod + felhasználói consent után -->
   {import.meta.env.PROD && (
     <>
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-BVW8JFES73" is:inline></script>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-CZKZV7GE2N" is:inline></script>
       <script is:inline>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'G-BVW8JFES73', {
+        // GDPR Consent Mode v2 — alapból mindent denied
+        gtag('consent', 'default', {
+          ad_storage: 'denied',
+          ad_user_data: 'denied',
+          ad_personalization: 'denied',
+          analytics_storage: 'denied',
+          functionality_storage: 'granted',
+          security_storage: 'granted',
+          wait_for_update: 500
+        });
+        gtag('config', 'G-CZKZV7GE2N', {
           anonymize_ip: true,
           cookie_flags: 'SameSite=None;Secure',
         });
+        // Read existing consent & update
+        function applyConsent(c) {
+          if (!c) return;
+          gtag('consent', 'update', {
+            analytics_storage: c.analytics ? 'granted' : 'denied',
+            ad_storage: c.marketing ? 'granted' : 'denied',
+            ad_user_data: c.marketing ? 'granted' : 'denied',
+            ad_personalization: c.marketing ? 'granted' : 'denied',
+          });
+        }
+        try { applyConsent(JSON.parse(localStorage.getItem('nevnap-consent'))); } catch (e) {}
+        window.addEventListener('consent-updated', function (e) { applyConsent(e.detail); });
       </script>
     </>
   )}
+
+    <!-- Cookie consent korai check — anti-FOUC, MUST be in <head> before render -->
+    <script is:inline>
+      (function(){try{var c=localStorage.getItem('nevnap-consent');document.documentElement.dataset.cookieConsent=c?'given':'pending';}catch(e){document.documentElement.dataset.cookieConsent='pending';}})();
+    </script>
   </head>
   <body class="font-body">
     <a href="#main" class="skip-link">
@@ -163,5 +191,6 @@ const jsonLdEntries = jsonLd
     )}
 
     <Footer lang={lang} />
+      <CookieBanner lang={lang} />
   </body>
 </html>

@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { strings } from '../i18n/strings';
+const t = strings.hu;
+---
+<BaseLayout lang="hu" title={`Impresszum | ${t.brand}`} description="A nevnap.app és a NévnapTárX üzemeltetőjének adatai." altLangPath="/impresszum">
+  <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
+    <nav class="text-sm text-zinc-500" aria-label="Morzsamenü">
+      <ol class="flex items-center gap-2 list-none"><li><a href="/" class="hover:text-primary-500">{t.brand}</a></li><li aria-hidden="true">›</li><li aria-current="page" class="text-zinc-700 dark:text-zinc-300">Impresszum</li></ol>
+    </nav>
+    <h1 class="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight"><span class="gradient-text">Impresszum</span></h1>
+
+    <section class="mt-10 space-y-6 text-zinc-700 dark:text-zinc-300 leading-relaxed">
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Üzemeltető</h2>
+        <p class="mt-2"><strong>Bogár Renátó</strong> egyéni magánszemély</p>
+        <p>Ország: Magyarország</p>
+        <p>Email: <a href="mailto:bogarrenato@gmail.com" class="text-primary-500 underline">bogarrenato@gmail.com</a></p>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">A szolgáltatás</h2>
+        <p class="mt-2">A nevnap.app weboldal és a NévnapTárX mobilalkalmazás magyar névnapok, név-jelentések és kapcsolódó tartalmak megosztására szolgáló ingyenes információs platform.</p>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Tárhely-szolgáltató</h2>
+        <p class="mt-2"><strong>Cloudflare, Inc.</strong></p>
+        <address class="not-italic">101 Townsend Street, San Francisco, CA 94107, USA</address>
+        <p>Web: <a href="https://www.cloudflare.com" target="_blank" rel="noopener" class="text-primary-500 underline">cloudflare.com</a></p>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Mobil alkalmazás disztribúció</h2>
+        <p class="mt-2">iOS — Apple Inc. (App Store)<br/>Android — Google LLC (Google Play)</p>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">További tájékoztatók</h2>
+        <ul class="mt-2 list-disc list-inside space-y-1">
+          <li><a href="/privacy" class="text-primary-500 underline">Adatvédelmi tájékoztató</a></li>
+          <li><a href="/cookies" class="text-primary-500 underline">Süti szabályzat</a></li>
+          <li><a href="/terms" class="text-primary-500 underline">Felhasználási feltételek</a></li>
+        </ul>
+      </div>
+    </section>
+  </article>
+</BaseLayout>

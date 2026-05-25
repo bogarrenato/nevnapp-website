@@ -46,6 +46,15 @@ export const strings = {
       cta: 'Támogass egy kávéval',
       subtext: 'Ko-fi — biztonságos, egyszeri vagy rendszeres',
     },
+    blog: {
+      title: 'Blog',
+      heading: 'Névnap blog',
+      subtitle: 'Cikkek, tippek és érdekességek a magyar névnap-hagyományról.',
+      readMore: 'Tovább olvasom',
+      readingTime: '{min} perc olvasás',
+      publishedOn: 'Közzétéve: {date}',
+      backToBlog: '← Vissza a bloghoz',
+    },
     namesPage: {
       title: 'Magyar nevek listája — {count} keresztnév',
       description: 'Az összes magyar keresztnév, jelentésekkel és névnapokkal — {count} név A-tól Z-ig.',
@@ -79,7 +88,7 @@ export const strings = {
 
     upcoming: {
       tomorrow: 'Holnap',
-      inDays: '{n} napon belül',
+      inDays: '{n} nap',
     },
 
     // Name detail page
@@ -95,6 +104,20 @@ export const strings = {
         'A {name} név jelentése egyelőre nem elérhető szótárunkban. Bővítjük az adatbázist — nézz vissza később!',
       sendGreeting: 'Küldj köszöntést {name}-nak az appban →',
       relatedHeading: 'Hasonló nevek',
+      greetingsHeading: 'Névnapi köszöntők {name}-nek',
+      greetingsIntro: '8 ingyenes köszöntő, vers és SMS-szöveg amit elküldhetsz {name} névnapjára:',
+      faqHeading: 'Gyakori kérdések — {name}',
+      faqQ1: 'Mikor van {name} névnapja?',
+      faqA1Single: '{name} névnapja {dates}.',
+      faqA1Multi: '{name} névnapja a magyar naptárban: {dates}.',
+      faqA1None: '{name} jelenleg nem szerepel a magyar névnap-naptárban hivatalos napon.',
+      faqQ2: 'Mit jelent a {name} név?',
+      faqA2WithMeaning: '{meaning}',
+      faqA2NoMeaning: 'A {name} név jelentése még nem szerepel az adatbázisunkban — folyamatosan bővítjük.',
+      faqQ3: 'Hogyan köszöntsünk egy {name}-t?',
+      faqA3: 'A {name} névhez többféle köszöntő szöveget összegyűjtöttünk: rövid, vers, SMS-be, hivatalos, vicces, és idézetes változatok. Görgess feljebb a köszöntők szekcióhoz!',
+      copyGreeting: 'Másolás',
+      copied: 'Másolva ✓',
       faqHeading: 'Gyakori kérdések — {name}',
     },
 
@@ -169,6 +192,15 @@ export const strings = {
       cta: 'Buy me a coffee',
       subtext: 'Ko-fi — secure, one-time or recurring',
     },
+    blog: {
+      title: 'Blog',
+      heading: 'Nameday blog',
+      subtitle: 'Articles, tips and curiosities about Hungarian nameday traditions.',
+      readMore: 'Read more',
+      readingTime: '{min} min read',
+      publishedOn: 'Published: {date}',
+      backToBlog: '← Back to blog',
+    },
     namesPage: {
       title: 'List of Hungarian names — {count} first names',
       description: 'All Hungarian first names with meanings and namedays — {count} names from A to Z.',
@@ -202,7 +234,7 @@ export const strings = {
 
     upcoming: {
       tomorrow: 'Tomorrow',
-      inDays: 'in {n} days',
+      inDays: '{n} days',
     },
 
     namePage: {
@@ -217,6 +249,20 @@ export const strings = {
         "The meaning of {name} isn't in our dictionary yet. We're growing the database — check back later!",
       sendGreeting: 'Send {name} a greeting in the app →',
       relatedHeading: 'Related names',
+      greetingsHeading: 'Nameday greetings for {name}',
+      greetingsIntro: '8 free greetings, poems and SMS texts you can send to {name} on their nameday:',
+      faqHeading: 'FAQ — {name}',
+      faqQ1: "When is {name}'s nameday?",
+      faqA1Single: "{name}'s nameday is {dates}.",
+      faqA1Multi: "{name}'s nameday in the Hungarian calendar: {dates}.",
+      faqA1None: "{name} is not currently listed in the Hungarian nameday calendar.",
+      faqQ2: 'What does the name {name} mean?',
+      faqA2WithMeaning: '{meaning}',
+      faqA2NoMeaning: 'The meaning of {name} is not yet in our database — we are continuously expanding.',
+      faqQ3: 'How do I greet a {name}?',
+      faqA3: 'For the name {name} we collected several greeting templates: short, poem, SMS, formal, funny, and quote variants. Scroll up to the greetings section!',
+      copyGreeting: 'Copy',
+      copied: 'Copied ✓',
       faqHeading: 'FAQ — {name}',
     },
 

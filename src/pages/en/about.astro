@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { strings } from '../../i18n/strings';
+const t = strings.en;
+---
+<BaseLayout lang="en" title={`About | ${t.brand}`} description="The NévnapTárX mission: preserving the Hungarian nameday tradition with modern technology." altLangPath="/about">
+  <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
+    <nav class="text-sm text-zinc-500" aria-label="Breadcrumb">
+      <ol class="flex items-center gap-2 list-none"><li><a href="/en/" class="hover:text-primary-500">{t.brand}</a></li><li aria-hidden="true">›</li><li aria-current="page" class="text-zinc-700 dark:text-zinc-300">About</li></ol>
+    </nav>
+    <h1 class="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight"><span class="gradient-text">About</span></h1>
+    <p class="mt-4 text-lg text-zinc-700 dark:text-zinc-300">Preserving the Hungarian nameday tradition with modern technology.</p>
+
+    <section class="mt-10 space-y-6 text-zinc-700 dark:text-zinc-300 leading-relaxed">
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Mission</h2>
+        <p class="mt-2">Nameday is a beautiful, centuries-old Hungarian tradition — every day of the year is associated with one or more names that families and friends celebrate. In the digital age it's easy to forget.</p>
+        <p class="mt-2">NévnapTárX was built with one simple goal: prevent that. <strong>1500 Hungarian names</strong> with meanings, origins and daily reminders bundled into a modern 2026-designed app — for iOS and Android.</p>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">What we offer</h2>
+        <ul class="mt-2 list-disc list-inside space-y-1">
+          <li><strong>1500+ Hungarian names</strong> with detailed meanings and origins</li>
+          <li><strong>366 calendar days</strong> of namedays in one place</li>
+          <li><strong>Daily push notifications</strong> for important namedays</li>
+          <li><strong>Modern UI/UX</strong> with dark and light themes</li>
+          <li><strong>Greeting suggestions</strong> and personalization (upcoming)</li>
+          <li><strong>Completely free</strong>, ad-free base tier</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">The developer</h2>
+        <p class="mt-2">NévnapTárX is built by <strong>Renátó Bogár</strong>, a Hungarian developer — out of love for Hungarian tradition. The project welcomes feedback and ideas.</p>
+        <p class="mt-3">📧 <a href="mailto:bogarrenato@gmail.com" class="text-primary-500 underline">bogarrenato@gmail.com</a></p>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Support</h2>
+        <p class="mt-2">This is a solo side project with no company backing. If you find the work valuable and want it to continue:</p>
+        <p class="mt-3"><a href="https://ko-fi.com/bogarrenato" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-amber-400 hover:bg-amber-300 text-zinc-900 font-bold transition">☕ Buy me a coffee</a></p>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Sources</h2>
+        <p class="mt-2">Name data comes from various Hungarian linguistic, traditional and public sources. We continuously expand and improve the database based on user feedback.</p>
+      </div>
+    </section>
+  </article>
+</BaseLayout>

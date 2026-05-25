@@ -25,6 +25,7 @@ const navItems = [
   { href: localizedPath(lang, '/'), label: t.nav.today },
   { href: localizedPath(lang, '/names'), label: t.nav.names },
   { href: localizedPath(lang, '/calendar'), label: t.nav.calendar },
+  { href: localizedPath(lang, '/blog'), label: t.blog.title },
 ];
 
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';

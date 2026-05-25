@@ -1,5 +1,6 @@
+# nevnap.app — robots.txt
 User-agent: *
 Allow: /
+Disallow: /api/
 
-# Sitemap
 Sitemap: https://nevnap.app/sitemap-index.xml

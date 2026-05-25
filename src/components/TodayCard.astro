@@ -49,7 +49,7 @@ const todayLabel = lang === 'hu'
           {primary.map((name) => (
             <li>
               <a
-                href={localizedPath(lang, `/nev/${encodeURIComponent(name)}`)}
+                href={localizedPath(lang, `/name/${encodeURIComponent(name)}`)}
                 class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur text-sm font-semibold transition"
                 aria-label={lang === 'hu' ? `${name} névnap részletei` : `Details for ${name}`}
               >
@@ -79,7 +79,7 @@ const todayLabel = lang === 'hu'
             {secondary.map((name) => (
               <li>
                 <a
-                  href={localizedPath(lang, `/nev/${encodeURIComponent(name)}`)}
+                  href={localizedPath(lang, `/name/${encodeURIComponent(name)}`)}
                   class="px-3 py-1 rounded-full text-sm bg-white/10 hover:bg-white/20 transition"
                 >
                   {name}

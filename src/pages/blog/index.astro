@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { strings, interpolate } from '../../i18n/strings';
+import { getCollection } from 'astro:content';
+
+const t = strings.hu;
+const posts = (await getCollection('blog', ({ data }) => data.lang === 'hu'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const title = `${t.blog.heading} | ${t.brand}`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: t.blog.heading,
+  description: t.blog.subtitle,
+  blogPost: posts.map((p) => ({
+    '@type': 'BlogPosting',
+    headline: p.data.title,
+    description: p.data.description,
+    datePublished: p.data.pubDate.toISOString(),
+    url: `https://nevnap.app/blog/${p.id}`,
+  })),
+};
+
+const fmtDate = (d: Date) => `${d.getFullYear()}. ${t.months[d.getMonth()]} ${d.getDate()}.`;
+---
+<BaseLayout lang="hu" title={title} description={t.blog.subtitle} altLangPath="/blog" jsonLd={[jsonLd]}>
+  <article class="container mx-auto px-6 max-w-4xl pt-12 md:pt-16">
+    <nav class="text-sm text-zinc-500" aria-label="Morzsamenü">
+      <ol class="flex items-center gap-2 list-none"><li><a href="/" class="hover:text-primary-500">{t.brand}</a></li><li aria-hidden="true">›</li><li aria-current="page" class="text-zinc-700 dark:text-zinc-300">{t.blog.title}</li></ol>
+    </nav>
+
+    <header class="mt-6">
+      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight"><span class="gradient-text">{t.blog.heading}</span></h1>
+      <p class="mt-4 text-lg text-zinc-700 dark:text-zinc-300">{t.blog.subtitle}</p>
+    </header>
+
+    <ul class="mt-12 grid sm:grid-cols-2 gap-6 list-none">
+      {posts.map((p) => (
+        <li>
+          <a href={`/blog/${p.id}`} class="block h-full rounded-3xl border border-zinc-200 dark:border-white/10 hover:border-primary-500/40 bg-white/60 dark:bg-white/5 backdrop-blur p-6 hover:shadow-lg hover:shadow-primary-500/10 transition card-lift">
+            <p class="text-xs uppercase tracking-widest text-primary-600 dark:text-primary-400 font-semibold">
+              {interpolate(t.blog.readingTime, { min: String(p.data.readingMinutes) })}
+            </p>
+            <h2 class="mt-2 text-xl md:text-2xl font-extrabold tracking-tight leading-tight">{p.data.title}</h2>
+            <p class="mt-3 text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed">{p.data.description}</p>
+            <p class="mt-4 text-xs text-zinc-500">{fmtDate(p.data.pubDate)}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </article>
+</BaseLayout>

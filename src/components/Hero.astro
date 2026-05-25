@@ -81,7 +81,7 @@ const kicker = interpolate(t.hero.kicker, { date: todayFormatted });
       <div class="mt-10 flex flex-wrap gap-3 animate-float-in" style="animation-delay: 240ms" role="group" aria-label={lang === 'hu' ? 'Fő műveletek' : 'Primary actions'}>
         <DownloadDropdown lang={lang} variant="primary" id="hero-download" label={t.hero.ctaPrimary} />
         <a
-          href={localizedPath(lang, '/nevek')}
+          href={localizedPath(lang, '/names')}
           class="inline-flex items-center gap-2 px-6 py-3 rounded-full glass font-semibold hover:bg-white/80 dark:hover:bg-zinc-900/80 transition"
         >
           {t.hero.ctaSecondary}

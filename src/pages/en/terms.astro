@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { strings } from '../../i18n/strings';
+const t = strings.en;
+---
+<BaseLayout lang="en" title={`Terms of Service | ${t.brand}`} description="Terms of Service for nevnap.app and NévnapTárX." altLangPath="/terms">
+  <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
+    <nav class="text-sm text-zinc-500" aria-label="Breadcrumb">
+      <ol class="flex items-center gap-2 list-none"><li><a href="/en/" class="hover:text-primary-500">{t.brand}</a></li><li aria-hidden="true">›</li><li aria-current="page" class="text-zinc-700 dark:text-zinc-300">Terms of Service</li></ol>
+    </nav>
+    <h1 class="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight"><span class="gradient-text">Terms of Service</span></h1>
+    <p class="mt-2 text-sm text-zinc-500">Effective: January 1, 2026.</p>
+
+    <section class="mt-10 space-y-6 text-zinc-700 dark:text-zinc-300 leading-relaxed">
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">1. Service</h2>
+        <p class="mt-2">The nevnap.app website and NévnapTárX mobile app ("Service") is a free information service about Hungarian namedays, name meanings and related content. Provided by Renátó Bogár ("Operator").</p>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">2. Acceptance</h2>
+        <p class="mt-2">By using the Service you accept these terms. If you disagree, please do not use the Service.</p>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">3. Permitted use</h2>
+        <p class="mt-2">Personal, non-commercial use. Prohibited:</p>
+        <ul class="mt-2 list-disc list-inside space-y-1">
+          <li>Copying or republishing content without permission</li>
+          <li>Automated scraping, bot activity</li>
+          <li>Disrupting Service operation</li>
+          <li>Collecting other users' data</li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">4. Intellectual property</h2>
+        <p class="mt-2">All content (source code, design, name meanings database, logos) is the Operator's intellectual property or used under license. Protected by Hungarian and international copyright laws.</p>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">5. Content accuracy</h2>
+        <p class="mt-2">Name meanings and nameday data are sourced from multiple Hungarian linguistic and traditional sources. The Operator <strong>does not guarantee</strong> full accuracy. Content is for informational purposes only.</p>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">6. Limitation of liability</h2>
+        <p class="mt-2">The Service is provided "as is". The Operator is not liable for:</p>
+        <ul class="mt-2 list-disc list-inside space-y-1">
+          <li>Service downtime</li>
+          <li>Notification delays or failures</li>
+          <li>Content inaccuracies</li>
+          <li>Third-party service (Cloudflare, Google) issues</li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">7. Third-party links</h2>
+        <p class="mt-2">The Service may contain external links (App Store, Google Play, Ko-fi, future partner pages). We are not responsible for those sites.</p>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">8. Privacy</h2>
+        <p class="mt-2">See our <a href="/en/privacy" class="text-primary-500 underline">Privacy Policy</a>.</p>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">9. Changes</h2>
+        <p class="mt-2">Terms may be updated. Significant changes announced on the site. Continued use means acceptance.</p>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">10. Governing law</h2>
+        <p class="mt-2">Hungarian law applies. Hungarian courts have jurisdiction.</p>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">11. Contact</h2>
+        <p class="mt-2"><a href="mailto:bogarrenato@gmail.com" class="text-primary-500 underline">bogarrenato@gmail.com</a></p>
+      </div>
+    </section>
+  </article>
+</BaseLayout>

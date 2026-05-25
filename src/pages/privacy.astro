@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { strings } from '../i18n/strings';
+const t = strings.hu;
+---
+<BaseLayout lang="hu" title={`Adatvédelmi tájékoztató | ${t.brand}`} description="Hogyan kezeljük az adataidat a nevnap.app weboldalon — GDPR-megfelelő tájékoztatás." altLangPath="/privacy">
+  <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16 prose-content">
+    <nav class="text-sm text-zinc-500" aria-label="Morzsamenü">
+      <ol class="flex items-center gap-2 list-none"><li><a href="/" class="hover:text-primary-500">{t.brand}</a></li><li aria-hidden="true">›</li><li aria-current="page" class="text-zinc-700 dark:text-zinc-300">Adatvédelmi tájékoztató</li></ol>
+    </nav>
+    <h1 class="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight"><span class="gradient-text">Adatvédelmi tájékoztató</span></h1>
+    <p class="mt-2 text-sm text-zinc-500">Utoljára frissítve: 2026. január 1.</p>
+
+    <section class="mt-10 space-y-6 text-zinc-700 dark:text-zinc-300 leading-relaxed">
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">1. Adatkezelő</h2>
+        <p class="mt-2">Bogár Renátó egyéni magánszemély (továbbiakban: „Üzemeltető") tájékoztatja a felhasználókat (továbbiakban: „Te" / „Felhasználó") a nevnap.app weboldal és a NévnapTárX mobilalkalmazás adatkezelési gyakorlatáról.</p>
+        <p class="mt-2"><strong>Kapcsolat:</strong> <a href="mailto:bogarrenato@gmail.com" class="text-primary-500 underline">bogarrenato@gmail.com</a></p>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">2. Milyen adatokat gyűjtünk?</h2>
+        <p class="mt-2">A weboldal <strong>nem gyűjt személyes azonosító adatokat</strong> a regisztráció nélküli látogatóktól. Az alábbi technikai adatokat automatikusan kezeli:</p>
+        <ul class="mt-3 list-disc list-inside space-y-1">
+          <li>IP-cím (anonimizálva — utolsó oktett maszkolva)</li>
+          <li>Böngésző típus, verzió, operációs rendszer</li>
+          <li>Látogatott oldalak, időtartam</li>
+          <li>Hivatkozó oldal (referrer)</li>
+          <li>Eszköz típusa (mobil/desktop)</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">3. Az adatkezelés célja és jogalapja</h2>
+        <ul class="mt-2 list-disc list-inside space-y-1">
+          <li><strong>Forgalmi statisztika</strong> (GDPR 6. cikk (1) f) — jogos érdek): a szolgáltatás fejlesztése.</li>
+          <li><strong>Süti-kezelés</strong> (GDPR 6. cikk (1) a) — hozzájárulás): a Süti banneren keresztül.</li>
+          <li><strong>Hirdetésmegjelenítés</strong> (jövőbeli funkció): kizárólag a felhasználó kifejezett hozzájárulása alapján.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">4. Adatfeldolgozók</h2>
+        <p class="mt-2">A működéshez az alábbi harmadik fél szolgáltatókat vesszük igénybe:</p>
+        <ul class="mt-3 list-disc list-inside space-y-1">
+          <li><strong>Cloudflare, Inc.</strong> (USA) — webtárhely, CDN. <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener" class="text-primary-500 underline">Adatvédelem</a></li>
+          <li><strong>Google LLC</strong> (USA) — Google Analytics (anonimizált). <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" class="text-primary-500 underline">Adatvédelem</a></li>
+          <li><strong>Google Ireland Ltd.</strong> — jövőbeli AdSense hirdetésmegjelenítés (csak hozzájárulás esetén).</li>
+          <li><strong>Apple Inc.</strong> és <strong>Google LLC</strong> — App Store, Google Play (kizárólag a mobil app esetében).</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">5. Az adattárolás időtartama</h2>
+        <ul class="mt-2 list-disc list-inside space-y-1">
+          <li>Analytics adatok: 14 hónap (Google alapbeállítás)</li>
+          <li>Süti preferenciák: 12 hónap a böngésződben (localStorage)</li>
+          <li>Szerver naplók (Cloudflare): max. 30 nap</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">6. A felhasználók jogai (GDPR)</h2>
+        <p class="mt-2">A GDPR alapján minden Felhasználónak joga van:</p>
+        <ul class="mt-2 list-disc list-inside space-y-1">
+          <li><strong>Hozzáférés</strong> — milyen adatokat tárolunk rólad</li>
+          <li><strong>Helyesbítés</strong> — pontatlan adatok javítása</li>
+          <li><strong>Törlés</strong> („elfeledtetés joga")</li>
+          <li><strong>Adatkezelés korlátozása</strong></li>
+          <li><strong>Adathordozhatóság</strong></li>
+          <li><strong>Tiltakozás</strong></li>
+          <li><strong>Hozzájárulás visszavonása</strong> bármikor</li>
+        </ul>
+        <p class="mt-3">Bármelyik jogod gyakorlásához írj a <a href="mailto:bogarrenato@gmail.com" class="text-primary-500 underline">bogarrenato@gmail.com</a> címre. <strong>30 napon belül</strong> válaszolunk.</p>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">7. Panasz benyújtása</h2>
+        <p class="mt-2">Panaszt nyújthatsz be a Nemzeti Adatvédelmi és Információszabadság Hatóságnál (NAIH):</p>
+        <address class="mt-2 not-italic">1055 Budapest, Falk Miksa utca 9-11.<br/>+36 (1) 391-1400<br/><a href="https://www.naih.hu" target="_blank" rel="noopener" class="text-primary-500 underline">www.naih.hu</a></address>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">8. Sütik (Cookies)</h2>
+        <p class="mt-2">A sütikről részletes információt a <a href="/cookies" class="text-primary-500 underline">Süti szabályzatban</a> találsz.</p>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">9. Módosítások</h2>
+        <p class="mt-2">A tájékoztató időről időre frissülhet. A jelentős változásokról a weboldalon értesítünk. A módosítás dátumát a tájékoztató tetején találod.</p>
+      </div>
+    </section>
+  </article>
+</BaseLayout>
