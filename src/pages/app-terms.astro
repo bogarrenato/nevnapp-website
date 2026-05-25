@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { strings } from '../i18n/strings';
+const t = strings.hu;
+---
+<BaseLayout
+  lang="hu"
+  title={`Mobil app felhasználási feltételei | ${t.brand}`}
+  description="A NévnapTárX mobilalkalmazás (iOS + Android) felhasználási feltételei, előfizetés részletei."
+  altLangPath="/app-terms"
+>
+  <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
+    <nav class="text-sm text-zinc-500" aria-label="Morzsamenü">
+      <ol class="flex items-center gap-2 list-none">
+        <li><a href="/" class="hover:text-primary-500">{t.brand}</a></li>
+        <li aria-hidden="true">›</li>
+        <li aria-current="page" class="text-zinc-700 dark:text-zinc-300">Mobil app feltételei</li>
+      </ol>
+    </nav>
+
+    <h1 class="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight">
+      <span class="gradient-text">Mobil alkalmazás — Felhasználási feltételek</span>
+    </h1>
+    <p class="mt-3 text-zinc-500">Utoljára frissítve: 2025. december 8.</p>
+
+    <section class="mt-10 space-y-8 text-zinc-700 dark:text-zinc-300 leading-relaxed">
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">1. Szolgáltatás</h2>
+        <p class="mt-2">A <strong>NévnapTárX</strong> iOS és Android alkalmazás névnap-emlékeztetőt, widgetet és értesítéseket biztosít. A szolgáltatás kizárólag személyes, nem kereskedelmi használatra készült.</p>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">2. Előfizetés (NameDayX Premium)</h2>
+        <ul class="mt-3 list-disc list-inside space-y-1.5">
+          <li><strong>Előfizetés neve:</strong> NameDayX Premium</li>
+          <li><strong>Időtartam:</strong> 1 hónap, automatikusan megújul</li>
+          <li><strong>Ár:</strong> 1,99 USD / hónap (vagy helyi pénznem szerinti egyenérték)</li>
+          <li><strong>Ár időszaki bontásban:</strong> 1,99 USD havonta terhelve</li>
+        </ul>
+        <p class="mt-4 font-semibold">Előfizetés tartalma:</p>
+        <ul class="mt-2 list-disc list-inside space-y-1.5">
+          <li>App-ból küldhető egyedi üdvözlő szövegek</li>
+          <li>Részletes név-jelentések megjelenítése</li>
+          <li>Reklámmentes élmény</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">3. Fizetés és megújulás</h2>
+        <ul class="mt-3 list-disc list-inside space-y-1.5">
+          <li>A díjat az <strong>Apple ID-hez társított App Store számla</strong> (iOS), illetve a <strong>Google Play számla</strong> (Android) terheli a vásárlás megerősítésekor.</li>
+          <li>Az előfizetés automatikusan megújul, ha legalább <strong>24 órával</strong> a következő időszak vége előtt nem mondod le.</li>
+          <li>A megújítás előtt legfeljebb 24 órával a store elterheli az összeget.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">4. Lemondás és visszatérítések</h2>
+        <ul class="mt-3 list-disc list-inside space-y-1.5">
+          <li>Az előfizetést közvetlenül kezelheted:
+            <ul class="mt-2 ml-6 list-disc space-y-1">
+              <li><strong>iOS:</strong> Beállítások → Apple ID → Előfizetések</li>
+              <li><strong>Android:</strong> Google Play → Fizetések & előfizetések</li>
+            </ul>
+          </li>
+          <li>A már megkezdett számlázási időszakra a store nem biztosít visszatérítést; speciális esetben az Apple/Google ügyfélszolgálat dönt.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">5. Helyreállítás</h2>
+        <p class="mt-2">Korábban megvásárolt előfizetésedet az alkalmazáson belüli <strong>"Vásárlás visszaállítása"</strong> opcióval aktiválhatod, ha ugyanazzal az Apple ID-val vagy Google fiókkal jelentkezel be.</p>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">6. Adatvédelem</h2>
+        <p class="mt-2">Az adatkezelés részleteit a <a href="/app-privacy" class="text-primary-500 underline">Mobil app adatvédelmi tájékoztatója</a> tartalmazza.</p>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">7. Kapcsolat</h2>
+        <p class="mt-2"><strong>Fejlesztő:</strong> Bogár Renátó</p>
+        <p><strong>E-mail:</strong> <a href="mailto:bogarrenato@gmail.com" class="text-primary-500 underline">bogarrenato@gmail.com</a></p>
+      </div>
+
+      <hr class="border-zinc-200 dark:border-white/10 my-12" />
+
+      <div lang="en">
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">English summary — Terms of Use (NameDayX)</h2>
+        <p class="mt-3 text-sm text-zinc-500">Last updated: 8 December 2025</p>
+        <ul class="mt-4 list-disc list-inside space-y-1.5 text-sm">
+          <li><strong>Subscription name:</strong> NameDayX Premium</li>
+          <li><strong>Length:</strong> 1 month, auto-renewing</li>
+          <li><strong>Price:</strong> USD 1.99 per month (or local equivalent). Billed every month.</li>
+          <li><strong>Payment:</strong> handled by Apple/Google and charged to your account.</li>
+          <li><strong>Renewal & cancellation:</strong> cancel at least 24h before the period ends in Settings → Apple ID → Subscriptions (iOS) or Google Play → Payments & subscriptions (Android).</li>
+          <li><strong>Restore purchases:</strong> use the "Restore purchase" button inside the app while signed in with the same account.</li>
+          <li><strong>Support:</strong> <a href="mailto:bogarrenato@gmail.com" class="text-primary-500 underline">bogarrenato@gmail.com</a></li>
+          <li><strong>Privacy policy:</strong> <a href="/en/app-privacy" class="text-primary-500 underline">nevnap.app/en/app-privacy</a></li>
+        </ul>
+      </div>
+    </section>
+  </article>
+</BaseLayout>

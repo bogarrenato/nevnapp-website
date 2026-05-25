@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { strings } from '../../i18n/strings';
+const t = strings.en;
+---
+<BaseLayout
+  lang="en"
+  title={`Mobile app Privacy Policy | ${t.brand}`}
+  description="Privacy Policy for the NévnapTárX mobile app (iOS + Android) — GDPR compliant."
+  altLangPath="/app-privacy"
+>
+  <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
+    <nav class="text-sm text-zinc-500" aria-label="Breadcrumb">
+      <ol class="flex items-center gap-2 list-none">
+        <li><a href="/en/" class="hover:text-primary-500">{t.brand}</a></li>
+        <li aria-hidden="true">›</li>
+        <li aria-current="page" class="text-zinc-700 dark:text-zinc-300">Mobile app Privacy</li>
+      </ol>
+    </nav>
+
+    <h1 class="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight">
+      <span class="gradient-text">Mobile App — Privacy Policy</span>
+    </h1>
+    <p class="mt-3 text-zinc-500">Last updated: 18 November 2025</p>
+
+    <section class="mt-10 space-y-8 text-zinc-700 dark:text-zinc-300 leading-relaxed">
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">1. Data Controller</h2>
+        <p class="mt-2"><strong>Name:</strong> Renátó Bogár (individual developer)<br/>
+        <strong>Email:</strong> <a href="mailto:bogarrenato@gmail.com" class="text-primary-500 underline">bogarrenato@gmail.com</a><br/>
+        <strong>Application:</strong> NévnapTárX (iOS + Android)</p>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">2. What data do we process?</h2>
+        <ul class="mt-3 list-disc list-inside space-y-2">
+          <li><strong>User settings:</strong> favorite nameday list, theme, notification preferences (stored on device only via SharedPreferences).</li>
+          <li><strong>Widget data:</strong> nameday list exported to widget via HomeWidget plugin (stored on device only).</li>
+          <li><strong>Nameday database:</strong> loaded from <code>assets/nevnapok.json</code>; contains no personal data.</li>
+          <li><strong>Subscription metadata:</strong> Apple/Google handle transactions; we only store a local boolean indicating active subscription.</li>
+          <li><strong>Notification token:</strong> if you enable daily push notifications, the device's APNs/FCM token is stored encrypted in AWS SNS. The token is not linked to any name or email — used solely for delivering notifications.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">3. Purpose and legal basis</h2>
+        <ul class="mt-3 list-disc list-inside space-y-1.5">
+          <li>Push notifications for selected namedays (<em>based on consent</em>).</li>
+          <li>Personalizing widget and in-app content (<em>legitimate interest / user request</em>).</li>
+          <li>Verifying subscription status for premium features (<em>contract performance</em>).</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">4. Data retention</h2>
+        <ul class="mt-3 list-disc list-inside space-y-1.5">
+          <li>All user settings remain on the device and are automatically removed upon app deletion.</li>
+          <li>Notification tokens are kept in AWS until the last notification; afterward they expire automatically or are deleted upon consent withdrawal.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">5. Third parties and data transfer</h2>
+        <ul class="mt-3 list-disc list-inside space-y-1.5">
+          <li><strong>Apple (App Store):</strong> handles payments and billing — <a href="https://www.apple.com/legal/privacy/" target="_blank" rel="noopener" class="text-primary-500 underline">Apple Privacy Policy</a>.</li>
+          <li><strong>Google (Play Store):</strong> handles payments on Android — <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" class="text-primary-500 underline">Google Privacy Policy</a>.</li>
+          <li><strong>Amazon Web Services SNS</strong> — <a href="https://aws.amazon.com/privacy/" target="_blank" rel="noopener" class="text-primary-500 underline">aws.amazon.com/privacy</a> — for token storage and notification delivery only.</li>
+          <li>No analytics SDKs, advertising IDs or location data are used.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">6. Your rights</h2>
+        <ul class="mt-3 list-disc list-inside space-y-1.5">
+          <li>Access, modify or delete data stored on your device directly via app settings (clear favorites, disable notifications etc.).</li>
+          <li>Request push token deletion via email; we will permanently remove it from AWS.</li>
+          <li>You have the right to file a complaint with your local data protection authority.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">7. Data security</h2>
+        <ul class="mt-3 list-disc list-inside space-y-1.5">
+          <li>All communication between the app and AWS is over HTTPS/TLS.</li>
+          <li>We collect only the minimum necessary data and never share it for marketing or sell it.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">8. Contact</h2>
+        <p class="mt-2">If you have questions, write to <a href="mailto:bogarrenato@gmail.com" class="text-primary-500 underline">bogarrenato@gmail.com</a>, or reach out through the in-app "Support" link.</p>
+      </div>
+    </section>
+  </article>
+</BaseLayout>

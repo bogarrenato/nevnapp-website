@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { strings } from '../../i18n/strings';
+const t = strings.en;
+---
+<BaseLayout
+  lang="en"
+  title={`Mobile app Terms of Use | ${t.brand}`}
+  description="Terms of Use for the NévnapTárX mobile app (iOS + Android), subscription details."
+  altLangPath="/app-terms"
+>
+  <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
+    <nav class="text-sm text-zinc-500" aria-label="Breadcrumb">
+      <ol class="flex items-center gap-2 list-none">
+        <li><a href="/en/" class="hover:text-primary-500">{t.brand}</a></li>
+        <li aria-hidden="true">›</li>
+        <li aria-current="page" class="text-zinc-700 dark:text-zinc-300">Mobile app Terms</li>
+      </ol>
+    </nav>
+
+    <h1 class="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight">
+      <span class="gradient-text">Mobile App — Terms of Use</span>
+    </h1>
+    <p class="mt-3 text-zinc-500">Last updated: 8 December 2025</p>
+
+    <section class="mt-10 space-y-8 text-zinc-700 dark:text-zinc-300 leading-relaxed">
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">1. Service</h2>
+        <p class="mt-2">The <strong>NévnapTárX</strong> iOS and Android application provides nameday reminders, widgets and notifications. Personal, non-commercial use only.</p>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">2. Subscription (NameDayX Premium)</h2>
+        <ul class="mt-3 list-disc list-inside space-y-1.5">
+          <li><strong>Subscription name:</strong> NameDayX Premium</li>
+          <li><strong>Length:</strong> 1 month, auto-renewing</li>
+          <li><strong>Price:</strong> USD 1.99 / month (or local equivalent)</li>
+          <li><strong>Price per period:</strong> USD 1.99 billed every month</li>
+        </ul>
+        <p class="mt-4 font-semibold">Subscription content:</p>
+        <ul class="mt-2 list-disc list-inside space-y-1.5">
+          <li>Custom greeting messages sendable from the app</li>
+          <li>Detailed name meanings</li>
+          <li>Ad-free experience</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">3. Payment and renewal</h2>
+        <ul class="mt-3 list-disc list-inside space-y-1.5">
+          <li>The fee is charged to your <strong>App Store account</strong> (iOS) or <strong>Google Play account</strong> (Android) at purchase confirmation.</li>
+          <li>The subscription auto-renews unless cancelled at least <strong>24 hours</strong> before the end of the current period.</li>
+          <li>The store may charge the renewal up to 24 hours before the new period.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">4. Cancellation and refunds</h2>
+        <ul class="mt-3 list-disc list-inside space-y-1.5">
+          <li>Manage your subscription directly:
+            <ul class="mt-2 ml-6 list-disc space-y-1">
+              <li><strong>iOS:</strong> Settings → Apple ID → Subscriptions</li>
+              <li><strong>Android:</strong> Google Play → Payments & subscriptions</li>
+            </ul>
+          </li>
+          <li>The store does not provide refunds for the current billing period; in special cases, contact Apple/Google support.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">5. Restore purchases</h2>
+        <p class="mt-2">Activate previously purchased subscriptions using the <strong>"Restore purchase"</strong> button inside the app, signed in with the same Apple ID or Google account.</p>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">6. Privacy</h2>
+        <p class="mt-2">See the <a href="/en/app-privacy" class="text-primary-500 underline">Mobile app Privacy Policy</a> for details.</p>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">7. Contact</h2>
+        <p class="mt-2"><strong>Developer:</strong> Renátó Bogár</p>
+        <p><strong>Email:</strong> <a href="mailto:bogarrenato@gmail.com" class="text-primary-500 underline">bogarrenato@gmail.com</a></p>
+      </div>
+    </section>
+  </article>
+</BaseLayout>
