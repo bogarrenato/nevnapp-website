@@ -9,6 +9,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { strings, SITE_URL, interpolate } from '../../i18n/strings';
 import { STORE_LINKS } from '../../lib/constants';
+import DownloadDropdown from '../../components/DownloadDropdown.astro';
 import {
   getAllNames,
   getDatesForName,
@@ -145,13 +146,12 @@ const jsonLd = [
     </section>
 
     <aside class="mt-12">
-      <a
-        href={STORE_LINKS.appStore}
-        rel="noopener"
-        class="block w-full text-center px-6 py-5 rounded-3xl bg-gradient-to-r from-coral-500 via-coral-600 to-violet-500 text-white font-bold text-lg shadow-2xl shadow-coral-500/30 hover:shadow-coral-500/50 transition"
-      >
-        {interpolate(t.namePage.sendGreeting, { name })}
-      </a>
+      <DownloadDropdown
+        lang="hu"
+        variant="cta"
+        id={`name-greeting-${name}`}
+        label={interpolate(t.namePage.sendGreeting, { name })}
+      />
     </aside>
 
     {related.length > 0 && (

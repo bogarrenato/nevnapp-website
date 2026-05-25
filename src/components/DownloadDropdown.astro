@@ -18,7 +18,7 @@ import type { Lang } from '../i18n/strings';
 
 interface Props {
   lang: Lang;
-  variant?: 'primary' | 'ghost';
+  variant?: 'primary' | 'ghost' | 'cta';
   /** Unique id so multiple instances on a page don't clash. */
   id?: string;
   /** Override the trigger text — defaults to a localized "Download" label. */
@@ -34,12 +34,17 @@ const tagAppStore = lang === 'hu' ? 'iPhone és iPad' : 'iPhone & iPad';
 const tagPlayStore = lang === 'hu' ? 'Android' : 'Android';
 const dlLabel = lang === 'hu' ? 'Letöltés' : 'Get it on';
 
-const triggerClass = variant === 'primary'
+const triggerClass = variant === 'cta'
+  ? 'flex w-full items-center justify-center gap-3 px-6 py-5 rounded-3xl bg-gradient-to-r from-coral-500 via-coral-600 to-violet-500 text-white font-bold text-lg shadow-2xl shadow-coral-500/30 hover:shadow-coral-500/50 hover:scale-[1.01] transition'
+  : variant === 'primary'
   ? 'inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-primary-500 to-violet-500 text-white font-semibold shadow-lg shadow-primary-500/40 hover:shadow-primary-500/60 hover:scale-[1.02] transition'
   : 'inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full bg-gradient-to-r from-primary-500 to-violet-500 text-white shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition';
+
+// CTA variant esetén a wrapper teljes szélességű
+const wrapperClass = variant === 'cta' ? 'relative block w-full' : 'relative inline-block';
 ---
 
-<div class="relative inline-block" data-download-dd={id}>
+<div class={wrapperClass} data-download-dd={id}>
   <button
     type="button"
     id={`${id}-trigger`}
