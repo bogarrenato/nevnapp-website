@@ -33,7 +33,7 @@ const heroTitle = primaryNames.length
 const kicker = interpolate(t.hero.kicker, { date: todayFormatted });
 ---
 
-<section class="relative" aria-labelledby="hero-title">
+<section class="relative z-10" aria-labelledby="hero-title">
   <!-- Blobs: saját overflow-hidden wrapperben, hogy a dropdown szabad lehessen -->
   <div aria-hidden="true" class="absolute inset-0 overflow-hidden pointer-events-none">
   <div
@@ -74,7 +74,7 @@ const kicker = interpolate(t.hero.kicker, { date: todayFormatted });
         )}
       </h1>
 
-      <p class="mt-6 text-lg md:text-xl text-zinc-600 dark:text-zinc-300 max-w-2xl animate-float-in" style="animation-delay: 160ms">
+      <p class="mt-6 text-lg md:text-xl text-zinc-900 dark:text-zinc-300 max-w-2xl animate-float-in" style="animation-delay: 160ms">
         {t.hero.subtitle}
       </p>
 

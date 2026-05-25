@@ -101,7 +101,7 @@ const jsonLdEntries = jsonLd
         try {
           const saved = localStorage.getItem('nevnap-theme');
           const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          const theme = saved ?? (prefersDark ? 'dark' : 'light');
+          const theme = saved ?? 'dark';
           if (theme === 'dark') document.documentElement.classList.add('dark');
         } catch (_) {}
       })();
@@ -110,6 +110,22 @@ const jsonLdEntries = jsonLd
     {jsonLdEntries.map((entry) => (
       <script type="application/ld+json" set:html={JSON.stringify(entry)} />
     ))}
+
+  <!-- Google Analytics GA4 — csak produkcióban tölt be -->
+  {import.meta.env.PROD && (
+    <>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-BVW8JFES73" is:inline></script>
+      <script is:inline>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-BVW8JFES73', {
+          anonymize_ip: true,
+          cookie_flags: 'SameSite=None;Secure',
+        });
+      </script>
+    </>
+  )}
   </head>
   <body class="font-body">
     <a href="#main" class="skip-link">

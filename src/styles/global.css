@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Class-alapú dark mode — a ThemeSlider .dark osztályt kapcsolgat a <html>-en */
+@variant dark (&:where(.dark, .dark *));
+
 /* ============================================
    Modern 2026 Design Tokens — NevnapTárX brand
    ============================================ */
