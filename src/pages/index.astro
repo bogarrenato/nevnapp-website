@@ -74,27 +74,17 @@ const jsonLd = [
 
   <!-- SEO content block — invisible to most users but rich for Google -->
   <section class="container mx-auto px-6 mt-24 max-w-3xl">
-    <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Mi a magyar névnap?</h2>
+    <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">{t.homeSeo.heading}</h2>
     <div class="mt-6 space-y-4 text-zinc-700 dark:text-zinc-300 leading-relaxed">
-      <p>
-        A <strong>magyar névnap-naptár</strong> hagyománya évszázados — minden napra esik egy
-        vagy több keresztnév, melyet a családok, barátok kis ünnepléssel jelölnek. A
-        NévnapTárX modern, 2026-os névnap appja <strong>1500 magyar nevet</strong> tartalmaz,
-        mindegyikhez részletes jelentéssel, eredettel és napi értesítéssel.
-      </p>
-      <p>
-        Akár <strong>mai névnap</strong>, <strong>holnapi névnap</strong> vagy egy konkrét
-        név (pl. <em>Anna</em>, <em>Bence</em>, <em>Csilla</em>) jelentése érdekel, itt
-        gyorsan megtalálod. Az alkalmazás <strong>iOS-re és Androidra</strong> is elérhető,
-        ingyenesen.
-      </p>
+      <p>{t.homeSeo.p1}</p>
+      <p>{t.homeSeo.p2}</p>
     </div>
 
     <div class="mt-12 grid sm:grid-cols-3 gap-4">
       {[
-        { label: '1500+', text: 'magyar név' },
-        { label: '366', text: 'naptári nap' },
-        { label: '0 Ft', text: 'ingyenes letöltés' },
+        { label: '1500+', text: t.homeSeo.statNames },
+        { label: '366', text: t.homeSeo.statDays },
+        { label: '0 Ft', text: t.homeSeo.statFree },
       ].map((stat) => (
         <div class="glass rounded-2xl p-5 text-center">
           <p class="text-3xl font-extrabold gradient-text">{stat.label}</p>

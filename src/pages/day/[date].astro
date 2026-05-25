@@ -61,7 +61,7 @@ const jsonLd = entry ? {
   jsonLd={jsonLd ? [jsonLd] : undefined}
 >
   <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
-    <nav class="text-sm text-zinc-500" aria-label="Morzsamenü">
+    <nav class="text-sm text-zinc-500" aria-label={t.dayPage.breadcrumbAria}>
       <ol class="flex items-center gap-2 list-none">
         <li><a href="/" class="hover:text-primary-500">{t.brand}</a></li>
         <li aria-hidden="true">›</li>
@@ -72,7 +72,7 @@ const jsonLd = entry ? {
     </nav>
 
     <header class="mt-6">
-      <p class="text-sm uppercase tracking-widest font-semibold text-primary-600 dark:text-primary-400">Naptár</p>
+      <p class="text-sm uppercase tracking-widest font-semibold text-primary-600 dark:text-primary-400">{t.dayPage.eyebrow}</p>
       <h1 class="mt-2 text-5xl md:text-6xl font-extrabold tracking-tight">
         <span class="gradient-text">
           <time datetime={`--${monthsPadded(month)}-${monthsPadded(day)}`}>{dateLabel}</time>

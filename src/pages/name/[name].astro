@@ -81,7 +81,7 @@ const jsonLd = [
   jsonLd={jsonLd}
 >
   <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
-    <nav class="text-sm text-zinc-500" aria-label="Morzsamenü">
+    <nav class="text-sm text-zinc-500" aria-label={t.namePage.breadcrumbAria}>
       <ol class="flex items-center gap-2 list-none">
         <li><a href="/" class="hover:text-primary-500">{t.brand}</a></li>
         <li aria-hidden="true">›</li>
@@ -92,7 +92,7 @@ const jsonLd = [
     </nav>
 
     <header class="mt-6">
-      <p class="text-sm uppercase tracking-widest font-semibold text-primary-600 dark:text-primary-400">Magyar keresztnév</p>
+      <p class="text-sm uppercase tracking-widest font-semibold text-primary-600 dark:text-primary-400">{t.namePage.eyebrow}</p>
       <h1 class="mt-2 text-5xl md:text-6xl font-extrabold tracking-tight">
         <span class="gradient-text">{name}</span>
       </h1>
@@ -140,7 +140,7 @@ const jsonLd = [
       <h2 id="meaning-heading" class="text-2xl md:text-3xl font-extrabold tracking-tight">
         {interpolate(t.namePage.meaningHeading, { name })}
       </h2>
-      <p class="mt-4 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300">
+      <p class="mt-4 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300" lang="hu">
         {meaning ?? interpolate(t.namePage.noMeaning, { name })}
       </p>
     </section>
