@@ -7,7 +7,7 @@
  * query "{name} névnap" + "{name} név jelentése" + brand searches.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { strings, SITE_URL, interpolate } from '../../i18n/strings';
+import { strings, SITE_URL, interpolate, huArticle } from '../../i18n/strings';
 import { STORE_LINKS } from '../../lib/constants';
 import DownloadDropdown from '../../components/DownloadDropdown.astro';
 import {
@@ -28,6 +28,7 @@ export function getStaticPaths() {
 
 const { name } = Astro.props as { name: string };
 const t = strings.hu;
+const article = huArticle(name);
 const dates = getDatesForName(name);
 const meaning = getMeaning(name);
 const related = getRelatedNames(name);
@@ -38,7 +39,7 @@ const datesLabel = dates
 
 const title = `${name} névnap, jelentése${datesLabel ? ` — ${datesLabel}` : ''} | ${t.brand}`;
 const description = meaning
-  ? `A ${name} név jelentése, eredete és magyar névnapjai. ${meaning.slice(0, 130)}…`
+  ? `${article} ${name} név jelentése, eredete és magyar névnapjai. ${meaning.slice(0, 130)}…`
   : `Mikor van ${name} névnapja? Eredet, jelentés és modern névnap-naptár app a NévnapTárX-tól.`;
 
 const greetings = getGreetings(name, 'hu', 8);
@@ -58,11 +59,11 @@ const faqEntries: Array<{ q: string; a: string }> = [
     q: interpolate(t.namePage.faqQ2, { name }),
     a: meaning
       ? interpolate(t.namePage.faqA2WithMeaning, { meaning })
-      : interpolate(t.namePage.faqA2NoMeaning, { name }),
+      : interpolate(t.namePage.faqA2NoMeaning, { name, article }),
   },
   {
     q: interpolate(t.namePage.faqQ3, { name }),
-    a: interpolate(t.namePage.faqA3, { name }),
+    a: interpolate(t.namePage.faqA3, { name, article }),
   },
 ];
 
@@ -174,10 +175,10 @@ const jsonLd = [
 
     <section class="mt-8" aria-labelledby="meaning-heading">
       <h2 id="meaning-heading" class="text-2xl md:text-3xl font-extrabold tracking-tight">
-        {interpolate(t.namePage.meaningHeading, { name })}
+        {interpolate(t.namePage.meaningHeading, { name, article })}
       </h2>
       <p class="mt-4 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300" lang="hu">
-        {meaning ?? interpolate(t.namePage.noMeaning, { name })}
+        {meaning ?? interpolate(t.namePage.noMeaning, { name, article })}
       </p>
     </section>
 

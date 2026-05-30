@@ -99,9 +99,9 @@ export const strings = {
       heading: '{name} — a név jelentése és névnapja',
       datesHeading: 'Mikor van {name} névnapja?',
       noDates: 'A magyar névnap-naptárban nem szerepel.',
-      meaningHeading: 'A {name} név jelentése',
+      meaningHeading: '{article} {name} név jelentése',
       noMeaning:
-        'A {name} név jelentése egyelőre nem elérhető szótárunkban. Bővítjük az adatbázist — nézz vissza később!',
+        '{article} {name} név jelentése egyelőre nem elérhető szótárunkban. Bővítjük az adatbázist — nézz vissza később!',
       sendGreeting: 'Küldj köszöntést {name}-nak az appban →',
       relatedHeading: 'Hasonló nevek',
       greetingsHeading: 'Névnapi köszöntők {name}-nek',
@@ -113,9 +113,9 @@ export const strings = {
       faqA1None: '{name} jelenleg nem szerepel a magyar névnap-naptárban hivatalos napon.',
       faqQ2: 'Mit jelent a {name} név?',
       faqA2WithMeaning: '{meaning}',
-      faqA2NoMeaning: 'A {name} név jelentése még nem szerepel az adatbázisunkban — folyamatosan bővítjük.',
+      faqA2NoMeaning: '{article} {name} név jelentése még nem szerepel az adatbázisunkban — folyamatosan bővítjük.',
       faqQ3: 'Hogyan köszöntsünk egy {name}-t?',
-      faqA3: 'A {name} névhez többféle köszöntő szöveget összegyűjtöttünk: rövid, vers, SMS-be, hivatalos, vicces, és idézetes változatok. Görgess feljebb a köszöntők szekcióhoz!',
+      faqA3: '{article} {name} névhez többféle köszöntő szöveget összegyűjtöttünk: rövid, vers, SMS-be, hivatalos, vicces, és idézetes változatok. Görgess feljebb a köszöntők szekcióhoz!',
       copyGreeting: 'Másolás',
       copied: 'Másolva ✓',
       faqHeading: 'Gyakori kérdések — {name}',
@@ -304,6 +304,12 @@ export const strings = {
 } as const;
 
 /** Replace {key} placeholders in a string. */
+const HU_VOWELS = new Set('aáeéiíoóöőuúüű');
+
+export function huArticle(name: string): string {
+  return HU_VOWELS.has(name[0]?.toLowerCase()) ? 'Az' : 'A';
+}
+
 export function interpolate(
   template: string,
   vars: Record<string, string | number>,
