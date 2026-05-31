@@ -1,0 +1,40 @@
+name: Daily rebuild & deploy
+
+# A site statikus: a "mai névnap" a build idejéhez kötődik.
+# Ezért naponta, röviddel a magyar éjfél után újraépítjük és deployoljuk,
+# hogy mindig az aktuális nap névnapja látsszon.
+# A két cron a nyári (CEST, UTC+2) és a téli (CET, UTC+1) időzónát is lefedi,
+# így egész évben éjfél után (00:10 budapesti idő körül) frissül.
+
+on:
+  schedule:
+    # A magyar névnap a magyar naptári naphoz kötődik, ezért a buildnek
+    # az Europe/Budapest szerinti éjfél UTÁN kell futnia. A GitHub cron UTC-ben
+    # jár és nem ismeri a nyári/téli időszámítást, ezért MINDKÉT eltolást lefedjük:
+    - cron: '5 22 * * *'   # 00:05 Budapest nyáron (CEST = UTC+2)
+    - cron: '5 23 * * *'   # 00:05 Budapest télen (CET = UTC+1)
+    # Egész évben pontosan az egyik fut éjfél után 00:05-kor (az új napot építve),
+    # a másik ~01:05-kor ártalmatlan, ismételt deployt csinál ugyanarról a napról.
+  workflow_dispatch:        # kézi indítás is lehetséges
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (bakes today's nameday)
+        run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        run: npx wrangler pages deploy dist --project-name=nevnap-website
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
