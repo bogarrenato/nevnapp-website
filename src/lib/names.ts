@@ -20,10 +20,18 @@ export interface NameDayEntry {
   secondary: string[];
 }
 
+export interface CalendarDate {
+  year: number;
+  month: number;
+  day: number;
+  iso: string;
+}
+
 interface NameDaysFile {
   namedays: NameDayEntry[];
 }
 
+const BUDAPEST_TIME_ZONE = 'Europe/Budapest';
 const NAME_DAYS = (nameDaysData as NameDaysFile).namedays;
 const MEANINGS = meaningsData as Record<string, string>;
 
@@ -92,24 +100,67 @@ export function getEntryByDate(month: number, day: number): NameDayEntry | undef
   return ENTRIES_BY_DATE.get(dateKey(month, day));
 }
 
-/** Today's entry, with the system clock. */
+/** Hungarian calendar day for a given instant, independent of the build machine timezone. */
+export function getBudapestCalendarDate(now: Date = new Date()): CalendarDate {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: BUDAPEST_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(now);
+
+  const values = Object.fromEntries(
+    parts
+      .filter((part) => part.type !== 'literal')
+      .map((part) => [part.type, part.value]),
+  ) as Record<'year' | 'month' | 'day', string>;
+
+  const year = Number(values.year);
+  const month = Number(values.month);
+  const day = Number(values.day);
+
+  return {
+    year,
+    month,
+    day,
+    iso: `${values.year}-${values.month}-${values.day}`,
+  };
+}
+
+/** Add days to a plain calendar date without depending on local timezone getters. */
+export function addCalendarDays(date: CalendarDate, days: number): CalendarDate {
+  const next = new Date(Date.UTC(date.year, date.month - 1, date.day + days));
+  const year = next.getUTCFullYear();
+  const month = next.getUTCMonth() + 1;
+  const day = next.getUTCDate();
+
+  return {
+    year,
+    month,
+    day,
+    iso: `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
+  };
+}
+
+/** Today's entry, based on the Hungarian calendar day. */
 export function getTodayEntry(now: Date = new Date()): NameDayEntry | undefined {
-  return getEntryByDate(now.getMonth() + 1, now.getDate());
+  const today = getBudapestCalendarDate(now);
+  return getEntryByDate(today.month, today.day);
 }
 
 /** Get the next N entries from today (inclusive). */
 export function getUpcoming(n: number, now: Date = new Date()): {
-  date: Date;
+  date: CalendarDate;
   entry: NameDayEntry | undefined;
   daysAhead: number;
 }[] {
   const out = [];
+  const today = getBudapestCalendarDate(now);
   for (let i = 0; i < n; i++) {
-    const d = new Date(now);
-    d.setDate(now.getDate() + i);
+    const d = addCalendarDays(today, i);
     out.push({
       date: d,
-      entry: getEntryByDate(d.getMonth() + 1, d.getDate()),
+      entry: getEntryByDate(d.month, d.day),
       daysAhead: i,
     });
   }

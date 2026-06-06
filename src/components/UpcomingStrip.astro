@@ -33,15 +33,15 @@ const upcoming = getUpcoming(UPCOMING_DAYS_COUNT + 1).slice(1);
       const dayLabel = u.daysAhead === 1
         ? t.upcoming.tomorrow
         : interpolate(t.upcoming.inDays, { n: u.daysAhead });
-      const dateLabel = `${t.monthsShort[u.date.getMonth()]} ${u.date.getDate()}.`;
+      const dateLabel = `${t.monthsShort[u.date.month - 1]} ${u.date.day}.`;
       const names = u.entry?.primary ?? [];
-      const isoDate = u.date.toISOString().slice(0, 10);
+      const isoDate = u.date.iso;
       const namesText = names.length
         ? names.join(', ')
         : (lang === 'hu' ? 'Nincs névnap' : 'No nameday');
       const href = names[0]
         ? localizedPath(lang, `/name/${encodeURIComponent(names[0])}`)
-        : localizedPath(lang, `/day/${dateKey(u.date.getMonth() + 1, u.date.getDate())}`);
+        : localizedPath(lang, `/day/${dateKey(u.date.month, u.date.day)}`);
       return (
         <li>
           <a

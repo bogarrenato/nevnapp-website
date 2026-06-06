@@ -11,21 +11,21 @@
 import { strings, interpolate, localizedPath, type Lang } from '../i18n/strings';
 import { STORE_LINKS } from '../lib/constants';
 import DownloadDropdown from './DownloadDropdown.astro';
-import { getTodayEntry } from '../lib/names';
+import { getBudapestCalendarDate, getTodayEntry } from '../lib/names';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = strings[lang];
 
-const today = new Date();
-const entry = getTodayEntry(today);
+const today = getBudapestCalendarDate();
+const entry = getTodayEntry();
 const primaryNames = entry?.primary ?? [];
 
 const todayFormatted = lang === 'hu'
-  ? `${t.months[today.getMonth()]} ${today.getDate()}.`
-  : `${t.months[today.getMonth()]} ${today.getDate()}`;
+  ? `${t.months[today.month - 1]} ${today.day}.`
+  : `${t.months[today.month - 1]} ${today.day}`;
 
-const todayIso = today.toISOString().slice(0, 10);
+const todayIso = today.iso;
 const heroTitle = primaryNames.length
   ? interpolate(t.hero.title, { name: primaryNames.join(' és ') })
   : t.hero.titleEmpty;

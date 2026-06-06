@@ -12,8 +12,7 @@ import { strings, SITE_URL } from '../../i18n/strings';
 import { getTodayEntry } from '../../lib/names';
 
 const t = strings.en;
-const today = new Date();
-const entry = getTodayEntry(today);
+const entry = getTodayEntry();
 const primaryNames = entry?.primary ?? [];
 const pageTitle = primaryNames.length
   ? `Today's Hungarian nameday: ${primaryNames.join(' & ')} | ${t.brand}`

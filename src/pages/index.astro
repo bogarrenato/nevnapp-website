@@ -10,16 +10,16 @@ import Hero from '../components/Hero.astro';
 import TodayCard from '../components/TodayCard.astro';
 import UpcomingStrip from '../components/UpcomingStrip.astro';
 import { strings, SITE_URL } from '../i18n/strings';
-import { getTodayEntry, getMeaning } from '../lib/names';
+import { getBudapestCalendarDate, getTodayEntry, getMeaning } from '../lib/names';
 
 const t = strings.hu;
-const today = new Date();
-const entry = getTodayEntry(today);
+const today = getBudapestCalendarDate();
+const entry = getTodayEntry();
 const primaryNames = entry?.primary ?? [];
 
 const pageTitle = primaryNames.length
-  ? `Mai névnap: ${primaryNames.join(' és ')} — ${t.months[today.getMonth()]} ${today.getDate()}. | ${t.brand}`
-  : `Mai névnap — ${t.months[today.getMonth()]} ${today.getDate()}. | ${t.brand}`;
+  ? `Mai névnap: ${primaryNames.join(' és ')} — ${t.months[today.month - 1]} ${today.day}. | ${t.brand}`
+  : `Mai névnap — ${t.months[today.month - 1]} ${today.day}. | ${t.brand}`;
 
 const pageDescription = primaryNames.length
   ? `Ma ${primaryNames.join(' és ')} névnapja van. Jelentés, eredet, köszöntők és napi névnap értesítések a NévnapTárX modern névnap-naptár appal.`
@@ -52,7 +52,7 @@ const jsonLd = [
     '@context': 'https://schema.org',
     '@type': 'Event',
     name: `${primaryNames.join(' és ')} névnapja`,
-    startDate: today.toISOString().split('T')[0],
+    startDate: today.iso,
     eventStatus: 'https://schema.org/EventScheduled',
     eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
     location: { '@type': 'Country', name: 'Hungary' },
