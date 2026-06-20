@@ -139,17 +139,32 @@ function buildFacebookCaption(input: {
 }): string {
   const lines = input.primaryNames.length
     ? [
-        `Ma, ${input.dateLabel.toLocaleLowerCase('hu-HU')} ${input.namesLabel} névnapja van.`,
-        `Boldog névnapot minden ${input.namesLabel}nek!`,
+        `📅 Ma, ${input.dateLabel.toLocaleLowerCase('hu-HU')} ${input.namesLabel} névnapja van.`,
+        `🎉 Boldog névnapot minden ${input.namesLabel}nek!`,
       ]
-    : [`Ma, ${input.dateLabel.toLocaleLowerCase('hu-HU')} nincs kiemelt névnap az adatbázisban.`];
+    : [`📅 Ma, ${input.dateLabel.toLocaleLowerCase('hu-HU')} nincs kiemelt névnap az adatbázisban.`];
 
   if (input.meaning && input.meaningName) {
-    lines.push('', `${input.meaningName} név: ${compactMeaning(input.meaning)}`);
+    lines.push('', `✨ ${input.meaningName} név: ${compactMeaning(input.meaning)}`);
   }
 
-  lines.push('', 'Mai névnapok és névjelentések:', 'https://nevnap.app/', '', '#névnap #mainévnap #névnaptárx');
+  lines.push(
+    '',
+    '💌 Mai névnapok és névjelentések:',
+    'https://www.nevnap.app/',
+    '',
+    buildHashtags(input.primaryNames),
+  );
   return lines.join('\n');
+}
+
+function buildHashtags(names: string[]): string {
+  const tags = ['magyar', 'névnap', 'névnaptárx', ...names.map(toHashtag).filter(Boolean)];
+  return [...new Set(tags)].map((tag) => `#${tag}`).join(' ');
+}
+
+function toHashtag(value: string): string {
+  return value.normalize('NFC').replace(/[^\p{L}\p{N}_]/gu, '');
 }
 
 function compactMeaning(meaning: string): string {
