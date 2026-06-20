@@ -15,6 +15,8 @@
     "facebook:reel": "node scripts/post-facebook-reel.mjs",
     "instagram:reel": "node scripts/post-instagram-reel.mjs",
     "tiktok:reel": "node scripts/post-tiktok-reel.mjs",
+    "youtube:reel": "node scripts/post-youtube-short.mjs",
+    "youtube:oauth": "node scripts/youtube-oauth-local.mjs",
     "social:reel": "node scripts/build-social-reel.mjs"
   },
   "dependencies": {

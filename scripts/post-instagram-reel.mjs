@@ -14,7 +14,9 @@ if (!ALLOW_STALE && socialContent.date?.iso !== expectedIso) {
   );
 }
 
-const videoUrl = `${SITE_URL}/social/today-reel.mp4?v=${encodeURIComponent(socialContent.date.iso)}`;
+const videoUrl =
+  process.env.IG_REEL_VIDEO_URL_OVERRIDE ||
+  `${SITE_URL}/social/today-reel.mp4?v=${encodeURIComponent(socialContent.date.iso)}`;
 const caption = process.env.IG_CAPTION_OVERRIDE || socialContent.facebookCaption;
 
 if (DRY_RUN) {

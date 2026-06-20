@@ -1,0 +1,71 @@
+name: Daily YouTube nameday Short
+
+on:
+  schedule:
+    # GitHub cron runs in UTC. Cover both Budapest offsets, then guard below
+    # so the Short is published once at 06:20 Europe/Budapest year-round.
+    - cron: '20 4 * * *'
+    - cron: '20 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: daily-youtube-nameday-short
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check YouTube secrets
+        id: youtube-secrets
+        env:
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+        run: |
+          if [ -z "$YOUTUBE_CLIENT_ID" ] || [ -z "$YOUTUBE_CLIENT_SECRET" ] || [ -z "$YOUTUBE_REFRESH_TOKEN" ]; then
+            echo "YouTube secrets are not configured yet; skipping Short post."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "configured=true" >> "$GITHUB_OUTPUT"
+
+      - name: Install FFmpeg
+        if: steps.youtube-secrets.outputs.configured == 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Install dependencies
+        if: steps.youtube-secrets.outputs.configured == 'true'
+        run: npm ci
+
+      - name: Build today's Short
+        if: steps.youtube-secrets.outputs.configured == 'true'
+        run: |
+          npm run build
+          npm run social:reel
+
+      - name: Post today's nameday Short to YouTube
+        if: steps.youtube-secrets.outputs.configured == 'true'
+        env:
+          PUBLIC_SITE_URL: https://www.nevnap.app
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+          YOUTUBE_PRIVACY_STATUS: ${{ vars.YOUTUBE_PRIVACY_STATUS || 'public' }}
+        run: |
+          budapest_time="$(TZ=Europe/Budapest date +%H:%M)"
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$budapest_time" != "06:20" ]; then
+            echo "Skipping: current Budapest time is $budapest_time, not 06:20."
+            exit 0
+          fi
+          npm run youtube:reel
