@@ -10,9 +10,18 @@ const imagePath = path.join(socialDir, 'today.png');
 const jsonPath = path.join(socialDir, 'today.json');
 const framePath = path.join(socialDir, 'today-reel-frame.png');
 const videoPath = path.join(socialDir, 'today-reel.mp4');
+const defaultAudioPath = path.join(rootDir, 'public', 'audio', 'reel-music.mp3');
+const audioPath = process.env.REEL_AUDIO_PATH
+  ? path.resolve(rootDir, process.env.REEL_AUDIO_PATH)
+  : defaultAudioPath;
+const hasAudio = fs.existsSync(audioPath);
 
 if (!fs.existsSync(imagePath) || !fs.existsSync(jsonPath)) {
   throw new Error('Run npm run build before npm run social:reel.');
+}
+
+if (process.env.REEL_AUDIO_PATH && !hasAudio) {
+  throw new Error(`REEL_AUDIO_PATH points to a missing file: ${audioPath}`);
 }
 
 const meta = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
@@ -74,14 +83,37 @@ await sharp(background)
   .png()
   .toFile(framePath);
 
-execFileSync('ffmpeg', [
+const ffmpegArgs = [
   '-y',
   '-i',
   framePath,
-  '-vf',
-  'scale=1080:1920,zoompan=z=1+0.0009*on:d=240:s=1080x1920:fps=30,format=yuv420p',
+];
+
+if (hasAudio) {
+  ffmpegArgs.push(
+    '-stream_loop',
+    '-1',
+    '-i',
+    audioPath,
+    '-filter_complex',
+    '[0:v]scale=1080:1920,zoompan=z=1+0.0009*on:d=240:s=1080x1920:fps=30,format=yuv420p[v];[1:a]volume=0.82,afade=t=in:st=0:d=0.25,afade=t=out:st=7.4:d=0.6[a]',
+    '-map',
+    '[v]',
+    '-map',
+    '[a]',
+  );
+} else {
+  ffmpegArgs.push(
+    '-vf',
+    'scale=1080:1920,zoompan=z=1+0.0009*on:d=240:s=1080x1920:fps=30,format=yuv420p',
+  );
+}
+
+ffmpegArgs.push(
   '-frames:v',
   '240',
+  '-t',
+  '8',
   '-c:v',
   'libx264',
   '-profile:v',
@@ -90,15 +122,35 @@ execFileSync('ffmpeg', [
   '4.1',
   '-pix_fmt',
   'yuv420p',
+);
+
+if (hasAudio) {
+  ffmpegArgs.push(
+    '-c:a',
+    'aac',
+    '-b:a',
+    '160k',
+    '-shortest',
+  );
+}
+
+ffmpegArgs.push(
   '-movflags',
   '+faststart',
   videoPath,
-], {
+);
+
+execFileSync('ffmpeg', ffmpegArgs, {
   stdio: 'inherit',
 });
 
 const stats = fs.statSync(videoPath);
 console.log(`Created ${path.relative(rootDir, videoPath)} (${Math.round(stats.size / 1024)} KB)`);
+console.log(
+  hasAudio
+    ? `Mixed audio from ${path.relative(rootDir, audioPath)}`
+    : 'No reel audio found. Add licensed audio at public/audio/reel-music.mp3 or set REEL_AUDIO_PATH.',
+);
 
 function escapeXml(input) {
   return String(input)
