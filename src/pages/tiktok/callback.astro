@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { strings } from '../../i18n/strings';
+
+const t = strings.hu;
+---
+
+<BaseLayout
+  lang="hu"
+  title={`TikTok kapcsolódás | ${t.brand}`}
+  description="TikTok fejlesztői engedélyezési visszatérési oldal a NévnapTárX automatizált videós posztolásához."
+  canonical="https://www.nevnap.app/tiktok/callback"
+  robots="noindex,nofollow"
+  hideDownloadStrip
+>
+  <main class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
+    <nav class="text-sm text-zinc-500" aria-label="Morzsamenü">
+      <ol class="flex items-center gap-2 list-none">
+        <li><a href="/" class="hover:text-primary-500">{t.brand}</a></li>
+        <li aria-hidden="true">›</li>
+        <li aria-current="page" class="text-zinc-700 dark:text-zinc-300">TikTok kapcsolódás</li>
+      </ol>
+    </nav>
+
+    <h1 class="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight">
+      <span class="gradient-text">TikTok kapcsolódás</span>
+    </h1>
+
+    <section class="mt-10 rounded-2xl border border-zinc-200/70 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] p-6 md:p-8">
+      <p id="status" class="text-zinc-700 dark:text-zinc-300">
+        Engedélyezési adatok betöltése...
+      </p>
+
+      <div id="code-panel" class="hidden mt-6">
+        <label for="auth-code" class="block text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+          TikTok authorization code
+        </label>
+        <textarea
+          id="auth-code"
+          readonly
+          rows="4"
+          class="mt-2 w-full rounded-xl border border-zinc-300 dark:border-white/10 bg-white dark:bg-zinc-950 px-3 py-2 font-mono text-sm text-zinc-900 dark:text-zinc-100"
+        ></textarea>
+        <button
+          id="copy-code"
+          type="button"
+          class="mt-4 rounded-full bg-primary-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition"
+        >
+          Kód másolása
+        </button>
+        <p class="mt-4 text-sm text-zinc-500">
+          Ezt a kódot egyszer lehet beváltani TikTok access tokenre és refresh tokenre.
+        </p>
+      </div>
+
+      <div id="error-panel" class="hidden mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+        <p class="font-semibold">TikTok hiba</p>
+        <p id="error-message" class="mt-1"></p>
+      </div>
+    </section>
+  </main>
+
+  <script is:inline>
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const error = params.get('error');
+    const errorDescription = params.get('error_description');
+    const status = document.getElementById('status');
+    const codePanel = document.getElementById('code-panel');
+    const codeField = document.getElementById('auth-code');
+    const copyButton = document.getElementById('copy-code');
+    const errorPanel = document.getElementById('error-panel');
+    const errorMessage = document.getElementById('error-message');
+
+    if (code) {
+      status.textContent = 'Sikeres TikTok engedélyezés.';
+      codeField.value = code;
+      codePanel.classList.remove('hidden');
+    } else if (error) {
+      status.textContent = 'A TikTok engedélyezés nem sikerült.';
+      errorMessage.textContent = errorDescription || error;
+      errorPanel.classList.remove('hidden');
+    } else {
+      status.textContent = 'Nem érkezett TikTok authorization code. Indítsd újra az engedélyezést a TikTok Developer OAuth linken keresztül.';
+    }
+
+    copyButton?.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(codeField.value);
+      copyButton.textContent = 'Kimásolva';
+    });
+  </script>
+</BaseLayout>
