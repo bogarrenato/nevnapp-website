@@ -1,0 +1,71 @@
+name: Daily TikTok nameday Reel
+
+on:
+  schedule:
+    # GitHub cron runs in UTC. Cover both Budapest offsets, then guard below
+    # so the Reel is published once at 06:15 Europe/Budapest year-round.
+    - cron: '15 4 * * *'
+    - cron: '15 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: daily-tiktok-nameday-reel
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check TikTok secrets
+        id: tiktok-secrets
+        env:
+          TIKTOK_REFRESH_TOKEN: ${{ secrets.TIKTOK_REFRESH_TOKEN }}
+          TIKTOK_ACCESS_TOKEN: ${{ secrets.TIKTOK_ACCESS_TOKEN }}
+        run: |
+          if [ -z "$TIKTOK_REFRESH_TOKEN" ] && [ -z "$TIKTOK_ACCESS_TOKEN" ]; then
+            echo "TikTok secrets are not configured yet; skipping Reel post."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "configured=true" >> "$GITHUB_OUTPUT"
+
+      - name: Install FFmpeg
+        if: steps.tiktok-secrets.outputs.configured == 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Install dependencies
+        if: steps.tiktok-secrets.outputs.configured == 'true'
+        run: npm ci
+
+      - name: Build today's Reel
+        if: steps.tiktok-secrets.outputs.configured == 'true'
+        run: |
+          npm run build
+          npm run social:reel
+
+      - name: Post today's nameday Reel to TikTok
+        if: steps.tiktok-secrets.outputs.configured == 'true'
+        env:
+          PUBLIC_SITE_URL: https://www.nevnap.app
+          TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+          TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
+          TIKTOK_REFRESH_TOKEN: ${{ secrets.TIKTOK_REFRESH_TOKEN }}
+          TIKTOK_ACCESS_TOKEN: ${{ secrets.TIKTOK_ACCESS_TOKEN }}
+          TIKTOK_PRIVACY_LEVEL: ${{ vars.TIKTOK_PRIVACY_LEVEL }}
+        run: |
+          budapest_time="$(TZ=Europe/Budapest date +%H:%M)"
+          if [ "${{ github.event_name }}" = "schedule" ] && { [[ "$budapest_time" < "06:15" ]] || [[ "$budapest_time" > "06:59" ]]; }; then
+            echo "Skipping: current Budapest time is $budapest_time, outside the 06:15-06:59 posting window."
+            exit 0
+          fi
+          npm run tiktok:reel
