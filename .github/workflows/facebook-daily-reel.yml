@@ -1,0 +1,39 @@
+name: Daily Facebook nameday Reel
+
+on:
+  schedule:
+    # GitHub cron runs in UTC. Cover both Budapest offsets, then guard below
+    # so the Reel is published once at 06:10 Europe/Budapest year-round.
+    - cron: '10 4 * * *'
+    - cron: '10 5 * * *'
+  workflow_dispatch:
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: daily-facebook-nameday-reel
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Post today's nameday Reel to Facebook
+        env:
+          PUBLIC_SITE_URL: https://www.nevnap.app
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
+        run: |
+          budapest_time="$(TZ=Europe/Budapest date +%H:%M)"
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$budapest_time" != "06:10" ]; then
+            echo "Skipping: current Budapest time is $budapest_time, not 06:10."
+            exit 0
+          fi
+          if [ -z "$FB_PAGE_ID" ] || [ -z "$FB_PAGE_ACCESS_TOKEN" ]; then
+            echo "Facebook secrets are not configured yet; skipping Reel post."
+            exit 0
+          fi
+          npm run facebook:reel
