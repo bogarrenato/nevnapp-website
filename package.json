@@ -11,7 +11,9 @@
     "deploy:production": "npm run build && npx wrangler pages deploy dist --project-name=nevnap-website --branch=main",
     "preview": "astro preview",
     "astro": "astro",
-    "facebook:post": "node scripts/post-facebook.mjs"
+    "facebook:post": "node scripts/post-facebook.mjs",
+    "instagram:reel": "node scripts/post-instagram-reel.mjs",
+    "social:reel": "node scripts/build-social-reel.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.2",

@@ -27,11 +27,19 @@ jobs:
         with:
           node-version: 22
 
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
       - name: Install dependencies
         run: npm ci
 
       - name: Build (bakes today's nameday)
         run: npm run build
+
+      - name: Build social reel
+        run: npm run social:reel
 
       - name: Deploy to Cloudflare Pages
         run: npx wrangler pages deploy dist --project-name=nevnap-website --branch=main
