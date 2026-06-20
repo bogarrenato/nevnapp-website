@@ -2,8 +2,10 @@ name: Daily Facebook nameday post
 
 on:
   schedule:
-    # 08:30 Budapest in summer, 07:30 Budapest in winter. One run per day avoids duplicate posts.
-    - cron: '30 6 * * *'
+    # GitHub cron runs in UTC. Cover both Budapest offsets, then guard below
+    # so the post is published once at 06:00 Europe/Budapest year-round.
+    - cron: '0 4 * * *'
+    - cron: '0 5 * * *'
   workflow_dispatch:
 
 jobs:
@@ -25,6 +27,11 @@ jobs:
           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
           FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
         run: |
+          budapest_time="$(TZ=Europe/Budapest date +%H:%M)"
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$budapest_time" != "06:00" ]; then
+            echo "Skipping: current Budapest time is $budapest_time, not 06:00."
+            exit 0
+          fi
           if [ -z "$FB_PAGE_ID" ] || [ -z "$FB_PAGE_ACCESS_TOKEN" ]; then
             echo "Facebook secrets are not configured yet; skipping post."
             exit 0
