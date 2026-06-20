@@ -1,0 +1,32 @@
+name: Daily Facebook nameday post
+
+on:
+  schedule:
+    # 08:30 Budapest in summer, 07:30 Budapest in winter. One run per day avoids duplicate posts.
+    - cron: '30 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: daily-facebook-nameday-post
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Post today's nameday to Facebook
+        env:
+          PUBLIC_SITE_URL: https://nevnap.app
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
+        run: |
+          if [ -z "$FB_PAGE_ID" ] || [ -z "$FB_PAGE_ACCESS_TOKEN" ]; then
+            echo "Facebook secrets are not configured yet; skipping post."
+            exit 0
+          fi
+          npm run facebook:post
