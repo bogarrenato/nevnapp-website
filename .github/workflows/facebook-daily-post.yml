@@ -28,8 +28,8 @@ jobs:
           FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
         run: |
           budapest_time="$(TZ=Europe/Budapest date +%H:%M)"
-          if [ "${{ github.event_name }}" = "schedule" ] && [ "$budapest_time" != "06:00" ]; then
-            echo "Skipping: current Budapest time is $budapest_time, not 06:00."
+          if [ "${{ github.event_name }}" = "schedule" ] && { [[ "$budapest_time" < "06:00" ]] || [[ "$budapest_time" > "06:59" ]]; }; then
+            echo "Skipping: current Budapest time is $budapest_time, outside the 06:00-06:59 posting window."
             exit 0
           fi
           if [ -z "$FB_PAGE_ID" ] || [ -z "$FB_PAGE_ACCESS_TOKEN" ]; then
