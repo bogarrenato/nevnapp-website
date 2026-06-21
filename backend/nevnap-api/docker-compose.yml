@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: nevnap
+      POSTGRES_USER: nevnap
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - nevnap-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nevnap -d nevnap"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  api:
+    build: .
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgres://nevnap:${POSTGRES_PASSWORD}@db:5432/nevnap
+      UPSTREAM_API_BASE_URL: https://5jx8hxy42l.execute-api.eu-central-1.amazonaws.com/prod
+      PORT: 5201
+      NODE_ENV: production
+    ports:
+      - "127.0.0.1:5201:5201"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  nevnap-postgres-data:

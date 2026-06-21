@@ -1,6 +1,9 @@
 # nevnap.app — robots.txt
 User-agent: *
 Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
 Disallow: /api/
 
 Sitemap: https://nevnap.app/sitemap-index.xml
+LLMs: https://nevnap.app/llms.txt

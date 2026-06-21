@@ -9,13 +9,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import TodayCard from '../components/TodayCard.astro';
 import UpcomingStrip from '../components/UpcomingStrip.astro';
-import { strings, SITE_URL } from '../i18n/strings';
-import { getBudapestCalendarDate, getTodayEntry, getMeaning } from '../lib/names';
+import { strings } from '../i18n/strings';
+import { getAllNames, getBudapestCalendarDate, getTodayEntry, getMeaning } from '../lib/names';
+import {
+  SEO_IDS,
+  buildFaqSchema,
+  buildNamedayDatasetSchema,
+  buildWebPageSchema,
+} from '../lib/seo';
 
 const t = strings.hu;
 const today = getBudapestCalendarDate();
 const entry = getTodayEntry();
 const primaryNames = entry?.primary ?? [];
+const allNames = getAllNames();
 
 const pageTitle = primaryNames.length
   ? `Mai névnap: ${primaryNames.join(' és ')} — ${t.months[today.month - 1]} ${today.day}. | ${t.brand}`
@@ -25,39 +32,37 @@ const pageDescription = primaryNames.length
   ? `Ma ${primaryNames.join(' és ')} névnapja van. Jelentés, eredet, köszöntők és napi névnap értesítések a NévnapTárX modern névnap-naptár appal.`
   : t.description;
 
-// JSON-LD: Website + Today's Event
+const todayAnswer = primaryNames.length
+  ? `Ma, ${t.months[today.month - 1]} ${today.day}-án ${primaryNames.join(' és ')} névnapja van a magyar névnap-naptár szerint.`
+  : `Ma, ${t.months[today.month - 1]} ${today.day}-án nincs kiemelt névnap az adatbázisban.`;
+
+const faqEntries = [
+  {
+    q: 'Kinek van ma névnapja?',
+    a: todayAnswer,
+  },
+  {
+    q: 'Hány magyar név szerepel a NévnapTárX adatbázisában?',
+    a: `A NévnapTárX adatbázisa ${allNames.length} magyar keresztnevet tartalmaz névnapokkal és sok esetben névjelentéssel.`,
+  },
+  {
+    q: 'Hol található a teljes magyar névnap-naptár?',
+    a: 'A teljes, napokra bontott magyar névnap-naptár a /calendar oldalon érhető el, a név szerinti kereséshez pedig a /names oldal használható.',
+  },
+];
+
 const jsonLd = [
-  {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: t.brand,
-    url: SITE_URL,
-    description: t.tagline,
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: `${SITE_URL}/name/{name}`,
-      'query-input': 'required name=name',
-    },
-  },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'MobileApplication',
-    name: t.brand,
-    operatingSystem: 'iOS, Android',
-    applicationCategory: 'UtilityApplication',
-    offers: { '@type': 'Offer', price: '0', priceCurrency: 'HUF' },
-    aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.8', ratingCount: '50' },
-  },
-  primaryNames.length ? {
-    '@context': 'https://schema.org',
-    '@type': 'Event',
-    name: `${primaryNames.join(' és ')} névnapja`,
-    startDate: today.iso,
-    eventStatus: 'https://schema.org/EventScheduled',
-    eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode',
-    location: { '@type': 'Country', name: 'Hungary' },
-    description: primaryNames.map((n) => getMeaning(n)).filter(Boolean).join(' '),
-  } : null,
+  buildWebPageSchema({
+    path: '/',
+    name: pageTitle,
+    description: pageDescription,
+    about: [
+      { '@id': SEO_IDS.namedayDataset },
+      { '@id': SEO_IDS.app },
+    ],
+  }),
+  buildNamedayDatasetSchema(allNames.length),
+  buildFaqSchema(faqEntries),
 ].filter(Boolean) as object[];
 ---
 
@@ -72,7 +77,30 @@ const jsonLd = [
   <TodayCard lang="hu" />
   <UpcomingStrip lang="hu" />
 
-  <!-- SEO content block — invisible to most users but rich for Google -->
+  <section class="container mx-auto px-6 mt-20 max-w-4xl" aria-labelledby="direct-answers-heading">
+    <p class="text-sm uppercase tracking-widest font-semibold text-primary-600 dark:text-primary-400">Rövid válaszok</p>
+    <h2 id="direct-answers-heading" class="mt-2 text-3xl md:text-4xl font-extrabold tracking-tight">
+      Mai névnap és magyar névnap-adatbázis
+    </h2>
+    <dl class="mt-6 grid gap-4 md:grid-cols-3">
+      {faqEntries.map((entry) => (
+        <div class="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-5">
+          <dt class="font-bold text-zinc-900 dark:text-zinc-100">{entry.q}</dt>
+          <dd class="mt-2 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">{entry.a}</dd>
+        </div>
+      ))}
+    </dl>
+    {primaryNames.length > 0 && (
+      <p class="mt-5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+        {primaryNames.map((name) => `${name}: ${getMeaning(name) ?? 'névjelentés hamarosan.'}`).join(' ')}
+      </p>
+    )}
+    <p class="mt-3 text-sm text-zinc-500 dark:text-zinc-500">
+      Adatforrás: a NévnapTárX szerkesztett magyar névnap- és névjelentés adatbázisa. Utolsó napi oldalfrissítés: {today.iso}.
+    </p>
+  </section>
+
+  <!-- SEO content block — visible explanatory copy for users and crawlers -->
   <section class="container mx-auto px-6 mt-24 max-w-3xl">
     <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">{t.homeSeo.heading}</h2>
     <div class="mt-6 space-y-4 text-zinc-700 dark:text-zinc-300 leading-relaxed">

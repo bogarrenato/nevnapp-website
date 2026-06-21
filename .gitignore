@@ -17,6 +17,11 @@ pnpm-debug.log*
 .env
 .env.production
 
+# operational backups and copied server configs
+aws-backups/
+vps-backups/
+deployment/
+
 # macOS-specific files
 .DS_Store
 

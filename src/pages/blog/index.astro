@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { strings, interpolate } from '../../i18n/strings';
 import { getCollection } from 'astro:content';
+import { SEO_IDS, buildBreadcrumbSchema, buildWebPageSchema } from '../../lib/seo';
 
 const t = strings.hu;
 const posts = (await getCollection('blog', ({ data }) => data.lang === 'hu'))
@@ -12,8 +13,12 @@ const title = `${t.blog.heading} | ${t.brand}`;
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Blog',
+  '@id': 'https://nevnap.app/blog#blog',
   name: t.blog.heading,
   description: t.blog.subtitle,
+  url: 'https://nevnap.app/blog',
+  inLanguage: 'hu-HU',
+  publisher: { '@id': SEO_IDS.organization },
   blogPost: posts.map((p) => ({
     '@type': 'BlogPosting',
     headline: p.data.title,
@@ -23,9 +28,24 @@ const jsonLd = {
   })),
 };
 
+const pageJsonLd = [
+  buildWebPageSchema({
+    path: '/blog',
+    name: title,
+    description: t.blog.subtitle,
+    type: 'CollectionPage',
+    mainEntity: { '@id': 'https://nevnap.app/blog#blog' },
+  }),
+  buildBreadcrumbSchema([
+    { name: t.brand, path: '/' },
+    { name: t.blog.title, path: '/blog' },
+  ]),
+  jsonLd,
+];
+
 const fmtDate = (d: Date) => `${d.getFullYear()}. ${t.months[d.getMonth()]} ${d.getDate()}.`;
 ---
-<BaseLayout lang="hu" title={title} description={t.blog.subtitle} altLangPath="/blog" jsonLd={[jsonLd]}>
+<BaseLayout lang="hu" title={title} description={t.blog.subtitle} jsonLd={pageJsonLd}>
   <article class="container mx-auto px-6 max-w-4xl pt-12 md:pt-16">
     <nav class="text-sm text-zinc-500" aria-label="Morzsamenü">
       <ol class="flex items-center gap-2 list-none"><li><a href="/" class="hover:text-primary-500">{t.brand}</a></li><li aria-hidden="true">›</li><li aria-current="page" class="text-zinc-700 dark:text-zinc-300">{t.blog.title}</li></ol>

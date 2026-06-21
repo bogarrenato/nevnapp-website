@@ -8,24 +8,52 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Hero from '../../components/Hero.astro';
 import TodayCard from '../../components/TodayCard.astro';
 import UpcomingStrip from '../../components/UpcomingStrip.astro';
-import { strings, SITE_URL } from '../../i18n/strings';
-import { getTodayEntry } from '../../lib/names';
+import { strings } from '../../i18n/strings';
+import { getAllNames, getBudapestCalendarDate, getTodayEntry } from '../../lib/names';
+import { SEO_IDS, buildFaqSchema, buildNamedayDatasetSchema, buildWebPageSchema } from '../../lib/seo';
 
 const t = strings.en;
 const entry = getTodayEntry();
 const primaryNames = entry?.primary ?? [];
+const today = getBudapestCalendarDate();
+const allNames = getAllNames();
 const pageTitle = primaryNames.length
   ? `Today's Hungarian nameday: ${primaryNames.join(' & ')} | ${t.brand}`
   : `Hungarian nameday today | ${t.brand}`;
 
-const jsonLd = [{
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: t.brand,
-  url: `${SITE_URL}/en`,
-  description: t.tagline,
-  inLanguage: 'en-US',
-}];
+const todayAnswer = primaryNames.length
+  ? `Today in Hungary, ${primaryNames.join(' and ')} celebrate their nameday.`
+  : 'Today has no highlighted nameday in the NévnapTárX database.';
+
+const faqEntries = [
+  {
+    q: "Who celebrates today's Hungarian nameday?",
+    a: todayAnswer,
+  },
+  {
+    q: 'How many Hungarian names are in NévnapTárX?',
+    a: `The NévnapTárX database includes ${allNames.length} Hungarian first names with nameday dates and many name meanings.`,
+  },
+  {
+    q: 'What is a Hungarian nameday?',
+    a: 'A Hungarian nameday is a calendar tradition where given names are associated with specific days of the year and celebrated socially, often similarly to a small birthday greeting.',
+  },
+];
+
+const jsonLd = [
+  buildWebPageSchema({
+    path: '/en',
+    name: pageTitle,
+    description: t.description,
+    lang: 'en',
+    about: [
+      { '@id': SEO_IDS.namedayDataset },
+      { '@id': SEO_IDS.app },
+    ],
+  }),
+  buildNamedayDatasetSchema(allNames.length),
+  buildFaqSchema(faqEntries),
+];
 ---
 
 <BaseLayout
@@ -38,6 +66,24 @@ const jsonLd = [{
   <Hero lang="en" />
   <TodayCard lang="en" />
   <UpcomingStrip lang="en" />
+
+  <section class="container mx-auto px-6 mt-20 max-w-4xl" aria-labelledby="direct-answers-heading">
+    <p class="text-sm uppercase tracking-widest font-semibold text-primary-600 dark:text-primary-400">Quick answers</p>
+    <h2 id="direct-answers-heading" class="mt-2 text-3xl md:text-4xl font-extrabold tracking-tight">
+      Today's Hungarian nameday
+    </h2>
+    <dl class="mt-6 grid gap-4 md:grid-cols-3">
+      {faqEntries.map((entry) => (
+        <div class="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-5">
+          <dt class="font-bold text-zinc-900 dark:text-zinc-100">{entry.q}</dt>
+          <dd class="mt-2 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">{entry.a}</dd>
+        </div>
+      ))}
+    </dl>
+    <p class="mt-3 text-sm text-zinc-500 dark:text-zinc-500">
+      Database date used on this page: {today.iso}, Europe/Budapest.
+    </p>
+  </section>
 
   <section class="container mx-auto px-6 mt-24 max-w-3xl">
     <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">What's a Hungarian nameday?</h2>

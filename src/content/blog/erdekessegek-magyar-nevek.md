@@ -71,9 +71,9 @@ Csak 10-20% **eredetileg magyar** (Levente, Csongor, Tünde, stb.)
 
 ## 6. 🎂 **Mindenkinek van legalább 1 névnapja**
 
-A magyar naptárban **minden napra esik 1-3 név**. Ha a Te neved nem található a hivatalos listán, az **NEM jelenti**, hogy nincs névnapod — a "védőszent" napja akkor is a tied.
+A magyar naptárban **minden napra esik 1-3 név**. Ha a Te neved nem található a megszokott magyar névnap-listákban, az **NEM jelenti**, hogy nincs névnapod — a "védőszent" napja akkor is a tied.
 
-Pl. *Liana* nem hivatalos magyar névnap, de a legközelebbi Liliána napon (jún. 23.) lehet ünnepelni.
+Pl. *Liana* nem szerepel minden magyar névnap-listában, de a legközelebbi Liliána napon (jún. 23.) lehet ünnepelni.
 
 ## 7. 💞 **Szerelmi nevek** is léteznek
 

@@ -41,6 +41,7 @@ const year = new Date().getFullYear();
       <ul class="mt-4 space-y-2">
         <li><a href={localizedPath(lang, '/names')} class="hover:text-primary-500 transition">{t.footer.links.allNames}</a></li>
         <li><a href={localizedPath(lang, '/calendar')} class="hover:text-primary-500 transition">{t.footer.links.calendar}</a></li>
+        {lang === 'hu' && <li><a href="/adatbazis" class="hover:text-primary-500 transition">Adatbázis</a></li>}
       </ul>
     </nav>
 
@@ -91,6 +92,7 @@ const year = new Date().getFullYear();
       <a href={lang === 'hu' ? '/terms' : '/en/terms'} class="hover:text-primary-500">{lang === 'hu' ? 'Felhasználási feltételek' : 'Terms of Service'}</a>
       <a href={lang === 'hu' ? '/app-terms' : '/en/app-terms'} class="hover:text-primary-500">{lang === 'hu' ? 'Mobil app feltételei' : 'App Terms'}</a>
       <a href={lang === 'hu' ? '/app-privacy' : '/en/app-privacy'} class="hover:text-primary-500">{lang === 'hu' ? 'Mobil app adatvédelem' : 'App Privacy'}</a>
+      {lang === 'hu' && <a href="/adatbazis" class="hover:text-primary-500">Névnap-adatbázis</a>}
       {lang === 'hu' && <a href="/impresszum" class="hover:text-primary-500">Impresszum</a>}
       <button type="button" class="hover:text-primary-500 cursor-pointer" onclick="window.nevnapConsent?.reopen()">
         {lang === 'hu' ? 'Süti beállítások' : 'Cookie settings'}

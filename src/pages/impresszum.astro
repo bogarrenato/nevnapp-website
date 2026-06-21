@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { strings } from '../i18n/strings';
 const t = strings.hu;
 ---
-<BaseLayout lang="hu" title={`Impresszum | ${t.brand}`} description="A nevnap.app és a NévnapTárX üzemeltetőjének adatai." altLangPath="/impresszum">
+<BaseLayout lang="hu" title={`Impresszum | ${t.brand}`} description="A nevnap.app és a NévnapTárX üzemeltetőjének adatai.">
   <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
     <nav class="text-sm text-zinc-500" aria-label="Morzsamenü">
       <ol class="flex items-center gap-2 list-none"><li><a href="/" class="hover:text-primary-500">{t.brand}</a></li><li aria-hidden="true">›</li><li aria-current="page" class="text-zinc-700 dark:text-zinc-300">Impresszum</li></ol>

@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { strings } from '../i18n/strings';
+import { getAllNames, getBudapestCalendarDate } from '../lib/names';
+import {
+  SEO_IDS,
+  buildBreadcrumbSchema,
+  buildDefinedTermSetSchema,
+  buildNamedayDatasetSchema,
+  buildWebPageSchema,
+} from '../lib/seo';
+
+const t = strings.hu;
+const names = getAllNames();
+const today = getBudapestCalendarDate();
+const title = `Névnap-adatbázis és módszertan | ${t.brand}`;
+const description = `A NévnapTárX magyar névnap- és névjelentés adatbázisának leírása: lefedettség, URL-struktúra, frissítés és hivatkozási útmutató.`;
+
+const jsonLd = [
+  buildWebPageSchema({
+    path: '/adatbazis',
+    name: title,
+    description,
+    about: { '@id': SEO_IDS.namedayDataset },
+  }),
+  buildBreadcrumbSchema([
+    { name: t.brand, path: '/' },
+    { name: 'Névnap-adatbázis', path: '/adatbazis' },
+  ]),
+  buildNamedayDatasetSchema(names.length),
+  buildDefinedTermSetSchema(names.length),
+];
+---
+
+<BaseLayout lang="hu" title={title} description={description} jsonLd={jsonLd}>
+  <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
+    <nav class="text-sm text-zinc-500" aria-label="Morzsamenü">
+      <ol class="flex items-center gap-2 list-none">
+        <li><a href="/" class="hover:text-primary-500">{t.brand}</a></li>
+        <li aria-hidden="true">›</li>
+        <li aria-current="page" class="text-zinc-700 dark:text-zinc-300">Névnap-adatbázis</li>
+      </ol>
+    </nav>
+
+    <header class="mt-6">
+      <p class="text-sm uppercase tracking-widest font-semibold text-primary-600 dark:text-primary-400">Adatforrás</p>
+      <h1 class="mt-2 text-4xl md:text-6xl font-extrabold tracking-tight">
+        <span class="gradient-text">Névnap-adatbázis és módszertan</span>
+      </h1>
+      <p class="mt-4 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300">
+        A NévnapTárX szerkesztett magyar névnap- és névjelentés adatbázist használ. Az adatbázis célja, hogy a felhasználók gyorsan megtalálják a mai névnapot, egy név jelentését, illetve a 2026-os magyar névnap-naptár napokra bontott bejegyzéseit.
+      </p>
+    </header>
+
+    <section class="mt-10 grid gap-4 sm:grid-cols-3" aria-label="Adatbázis számok">
+      <div class="rounded-2xl border border-zinc-200 dark:border-white/10 p-5">
+        <p class="text-3xl font-extrabold gradient-text">{names.length}</p>
+        <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">magyar keresztnév</p>
+      </div>
+      <div class="rounded-2xl border border-zinc-200 dark:border-white/10 p-5">
+        <p class="text-3xl font-extrabold gradient-text">366</p>
+        <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">naptári nap</p>
+      </div>
+      <div class="rounded-2xl border border-zinc-200 dark:border-white/10 p-5">
+        <p class="text-3xl font-extrabold gradient-text">{today.iso}</p>
+        <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">aktuális build dátuma</p>
+      </div>
+    </section>
+
+    <section class="mt-12 space-y-8">
+      <section aria-labelledby="coverage-heading">
+        <h2 id="coverage-heading" class="text-2xl md:text-3xl font-extrabold tracking-tight">Mit tartalmaz?</h2>
+        <p class="mt-4 leading-relaxed text-zinc-700 dark:text-zinc-300">
+          Minden névoldal tartalmazhat névnap-dátumokat, névjelentést, kapcsolódó neveket és névnapi köszöntőket. A dátumoldalak a naptári naphoz tartozó elsődleges és további neveket listázzák. A teljes névindex a <a href="/names" class="text-primary-600 dark:text-primary-400 hover:underline">Magyar nevek</a>, a teljes naptár pedig a <a href="/calendar" class="text-primary-600 dark:text-primary-400 hover:underline">Magyar névnaptár</a> oldalon érhető el.
+        </p>
+      </section>
+
+      <section aria-labelledby="structure-heading">
+        <h2 id="structure-heading" class="text-2xl md:text-3xl font-extrabold tracking-tight">URL-struktúra</h2>
+        <ul class="mt-4 space-y-2 text-zinc-700 dark:text-zinc-300">
+          <li><code>/name/Anna</code> — konkrét név jelentése és névnapjai.</li>
+          <li><code>/day/07-26</code> — konkrét naptári nap névnapjai MM-DD formátumban.</li>
+          <li><code>/llms.txt</code> és <code>/llms-full.txt</code> — gépi feldolgozáshoz készített LLM context fájlok.</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="citation-heading">
+        <h2 id="citation-heading" class="text-2xl md:text-3xl font-extrabold tracking-tight">Hivatkozási útmutató</h2>
+        <p class="mt-4 leading-relaxed text-zinc-700 dark:text-zinc-300">
+          Ha egy AI válasz vagy külső hivatkozás konkrét névről szól, a megfelelő <code>/name/</code> oldalt érdemes idézni. Ha egy naptári napról szól, a megfelelő <code>/day/</code> oldal a pontos forrás. Általános magyar névnap-hagyományhoz a főoldal és a blogcikkek adnak kontextust.
+        </p>
+      </section>
+    </section>
+  </article>
+</BaseLayout>

@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { strings, interpolate, SITE_URL } from '../../i18n/strings';
 import { getCollection, render } from 'astro:content';
+import { SEO_IDS, buildBreadcrumbSchema, buildWebPageSchema } from '../../lib/seo';
 
 export async function getStaticPaths() {
   const all = await getCollection('blog', ({ data }) => data.lang === 'hu');
@@ -12,19 +13,39 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 const t = strings.hu;
 const fmtDate = (d: Date) => `${d.getFullYear()}. ${t.months[d.getMonth()]} ${d.getDate()}.`;
+const pagePath = `/blog/${post.id}`;
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'BlogPosting',
-  headline: post.data.title,
-  description: post.data.description,
-  datePublished: post.data.pubDate.toISOString(),
-  author: { '@type': 'Person', name: 'Bogár Renátó' },
-  publisher: { '@type': 'Organization', name: t.brand, logo: { '@type': 'ImageObject', url: `${SITE_URL}/icons/app-icon.png` } },
-  mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/blog/${post.id}` },
-};
+const jsonLd = [
+  buildWebPageSchema({
+    path: pagePath,
+    name: post.data.title,
+    description: post.data.description,
+    mainEntity: { '@id': `${SITE_URL}${pagePath}#article` },
+  }),
+  buildBreadcrumbSchema([
+    { name: t.brand, path: '/' },
+    { name: t.blog.title, path: '/blog' },
+    { name: post.data.title, path: pagePath },
+  ]),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    '@id': `${SITE_URL}${pagePath}#article`,
+    headline: post.data.title,
+    description: post.data.description,
+    datePublished: post.data.pubDate.toISOString(),
+    dateModified: post.data.pubDate.toISOString(),
+    inLanguage: 'hu-HU',
+    isAccessibleForFree: true,
+    author: { '@id': SEO_IDS.creator },
+    publisher: { '@id': SEO_IDS.organization },
+    image: `${SITE_URL}/og-default.png`,
+    mainEntityOfPage: { '@id': `${SITE_URL}${pagePath}#webpage` },
+    keywords: post.data.tags,
+  },
+];
 ---
-<BaseLayout lang="hu" title={`${post.data.title} | ${t.brand}`} description={post.data.description} jsonLd={[jsonLd]}>
+<BaseLayout lang="hu" title={`${post.data.title} | ${t.brand}`} description={post.data.description} jsonLd={jsonLd}>
   <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
     <nav class="text-sm text-zinc-500" aria-label="Morzsamenü">
       <ol class="flex items-center gap-2 list-none">

@@ -80,7 +80,7 @@ export const strings = {
     today: {
       heading: 'Mai névnap',
       secondaryHeading: 'További nevek ma',
-      noNameday: 'Ma nincs hivatalos névnap a magyar naptár szerint.',
+      noNameday: 'Ma nincs kiemelt névnap a magyar névnap-naptár szerint.',
       learnMeaning: 'A név jelentése →',
       tomorrowHeading: 'Holnapi névnap',
       upcomingHeading: 'Közelgő névnapok',
@@ -105,28 +105,29 @@ export const strings = {
       sendGreeting: 'Küldj köszöntést {name}-nak az appban →',
       relatedHeading: 'Hasonló nevek',
       greetingsHeading: 'Névnapi köszöntők {name}-nek',
-      greetingsIntro: '8 ingyenes köszöntő, vers és SMS-szöveg amit elküldhetsz {name} névnapjára:',
+      greetingsIntro: '8 ingyenes köszöntő, rímes vers és SMS-szöveg amit elküldhetsz {name} névnapjára:',
       faqHeading: 'Gyakori kérdések — {name}',
       faqQ1: 'Mikor van {name} névnapja?',
       faqA1Single: '{name} névnapja {dates}.',
       faqA1Multi: '{name} névnapja a magyar naptárban: {dates}.',
-      faqA1None: '{name} jelenleg nem szerepel a magyar névnap-naptárban hivatalos napon.',
+      faqA1None: '{name} jelenleg nem szerepel külön napon a NévnapTárX magyar névnap-adatbázisában.',
       faqQ2: 'Mit jelent a {name} név?',
       faqA2WithMeaning: '{meaning}',
       faqA2NoMeaning: '{article} {name} név jelentése még nem szerepel az adatbázisunkban — folyamatosan bővítjük.',
       faqQ3: 'Hogyan köszöntsünk egy {name}-t?',
-      faqA3: '{article} {name} névhez többféle köszöntő szöveget összegyűjtöttünk: rövid, vers, SMS-be, hivatalos, vicces, és idézetes változatok. Görgess feljebb a köszöntők szekcióhoz!',
+      faqA3: '{article} {name} névhez többféle köszöntő szöveget összegyűjtöttünk: rövid, rímes vers, SMS-be, hivatalos, vicces, és idézetes változatok. Görgess feljebb a köszöntők szekcióhoz!',
       copyGreeting: 'Másolás',
       copied: 'Másolva ✓',
-      faqHeading: 'Gyakori kérdések — {name}',
     },
 
     // Day page
     dayPage: {
+      eyebrow: 'Napi névnap',
+      breadcrumbAria: 'Morzsamenü',
       heading: '{date} — Mai névnap',
       primary: 'Elsődleges névnap',
       secondary: 'További nevek ezen a napon',
-      noNameday: 'Ezen a napon nincs hivatalos magyar névnap.',
+      noNameday: 'Ezen a napon nincs kiemelt magyar névnap az adatbázisban.',
     },
 
     // Footer
@@ -226,7 +227,7 @@ export const strings = {
     today: {
       heading: "Today's nameday",
       secondaryHeading: 'Other names today',
-      noNameday: "There's no official nameday today in the Hungarian calendar.",
+      noNameday: "There is no highlighted nameday today in the NévnapTárX database.",
       learnMeaning: 'Name meaning →',
       tomorrowHeading: "Tomorrow's nameday",
       upcomingHeading: 'Upcoming namedays',
@@ -250,7 +251,7 @@ export const strings = {
       sendGreeting: 'Send {name} a greeting in the app →',
       relatedHeading: 'Related names',
       greetingsHeading: 'Nameday greetings for {name}',
-      greetingsIntro: '8 free greetings, poems and SMS texts you can send to {name} on their nameday:',
+      greetingsIntro: '8 free greetings, rhyming poems and SMS texts you can send to {name} on their nameday:',
       faqHeading: 'FAQ — {name}',
       faqQ1: "When is {name}'s nameday?",
       faqA1Single: "{name}'s nameday is {dates}.",
@@ -260,17 +261,18 @@ export const strings = {
       faqA2WithMeaning: '{meaning}',
       faqA2NoMeaning: 'The meaning of {name} is not yet in our database — we are continuously expanding.',
       faqQ3: 'How do I greet a {name}?',
-      faqA3: 'For the name {name} we collected several greeting templates: short, poem, SMS, formal, funny, and quote variants. Scroll up to the greetings section!',
+      faqA3: 'For the name {name} we collected several greeting templates: short, rhyming poem, SMS, formal, funny, and quote variants. Scroll up to the greetings section!',
       copyGreeting: 'Copy',
       copied: 'Copied ✓',
-      faqHeading: 'FAQ — {name}',
     },
 
     dayPage: {
+      eyebrow: 'Daily nameday',
+      breadcrumbAria: 'Breadcrumb',
       heading: "{date} — Today's nameday",
       primary: 'Main nameday',
       secondary: 'Other names on this day',
-      noNameday: "There's no official Hungarian nameday on this day.",
+      noNameday: "There is no highlighted Hungarian nameday in the NévnapTárX database for this day.",
     },
 
     footer: {

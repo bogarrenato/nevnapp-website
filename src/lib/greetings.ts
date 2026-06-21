@@ -26,11 +26,19 @@ const HU_TEMPLATES: Array<[GreetingKind, string]> = [
   ['short', 'Boldog névnapot, {name}! 🌷 Ne felejtsd el, milyen különleges vagy.'],
   ['short', '{name}, légy büszke a nevedre — mert mögötte egy egyedi ember áll!'],
 
-  // Vers (verse)
-  ['verse', 'Virág bontja szirmait,\nNap mosolyog rád,\n{name}! Légy boldog ma,\nÉs lélekben szabad!'],
-  ['verse', 'Sok-sok év, sok-sok mosoly,\nÉs egy {name} aki ragyog!\nBoldog névnapot néked,\nSzeretettel ölelünk!'],
-  ['verse', 'Ma {name} ünnepel,\nFényes nap köszönt rád!\nLegyen boldog éveden,\nSok meleg ölelés!'],
-  ['verse', 'A neved szép és csodás,\nMint egy tavaszi virág.\nBoldog névnapot, {name},\nSose hagyjon el a vidámság!'],
+  // Rímes versek (verse)
+  ['verse', 'Ma öröm csillan az arcodon,\nvirág nyílik névnapodon.\n{name}, legyen fény az utadon,\nszeretet kísérjen minden napodon!'],
+  ['verse', 'Csengjen dal és nyíljon virág,\nmosolyogjon rád az egész világ.\n{name}, teljesüljön minden álmod,\nszerencse kísérje minden vágyod!'],
+  ['verse', '{name}, ma rád ragyog az ég,\nhozzon örömöt, békét még.\nLegyen a szívedben sok remény,\nkísérjen utadon tiszta fény!'],
+  ['verse', 'Kertben nyílik száz szál virág,\n{name}, téged köszönt ma a világ.\nMosoly üljön mindig arcodon,\nboldogság legyen minden napodon!'],
+  ['verse', 'Névnapodon száll a jókívánság,\nkörülötted legyen mosoly és virág.\n{name}, legyen vidám minden álmod,\nöröm tegye széppé a világod!'],
+  ['verse', 'Boldog névnapot, {name}, szívből kívánom,\nöröm kísérjen minden kis világon.\nLegyen előtted fényes az út,\nbánat ma hozzád sose jut!'],
+  ['verse', '{name}, ez a nap most rólad szól,\ncsendül a dal, a jókedv dalol.\nLegyen szíved könnyű, vidám,\nöröm ragyogjon rád igazán!'],
+  ['verse', 'Neved ma ünnepi virág,\nszeretettel néz rád a világ.\n{name}, legyen áldott minden napod,\nöröm tegye széppé minden holnapod!'],
+  ['verse', 'Ma a nap is szebben ragyog,\nszívedben az öröm nagyot dobog.\n{name}, jó szerencse járjon veled,\nboldogság töltse meg az életed!'],
+  ['verse', 'Szálljon hozzád sok-sok jó,\nlegyen minden perced ragyogó.\n{name}, ma csak rólad szól a dal,\nboldogságod messze szárnyal!'],
+  ['verse', 'Hozzon a reggel derűt, fényt,\na délután sok szép reményt.\n{name}, este is mosoly várjon,\nszeretet legyen minden álmon!'],
+  ['verse', 'Névnapodra csokor virág,\nveled nevet ma a világ.\n{name}, szívből azt kívánom,\nöröm kísérjen minden világon!'],
 
   // SMS rövid
   ['sms', 'Boldog névnapot, {name}! 🎉 Sok szeretettel ölellek.'],
@@ -64,8 +72,10 @@ const EN_TEMPLATES: Array<[GreetingKind, string]> = [
   ['short', '{name}, today is YOUR day! Enjoy every moment of it.'],
   ['short', 'Happy nameday, {name}! 🌷 Remember how special you are.'],
 
-  ['verse', 'Flowers bloom on this fine day,\nFor {name} to dance and play.\nMay your year be filled with light,\nAnd your soul forever bright!'],
-  ['verse', 'A name so sweet, a soul so kind,\n{name} — one of a kind!\nHappy nameday from the heart,\nMay joy and love never depart!'],
+  ['verse', 'Flowers bloom on this bright day,\n{name}, may joy come your way.\nMay your year be full of light,\nand every dream be warm and bright!'],
+  ['verse', 'A name so sweet, a heart so kind,\n{name}, you are one of a kind.\nHappy nameday, bright and true,\nmay every good thing come to you!'],
+  ['verse', 'Let laughter ring and candles glow,\nlet every happy feeling grow.\n{name}, may your nameday shine,\nwith joy and love in every line!'],
+  ['verse', 'The sky is clear, the day is bright,\n{name}, may your heart feel light.\nMay luck and laughter stay with you,\nand every wish you make come true!'],
 
   ['sms', 'Happy nameday, {name}! 🎉 Sending big hugs.'],
   ['sms', '{name}! 🌹 Wishing you a wonderful nameday!'],
@@ -129,7 +139,7 @@ export function getGreetings(name: string, lang: 'hu' | 'en' = 'hu', count = 8):
 
 export const KIND_LABELS_HU: Record<GreetingKind, string> = {
   short: 'Rövid köszöntő',
-  verse: 'Versike',
+  verse: 'Rímes versike',
   sms: 'SMS-be',
   formal: 'Hivatalos',
   funny: 'Vicces',
@@ -138,7 +148,7 @@ export const KIND_LABELS_HU: Record<GreetingKind, string> = {
 
 export const KIND_LABELS_EN: Record<GreetingKind, string> = {
   short: 'Short greeting',
-  verse: 'Poem',
+  verse: 'Rhyming poem',
   sms: 'SMS',
   formal: 'Formal',
   funny: 'Funny',

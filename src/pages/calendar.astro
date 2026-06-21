@@ -5,7 +5,13 @@
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { strings } from '../i18n/strings';
-import { getEntryByDate, dateKey } from '../lib/names';
+import { getAllNames, getEntryByDate, dateKey } from '../lib/names';
+import {
+  SEO_IDS,
+  buildBreadcrumbSchema,
+  buildNamedayDatasetSchema,
+  buildWebPageSchema,
+} from '../lib/seo';
 
 const t = strings.hu;
 
@@ -25,9 +31,25 @@ const months = Array.from({ length: 12 }, (_, m) => {
 
 const title = `${t.calendarPage.title} | ${t.brand}`;
 const description = t.calendarPage.description;
+const nameCount = getAllNames().length;
+
+const jsonLd = [
+  buildWebPageSchema({
+    path: '/calendar',
+    name: title,
+    description,
+    type: 'CollectionPage',
+    mainEntity: { '@id': SEO_IDS.namedayDataset },
+  }),
+  buildBreadcrumbSchema([
+    { name: t.brand, path: '/' },
+    { name: t.calendarPage.heading, path: '/calendar' },
+  ]),
+  buildNamedayDatasetSchema(nameCount),
+];
 ---
 
-<BaseLayout lang="hu" title={title} description={description} altLangPath="/calendar">
+<BaseLayout lang="hu" title={title} description={description} jsonLd={jsonLd}>
   <section class="container mx-auto px-6 pt-12 md:pt-16">
     <header class="max-w-3xl">
       <p class="text-sm uppercase tracking-widest font-semibold text-primary-600 dark:text-primary-400">2026</p>
@@ -35,9 +57,18 @@ const description = t.calendarPage.description;
         <span class="gradient-text">{t.calendarPage.heading}</span>
       </h1>
       <p class="mt-3 text-zinc-600 dark:text-zinc-400 text-lg">
-        Minden napra a hivatalos magyar névnap — koppints egy névre a részletekért.
+        Minden napra a magyar névnap-naptár szerinti névnap — koppints egy névre a részletekért.
       </p>
     </header>
+
+    <section class="mt-8 rounded-2xl border border-primary-500/20 bg-primary-50/70 dark:bg-primary-500/10 p-5 max-w-3xl" aria-labelledby="calendar-summary-heading">
+      <h2 id="calendar-summary-heading" class="text-sm uppercase tracking-widest font-semibold text-primary-700 dark:text-primary-300">
+        Rövid válasz
+      </h2>
+      <p class="mt-3 text-zinc-700 dark:text-zinc-300 leading-relaxed">
+        Ez a 2026-os magyar névnap-naptár hónapokra és napokra bontva mutatja a névnapokat. A teljes adatbázis {nameCount} magyar keresztnevet kapcsol dátumokhoz és névjelentésekhez.
+      </p>
+    </section>
 
     <div class="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
       {months.map((m) => (

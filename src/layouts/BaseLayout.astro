@@ -12,7 +12,8 @@
 import '../styles/global.css';
 import { strings, SITE_URL, type Lang } from '../i18n/strings';
 import CookieBanner from '../components/CookieBanner.astro';
-import { STORE_LINKS } from '../lib/constants';
+import { STORE_LINKS, SOCIAL } from '../lib/constants';
+import { CREATOR_NAME, buildIdentityGraph } from '../lib/seo';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import StoreBadge from '../components/StoreBadge.astro';
@@ -27,6 +28,10 @@ interface Props {
   altLangPath?: string;
   /** Optional JSON-LD payload(s) for schema.org markup. */
   jsonLd?: object | object[];
+  /** Explicit robots directives. Defaults to full snippet eligibility. */
+  robots?: string;
+  /** Accessible alt text for the social image. */
+  ogImageAlt?: string;
   /** Hides the global app-download CTA strip when set (e.g. on legal pages). */
   hideDownloadStrip?: boolean;
 }
@@ -39,16 +44,21 @@ const {
   ogImage = '/og-default.png',
   altLangPath,
   jsonLd,
+  robots = 'index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1',
+  ogImageAlt,
   hideDownloadStrip = false,
 } = Astro.props;
 
 const t = strings[lang];
 const metaDescription = description ?? t.description;
 const url = canonical ?? new URL(Astro.url.pathname, SITE_URL).toString();
+const ogImageUrl = new URL(ogImage, SITE_URL).toString();
+const imageAlt = ogImageAlt ?? `${t.brand} — modern magyar névnap-naptár`;
+const defaultLanguageUrl = altLangPath ? new URL(altLangPath, SITE_URL).toString() : null;
 
 const jsonLdEntries = jsonLd
-  ? Array.isArray(jsonLd) ? jsonLd : [jsonLd]
-  : [];
+  ? [buildIdentityGraph(lang), ...(Array.isArray(jsonLd) ? jsonLd : [jsonLd])]
+  : [buildIdentityGraph(lang)];
 ---
 
 <!doctype html>
@@ -61,8 +71,20 @@ const jsonLdEntries = jsonLd
 
     <title>{title}</title>
     <meta name="description" content={metaDescription} />
+    <meta name="robots" content={robots} />
+    <meta name="googlebot" content={robots} />
+    <meta name="bingbot" content={robots} />
+    <meta name="author" content={CREATOR_NAME} />
+    <meta name="publisher" content={t.brand} />
+    <meta name="application-name" content={t.brand} />
+    <meta name="apple-mobile-web-app-title" content={t.brand} />
     {import.meta.env.PROD && <meta name="google-adsense-account" content="ca-pub-5975990857512539" />}
+    <meta name="format-detection" content="telephone=no" />
     <link rel="canonical" href={url} />
+    <link rel="alternate" type="text/plain" href={new URL('/llms.txt', SITE_URL).toString()} title="LLM summary" />
+    <link rel="alternate" type="text/plain" href={new URL('/llms-full.txt', SITE_URL).toString()} title="LLM full context" />
+    <link rel="me" href={SOCIAL.instagram} />
+    <link rel="me" href={SOCIAL.tiktok} />
 
     <!-- hreflang alternates -->
     {altLangPath && lang === 'hu' && (
@@ -71,22 +93,25 @@ const jsonLdEntries = jsonLd
     {altLangPath && lang === 'en' && (
       <link rel="alternate" hreflang="hu" href={new URL(altLangPath, SITE_URL).toString()} />
     )}
-    <link rel="alternate" hreflang="x-default" href={url} />
+    {defaultLanguageUrl && <link rel="alternate" hreflang="x-default" href={defaultLanguageUrl} />}
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={url} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={metaDescription} />
-    <meta property="og:image" content={new URL(ogImage, SITE_URL).toString()} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:alt" content={imageAlt} />
     <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'hu_HU'} />
+    {altLangPath && <meta property="og:locale:alternate" content={lang === 'en' ? 'hu_HU' : 'en_US'} />}
     <meta property="og:site_name" content={t.brand} />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={metaDescription} />
-    <meta name="twitter:image" content={new URL(ogImage, SITE_URL).toString()} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={imageAlt} />
 
     <!-- Favicon / icon -->
     <link rel="icon" type="image/png" href="/icons/app-icon.png" />
@@ -102,7 +127,6 @@ const jsonLdEntries = jsonLd
       (function () {
         try {
           const saved = localStorage.getItem('nevnap-theme');
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
           const theme = saved ?? 'dark';
           if (theme === 'dark') document.documentElement.classList.add('dark');
         } catch (_) {}
@@ -110,7 +134,7 @@ const jsonLdEntries = jsonLd
     </script>
 
     {jsonLdEntries.map((entry) => (
-      <script type="application/ld+json" set:html={JSON.stringify(entry)} />
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(entry)} />
     ))}
 
   <!-- Google Analytics GA4 — csak prod + felhasználói consent után -->
@@ -150,6 +174,7 @@ const jsonLdEntries = jsonLd
       </script>
       <script
         async
+        is:inline
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5975990857512539"
         crossorigin="anonymous"
       ></script>
