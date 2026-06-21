@@ -61,6 +61,7 @@ const jsonLdEntries = jsonLd
 
     <title>{title}</title>
     <meta name="description" content={metaDescription} />
+    {import.meta.env.PROD && <meta name="google-adsense-account" content="ca-pub-5975990857512539" />}
     <link rel="canonical" href={url} />
 
     <!-- hreflang alternates -->
@@ -147,6 +148,11 @@ const jsonLdEntries = jsonLd
         try { applyConsent(JSON.parse(localStorage.getItem('nevnap-consent'))); } catch (e) {}
         window.addEventListener('consent-updated', function (e) { applyConsent(e.detail); });
       </script>
+      <script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5975990857512539"
+        crossorigin="anonymous"
+      ></script>
     </>
   )}
 
