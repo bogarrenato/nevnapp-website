@@ -1,0 +1,42 @@
+name: Daily Facebook group nameday post
+
+on:
+  schedule:
+    # GitHub cron runs in UTC. Cover both Budapest offsets, then guard below
+    # so the group post is published once at 06:25 Europe/Budapest year-round.
+    - cron: '25 4 * * *'
+    - cron: '25 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: daily-facebook-group-nameday-post
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Post today's nameday to Facebook group
+        env:
+          PUBLIC_SITE_URL: https://www.nevnap.app
+          FB_GROUP_ID: '1473018134570043'
+          FB_GROUP_ACCESS_TOKEN: ${{ secrets.FB_GROUP_ACCESS_TOKEN }}
+          FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            budapest_offset="$(TZ=Europe/Budapest date +%z)"
+            schedule="${{ github.event.schedule }}"
+            if { [ "$budapest_offset" = "+0200" ] && [ "$schedule" != "25 4 * * *" ]; } || { [ "$budapest_offset" = "+0100" ] && [ "$schedule" != "25 5 * * *" ]; }; then
+              echo "Skipping duplicate offset schedule: schedule=$schedule, Budapest offset=$budapest_offset."
+              exit 0
+            fi
+          fi
+          npm run facebook:group

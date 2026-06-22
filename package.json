@@ -12,6 +12,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "facebook:post": "node scripts/post-facebook.mjs",
+    "facebook:group": "node scripts/post-facebook-group.mjs",
     "facebook:reel": "node scripts/post-facebook-reel.mjs",
     "instagram:reel": "node scripts/post-instagram-reel.mjs",
     "tiktok:reel": "node scripts/post-tiktok-reel.mjs",
