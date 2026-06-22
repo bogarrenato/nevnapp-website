@@ -27,10 +27,13 @@ jobs:
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
         run: |
-          budapest_time="$(TZ=Europe/Budapest date +%H:%M)"
-          if [ "${{ github.event_name }}" = "schedule" ] && { [[ "$budapest_time" < "06:05" ]] || [[ "$budapest_time" > "06:59" ]]; }; then
-            echo "Skipping: current Budapest time is $budapest_time, outside the 06:05-06:59 posting window."
-            exit 0
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            budapest_offset="$(TZ=Europe/Budapest date +%z)"
+            schedule="${{ github.event.schedule }}"
+            if { [ "$budapest_offset" = "+0200" ] && [ "$schedule" != "5 4 * * *" ]; } || { [ "$budapest_offset" = "+0100" ] && [ "$schedule" != "5 5 * * *" ]; }; then
+              echo "Skipping duplicate offset schedule: schedule=$schedule, Budapest offset=$budapest_offset."
+              exit 0
+            fi
           fi
           if [ -z "$IG_USER_ID" ] || [ -z "$IG_ACCESS_TOKEN" ]; then
             echo "Instagram secrets are not configured yet; skipping Reel post."
