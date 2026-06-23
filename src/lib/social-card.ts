@@ -140,7 +140,7 @@ function buildFacebookCaption(input: {
   const lines = input.primaryNames.length
     ? [
         `📅 Ma, ${input.dateLabel.toLocaleLowerCase('hu-HU')} ${input.namesLabel} névnapja van.`,
-        `🎉 Boldog névnapot minden ${input.namesLabel}nek!`,
+        `🎉 Boldog névnapot minden ${formatHungarianDativeList(input.primaryNames)}!`,
       ]
     : [`📅 Ma, ${input.dateLabel.toLocaleLowerCase('hu-HU')} nincs kiemelt névnap az adatbázisban.`];
 
@@ -161,6 +161,37 @@ function buildFacebookCaption(input: {
 function buildHashtags(names: string[]): string {
   const tags = ['magyar', 'névnap', 'névnaptárx', ...names.map(toHashtag).filter(Boolean)];
   return [...new Set(tags)].map((tag) => `#${tag}`).join(' ');
+}
+
+function formatHungarianDativeList(items: string[]): string {
+  return formatHungarianList(items.map(formatHungarianDativeName));
+}
+
+function formatHungarianDativeName(name: string): string {
+  const trimmed = name.trim();
+  if (!trimmed) return trimmed;
+
+  const last = trimmed.at(-1)?.toLocaleLowerCase('hu-HU') ?? '';
+  const stem = last === 'a'
+    ? `${trimmed.slice(0, -1)}á`
+    : last === 'e'
+      ? `${trimmed.slice(0, -1)}é`
+      : trimmed;
+  const suffix = usesBackVowelHarmony(trimmed) ? 'nak' : 'nek';
+
+  return `${stem}${suffix}`;
+}
+
+function usesBackVowelHarmony(input: string): boolean {
+  const vowels = input.toLocaleLowerCase('hu-HU').match(/[aáeéiíoóöőuúüű]/gu) ?? [];
+
+  for (let index = vowels.length - 1; index >= 0; index -= 1) {
+    const vowel = vowels[index];
+    if ('aáoóuú'.includes(vowel)) return true;
+    if ('öőüűe'.includes(vowel)) return false;
+  }
+
+  return false;
 }
 
 function toHashtag(value: string): string {

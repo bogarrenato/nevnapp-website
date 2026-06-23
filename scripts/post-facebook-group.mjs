@@ -4,6 +4,8 @@ const GROUP_ID = process.env.FB_GROUP_ID;
 const ACCESS_TOKEN = process.env.FB_GROUP_ACCESS_TOKEN || process.env.FB_PAGE_ACCESS_TOKEN;
 const DRY_RUN = process.argv.includes('--dry-run') || process.env.FB_GROUP_DRY_RUN === '1';
 const ALLOW_STALE = process.env.FB_GROUP_ALLOW_STALE === '1';
+const POST_FORMAT = process.env.FB_GROUP_POST_FORMAT || 'video';
+const DISABLE_FALLBACK = process.env.FB_GROUP_DISABLE_FALLBACK === '1';
 
 const socialContent = await fetchJson(`${SITE_URL}/social/today.json?ts=${Date.now()}`);
 const expectedIso = getBudapestIsoDate();
@@ -15,7 +17,11 @@ if (!ALLOW_STALE && socialContent.date?.iso !== expectedIso) {
 }
 
 const imageUrl = `${SITE_URL}/social/today.png?v=${encodeURIComponent(socialContent.date.iso)}`;
+const videoUrl = `${SITE_URL}/social/today-reel.mp4?v=${encodeURIComponent(socialContent.date.iso)}`;
 const caption = process.env.FB_GROUP_CAPTION_OVERRIDE || socialContent.facebookCaption;
+const title =
+  process.env.FB_GROUP_VIDEO_TITLE_OVERRIDE ||
+  `Mai névnap: ${(socialContent.primaryNames || ['NévnapTárX']).join(', ')}`;
 
 if (DRY_RUN) {
   console.log('Facebook group post dry run');
@@ -24,7 +30,10 @@ if (DRY_RUN) {
       {
         groupId: GROUP_ID || '<missing>',
         hasAccessToken: Boolean(ACCESS_TOKEN),
+        postFormat: POST_FORMAT,
+        videoUrl,
         imageUrl,
+        title,
         caption,
       },
       null,
@@ -42,15 +51,30 @@ if (!ACCESS_TOKEN) {
   throw new Error('Missing FB_GROUP_ACCESS_TOKEN or FB_PAGE_ACCESS_TOKEN environment variable.');
 }
 
+if (POST_FORMAT === 'video') {
+  try {
+    const video = await graphPost(`/${GROUP_ID}/videos`, {
+      file_url: videoUrl,
+      title,
+      description: caption,
+      access_token: ACCESS_TOKEN,
+    });
+    console.log(`Published Facebook group video post: ${video.post_id || video.id}`);
+    process.exit(0);
+  } catch (videoError) {
+    if (DISABLE_FALLBACK) {
+      throw videoError;
+    }
+    console.warn(`Facebook group video post failed, trying photo fallback: ${videoError.message}`);
+  }
+}
+
 try {
-  const photo = await graphPost(`/${GROUP_ID}/photos`, {
-    url: imageUrl,
-    caption,
-    published: 'true',
-    access_token: ACCESS_TOKEN,
-  });
-  console.log(`Published Facebook group photo post: ${photo.post_id || photo.id}`);
+  await publishPhoto();
 } catch (photoError) {
+  if (DISABLE_FALLBACK) {
+    throw photoError;
+  }
   console.warn(`Facebook group photo post failed, trying feed fallback: ${photoError.message}`);
 
   const feed = await graphPost(`/${GROUP_ID}/feed`, {
@@ -59,6 +83,16 @@ try {
     access_token: ACCESS_TOKEN,
   });
   console.log(`Published Facebook group feed post: ${feed.id}`);
+}
+
+async function publishPhoto() {
+  const photo = await graphPost(`/${GROUP_ID}/photos`, {
+    url: imageUrl,
+    caption,
+    published: 'true',
+    access_token: ACCESS_TOKEN,
+  });
+  console.log(`Published Facebook group photo post: ${photo.post_id || photo.id}`);
 }
 
 async function graphPost(path, params) {

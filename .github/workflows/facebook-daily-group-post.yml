@@ -1,9 +1,9 @@
-name: Daily Facebook group nameday post
+name: Daily Facebook group nameday video
 
 on:
   schedule:
     # GitHub cron runs in UTC. Cover both Budapest offsets, then guard below
-    # so the group post is published once at 06:25 Europe/Budapest year-round.
+    # so the group video is published once at 06:25 Europe/Budapest year-round.
     - cron: '25 4 * * *'
     - cron: '25 5 * * *'
   workflow_dispatch:
@@ -15,7 +15,7 @@ jobs:
   post:
     runs-on: ubuntu-latest
     concurrency:
-      group: daily-facebook-group-nameday-post
+      group: daily-facebook-group-nameday-video
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
@@ -24,12 +24,13 @@ jobs:
         with:
           node-version: 22
 
-      - name: Post today's nameday to Facebook group
+      - name: Post today's nameday video to Facebook group
         env:
           PUBLIC_SITE_URL: https://www.nevnap.app
           FB_GROUP_ID: '1473018134570043'
           FB_GROUP_ACCESS_TOKEN: ${{ secrets.FB_GROUP_ACCESS_TOKEN }}
           FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
+          FB_GROUP_POST_FORMAT: video
         run: |
           if [ "${{ github.event_name }}" = "schedule" ]; then
             budapest_offset="$(TZ=Europe/Budapest date +%z)"
