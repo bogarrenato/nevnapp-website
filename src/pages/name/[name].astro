@@ -35,6 +35,7 @@ export function getStaticPaths() {
 const { name } = Astro.props as { name: string };
 const t = strings.hu;
 const article = huArticle(name);
+const articleLower = article.toLocaleLowerCase('hu');
 const dates = getDatesForName(name);
 const meaning = getDisplayMeaning(name);
 const related = getRelatedNames(name);
@@ -71,7 +72,7 @@ const faqEntries: Array<{ q: string; a: string }> = [
       : interpolate(dates.length === 1 ? t.namePage.faqA1Single : t.namePage.faqA1Multi, { name, dates: datesText }),
   },
   {
-    q: interpolate(t.namePage.faqQ2, { name, article }),
+    q: interpolate(t.namePage.faqQ2, { name, article, articleLower }),
     a: meaning
       ? interpolate(t.namePage.faqA2WithMeaning, { meaning })
       : interpolate(t.namePage.faqA2NoMeaning, { name, article }),

@@ -111,7 +111,7 @@ export const strings = {
       faqA1Single: '{name} névnapja {dates}.',
       faqA1Multi: '{name} névnapja a magyar naptárban: {dates}.',
       faqA1None: '{name} jelenleg nem szerepel külön napon a NévnapTárX magyar névnap-adatbázisában.',
-      faqQ2: 'Mit jelent {article} {name} név?',
+      faqQ2: 'Mit jelent {articleLower} {name} név?',
       faqA2WithMeaning: '{meaning}',
       faqA2NoMeaning: '{article} {name} név jelentése még nem szerepel az adatbázisunkban — folyamatosan bővítjük.',
       faqQ3: 'Milyen köszöntőt küldhetsz {name} névnapjára?',
@@ -156,8 +156,8 @@ export const strings = {
       'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December',
     ],
     monthsShort: [
-      'Jan', 'Feb', 'Már', 'Ápr', 'Máj', 'Jún',
-      'Júl', 'Aug', 'Szep', 'Okt', 'Nov', 'Dec',
+      'jan.', 'febr.', 'márc.', 'ápr.', 'máj.', 'jún.',
+      'júl.', 'aug.', 'szept.', 'okt.', 'nov.', 'dec.',
     ],
   },
 
