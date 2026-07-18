@@ -1,7 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { strings } from '../../i18n/strings';
+import { getAllNames, getMeaningCoverageCount } from '../../lib/names';
 const t = strings.en;
+const nameCount = getAllNames().length;
+const meaningCount = getMeaningCoverageCount();
 ---
 <BaseLayout lang="en" title={`About | ${t.brand}`} description="The NévnapTárX mission: preserving the Hungarian nameday tradition with modern technology." altLangPath="/about">
   <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
@@ -15,17 +18,18 @@ const t = strings.en;
       <div>
         <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Mission</h2>
         <p class="mt-2">Nameday is a beautiful, centuries-old Hungarian tradition — every day of the year is associated with one or more names that families and friends celebrate. In the digital age it's easy to forget.</p>
-        <p class="mt-2">NévnapTárX was built with one simple goal: prevent that. <strong>1500 Hungarian names</strong> with meanings, origins and daily reminders bundled into a modern 2026-designed app — for iOS and Android.</p>
+        <p class="mt-2">NévnapTárX was built with one simple goal: prevent that. The current calendar indexes namedays for <strong>{nameCount} distinct name forms</strong> and includes short meaning entries for <strong>{meaningCount} names</strong>. The iOS and Android apps can also provide daily reminders.</p>
       </div>
 
       <div>
         <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">What we offer</h2>
         <ul class="mt-2 list-disc list-inside space-y-1">
-          <li><strong>1500+ Hungarian names</strong> with detailed meanings and origins</li>
-          <li><strong>366 calendar days</strong> of namedays in one place</li>
+          <li>Namedays for <strong>{nameCount} distinct name forms</strong></li>
+          <li><strong>{meaningCount} short name meanings</strong>, with missing entries clearly labelled</li>
+          <li>Every recurring calendar date, including 29 February</li>
           <li><strong>Daily push notifications</strong> for important namedays</li>
           <li><strong>Modern UI/UX</strong> with dark and light themes</li>
-          <li><strong>Greeting suggestions</strong> and personalization (upcoming)</li>
+          <li><strong>Greeting suggestions</strong> for several situations</li>
           <li><strong>Completely free</strong>, ad-free base tier</li>
         </ul>
       </div>
@@ -44,7 +48,7 @@ const t = strings.en;
 
       <div>
         <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Sources</h2>
-        <p class="mt-2">Name data comes from various Hungarian linguistic, traditional and public sources. We continuously expand and improve the database based on user feedback.</p>
+        <p class="mt-2">Nameday dates are traditional rather than official records, and calendars can differ. The Hungarian <a href="/adatbazis" class="text-primary-500 underline">database and methodology page</a> documents scope, limitations, review and primary references.</p>
       </div>
     </section>
   </article>

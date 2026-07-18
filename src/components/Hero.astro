@@ -26,7 +26,7 @@ const todayFormatted = lang === 'hu'
 
 const todayIso = today.iso;
 const heroTitle = primaryNames.length
-  ? interpolate(t.hero.title, { name: primaryNames.join(' és ') })
+  ? interpolate(t.hero.title, { name: primaryNames.join(lang === 'hu' ? ' és ' : ' and ') })
   : t.hero.titleEmpty;
 
 const kicker = interpolate(t.hero.kicker, { date: todayFormatted });

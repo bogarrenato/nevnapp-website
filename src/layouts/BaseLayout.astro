@@ -34,6 +34,8 @@ interface Props {
   ogImageAlt?: string;
   /** Hides the global app-download CTA strip when set (e.g. on legal pages). */
   hideDownloadStrip?: boolean;
+  /** Loads AdSense only on substantial publisher-content pages. */
+  adsEligible?: boolean;
 }
 
 const {
@@ -47,6 +49,7 @@ const {
   robots = 'index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1',
   ogImageAlt,
   hideDownloadStrip = false,
+  adsEligible = false,
 } = Astro.props;
 
 const t = strings[lang];
@@ -140,12 +143,11 @@ const jsonLdEntries = jsonLd
   <!-- Google Analytics GA4 — csak prod + felhasználói consent után -->
   {import.meta.env.PROD && (
     <>
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-CZKZV7GE2N" is:inline></script>
       <script is:inline>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        // GDPR Consent Mode v2 — alapból mindent denied
+        // Basic Consent Mode: no Analytics network request is made before an
+        // explicit analytics choice. Ad consent is handled by the certified CMP.
         gtag('consent', 'default', {
           ad_storage: 'denied',
           ad_user_data: 'denied',
@@ -155,29 +157,39 @@ const jsonLdEntries = jsonLd
           security_storage: 'granted',
           wait_for_update: 500
         });
-        gtag('config', 'G-CZKZV7GE2N', {
-          anonymize_ip: true,
-          cookie_flags: 'SameSite=None;Secure',
-        });
-        // Read existing consent & update
+        var analyticsLoaded = false;
+        function loadAnalytics() {
+          if (analyticsLoaded) return;
+          analyticsLoaded = true;
+          var script = document.createElement('script');
+          script.async = true;
+          script.src = 'https://www.googletagmanager.com/gtag/js?id=G-CZKZV7GE2N';
+          document.head.appendChild(script);
+          gtag('js', new Date());
+          gtag('config', 'G-CZKZV7GE2N', {
+            anonymize_ip: true,
+            cookie_flags: 'SameSite=None;Secure',
+          });
+        }
         function applyConsent(c) {
           if (!c) return;
           gtag('consent', 'update', {
             analytics_storage: c.analytics ? 'granted' : 'denied',
-            ad_storage: c.marketing ? 'granted' : 'denied',
-            ad_user_data: c.marketing ? 'granted' : 'denied',
-            ad_personalization: c.marketing ? 'granted' : 'denied',
           });
+          if (c.analytics) loadAnalytics();
+          else if (analyticsLoaded) window.location.reload();
         }
         try { applyConsent(JSON.parse(localStorage.getItem('nevnap-consent'))); } catch (e) {}
         window.addEventListener('consent-updated', function (e) { applyConsent(e.detail); });
       </script>
-      <script
-        async
-        is:inline
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5975990857512539"
-        crossorigin="anonymous"
-      ></script>
+      {adsEligible && (
+        <script
+          async
+          is:inline
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5975990857512539"
+          crossorigin="anonymous"
+        ></script>
+      )}
     </>
   )}
 
@@ -210,8 +222,8 @@ const jsonLdEntries = jsonLd
           </h2>
           <p class="mt-3 text-zinc-600 dark:text-zinc-300 max-w-xl mx-auto">
             {lang === 'hu'
-              ? '1500 név, napi értesítés, név-jelentések — egy modern app a zsebedben.'
-              : '1500 names, daily reminders, name meanings — a modern app in your pocket.'}
+              ? '1300+ név napjai, több száz név jelentése és napi értesítés — egy modern app a zsebedben.'
+              : 'Namedays for 1,300+ names, hundreds of name meanings and daily reminders — a modern app in your pocket.'}
           </p>
           <div class="mt-8 flex items-center justify-center gap-4 flex-wrap" role="group" aria-label={lang === 'hu' ? 'Letöltési linkek' : 'Download links'}>
             <StoreBadge store="apple" href={STORE_LINKS.appStore} lang={lang} />

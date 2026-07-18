@@ -10,7 +10,7 @@ import Hero from '../components/Hero.astro';
 import TodayCard from '../components/TodayCard.astro';
 import UpcomingStrip from '../components/UpcomingStrip.astro';
 import { strings } from '../i18n/strings';
-import { getAllNames, getBudapestCalendarDate, getTodayEntry, getMeaning } from '../lib/names';
+import { getAllNames, getBudapestCalendarDate, getTodayEntry } from '../lib/names';
 import {
   SEO_IDS,
   buildFaqSchema,
@@ -23,6 +23,7 @@ const today = getBudapestCalendarDate();
 const entry = getTodayEntry();
 const primaryNames = entry?.primary ?? [];
 const allNames = getAllNames();
+const daysInCurrentYear = new Date(Date.UTC(today.year, 1, 29)).getUTCMonth() === 1 ? 366 : 365;
 
 const pageTitle = primaryNames.length
   ? `Mai névnap: ${primaryNames.join(' és ')} — ${t.months[today.month - 1]} ${today.day}. | ${t.brand}`
@@ -33,8 +34,8 @@ const pageDescription = primaryNames.length
   : t.description;
 
 const todayAnswer = primaryNames.length
-  ? `Ma, ${t.months[today.month - 1]} ${today.day}-án ${primaryNames.join(' és ')} névnapja van a magyar névnap-naptár szerint.`
-  : `Ma, ${t.months[today.month - 1]} ${today.day}-án nincs kiemelt névnap az adatbázisban.`;
+  ? `Ma, ${t.months[today.month - 1].toLocaleLowerCase('hu')} ${today.day}-án ${primaryNames.join(' és ')} névnapja van a magyar névnap-naptár szerint.`
+  : `Ma, ${t.months[today.month - 1].toLocaleLowerCase('hu')} ${today.day}-án nincs kiemelt névnap az adatbázisban.`;
 
 const faqEntries = [
   {
@@ -72,6 +73,7 @@ const jsonLd = [
   description={pageDescription}
   altLangPath="/"
   jsonLd={jsonLd}
+  adsEligible
 >
   <Hero lang="hu" />
   <TodayCard lang="hu" />
@@ -90,13 +92,8 @@ const jsonLd = [
         </div>
       ))}
     </dl>
-    {primaryNames.length > 0 && (
-      <p class="mt-5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-        {primaryNames.map((name) => `${name}: ${getMeaning(name) ?? 'névjelentés hamarosan.'}`).join(' ')}
-      </p>
-    )}
     <p class="mt-3 text-sm text-zinc-500 dark:text-zinc-500">
-      Adatforrás: a NévnapTárX szerkesztett magyar névnap- és névjelentés adatbázisa. Utolsó napi oldalfrissítés: {today.iso}.
+      Adatforrás: a NévnapTárX tájékoztató jellegű magyar névnap-naptára. Lefedettség és módszertan: <a href="/adatbazis" class="text-primary-600 dark:text-primary-400 hover:underline">adatbázis és források</a>. Utolsó napi oldalfrissítés: {today.iso}.
     </p>
   </section>
 
@@ -110,8 +107,8 @@ const jsonLd = [
 
     <div class="mt-12 grid sm:grid-cols-3 gap-4">
       {[
-        { label: '1500+', text: t.homeSeo.statNames },
-        { label: '366', text: t.homeSeo.statDays },
+        { label: String(allNames.length), text: t.homeSeo.statNames },
+        { label: String(daysInCurrentYear), text: t.homeSeo.statDays },
         { label: '0 Ft', text: t.homeSeo.statFree },
       ].map((stat) => (
         <div class="glass rounded-2xl p-5 text-center">

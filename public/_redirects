@@ -1,0 +1,9 @@
+# Common sitemap alias used by crawlers and webmaster tools.
+/sitemap.xml /sitemap-index.xml 301
+
+# The detailed dataset is Hungarian-only; keep old English-shaped links useful.
+/en/names /names 301
+/en/calendar /calendar 301
+/en/blog /blog 301
+/en/name/* /name/:splat 301
+/en/day/* /day/:splat 301

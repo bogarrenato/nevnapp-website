@@ -9,7 +9,7 @@ const t = strings.en;
       <ol class="flex items-center gap-2 list-none"><li><a href="/en/" class="hover:text-primary-500">{t.brand}</a></li><li aria-hidden="true">›</li><li aria-current="page" class="text-zinc-700 dark:text-zinc-300">Cookie Policy</li></ol>
     </nav>
     <h1 class="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight"><span class="gradient-text">Cookie Policy</span></h1>
-    <p class="mt-2 text-sm text-zinc-500">Last updated: January 1, 2026.</p>
+    <p class="mt-2 text-sm text-zinc-500">Last updated: July 18, 2026.</p>
 
     <section class="mt-10 space-y-6 text-zinc-700 dark:text-zinc-300 leading-relaxed">
       <div>
@@ -21,13 +21,13 @@ const t = strings.en;
         <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">What cookies we use</h2>
 
         <div class="mt-4 rounded-2xl border border-zinc-200 dark:border-white/10 p-5">
-          <h3 class="font-bold">🟢 Necessary (always active)</h3>
-          <p class="mt-1 text-sm">Required for basic site functionality.</p>
+          <h3 class="font-bold">🟢 Local preferences (always available)</h3>
+          <p class="mt-1 text-sm">These values use browser localStorage, rather than traditional cookies, to remember the theme and privacy choice.</p>
           <table class="mt-3 w-full text-xs">
             <thead class="text-left text-zinc-500"><tr><th class="py-1 pr-3">Name</th><th class="py-1 pr-3">Purpose</th><th class="py-1">Lifespan</th></tr></thead>
             <tbody>
-              <tr class="border-t border-zinc-200/60 dark:border-white/5"><td class="py-1 pr-3">nevnap-theme</td><td class="py-1 pr-3">Theme (dark/light)</td><td class="py-1">12 mo</td></tr>
-              <tr class="border-t border-zinc-200/60 dark:border-white/5"><td class="py-1 pr-3">nevnap-consent</td><td class="py-1 pr-3">Cookie consent</td><td class="py-1">12 mo</td></tr>
+              <tr class="border-t border-zinc-200/60 dark:border-white/5"><td class="py-1 pr-3">nevnap-theme</td><td class="py-1 pr-3">Theme (dark/light)</td><td class="py-1">Until changed or cleared</td></tr>
+              <tr class="border-t border-zinc-200/60 dark:border-white/5"><td class="py-1 pr-3">nevnap-consent</td><td class="py-1 pr-3">Cookie consent</td><td class="py-1">Until changed or cleared</td></tr>
             </tbody>
           </table>
         </div>
@@ -44,8 +44,9 @@ const t = strings.en;
         </div>
 
         <div class="mt-4 rounded-2xl border border-zinc-200 dark:border-white/10 p-5">
-          <h3 class="font-bold">🟠 Marketing (future, with consent)</h3>
-          <p class="mt-1 text-sm">For relevant ad display. <strong>Not active yet</strong>. We will update this policy before activation.</p>
+          <h3 class="font-bold">🟠 Advertising and consent technologies</h3>
+          <p class="mt-1 text-sm">Google AdSense code may run on edited publisher-content pages. Google's consent framework may use cookies such as <code>FCCDCF</code> or <code>FCNEC</code>; approved ad serving may also use <code>__gads</code> or <code>__gpi</code>. The exact set depends on region, consent and Google configuration.</p>
+          <p class="mt-2 text-sm">In the EEA, advertising consent is handled separately by a Google-certified CMP; this site's own cookie banner controls analytics only. Until that certified message is active, ad storage is denied by default through Google Consent Mode. See <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener" class="text-primary-500 underline">Google's cookie information</a>.</p>
         </div>
       </div>
 
@@ -55,6 +56,7 @@ const t = strings.en;
           <li><button type="button" id="reopen-banner" class="text-primary-500 underline">Reopen cookie banner</button></li>
           <li>Your browser settings</li>
           <li>Google Analytics opt-out: <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener" class="text-primary-500 underline">tools.google.com/dlpage/gaoptout</a></li>
+          <li>Google ad settings: <a href="https://myadcenter.google.com/" target="_blank" rel="noopener" class="text-primary-500 underline">My Ad Center</a></li>
         </ul>
       </div>
 

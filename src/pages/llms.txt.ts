@@ -14,7 +14,7 @@ export const GET: APIRoute = () => {
 
 > Magyar névnap-naptár, névjelentés-adatbázis és mobilalkalmazás iOS-re és Androidra.
 
-NévnapTárX helps users find today's Hungarian nameday, browse the 2026 Hungarian nameday calendar, look up Hungarian first-name meanings, and download the nameday reminder app.
+NévnapTárX helps users find today's Hungarian nameday, browse the ${today.year} Hungarian nameday calendar, look up Hungarian first-name meanings, and download the nameday reminder app.
 
 ## Current Daily Context
 
@@ -26,7 +26,7 @@ NévnapTárX helps users find today's Hungarian nameday, browse the 2026 Hungari
 
 - [Today's Hungarian nameday](${SITE_URL}/): current daily nameday, meaning summary, app download links.
 - [All Hungarian names](${SITE_URL}/names): A-Z name index, each name links to a detailed page.
-- [2026 Hungarian nameday calendar](${SITE_URL}/calendar): month/day calendar with linked names.
+- [${today.year} Hungarian nameday calendar](${SITE_URL}/calendar): month/day calendar with linked names.
 - [Nameday database methodology](${SITE_URL}/adatbazis): dataset coverage, URL structure and citation guidance.
 - [Nameday blog](${SITE_URL}/blog): background articles about Hungarian nameday culture.
 - [Privacy policy](${SITE_URL}/privacy): website privacy information.

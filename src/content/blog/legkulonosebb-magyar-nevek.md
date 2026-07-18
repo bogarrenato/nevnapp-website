@@ -1,112 +1,96 @@
 ---
-title: 'A 15 legkülönösebb magyar név — eredetük és jelentésük'
-description: 'Ritka, különös magyar nevek, amiket talán még sose hallottál — de mind hivatalosan engedélyezett.'
+title: '15 érdekes magyar utónév — irodalmi, mondai és természeti kapcsolatok'
+description: 'Szerkesztett válogatás tizenöt karakteres utónévből, ellenőrizhető háttérrel és gyakorlati névválasztási szempontokkal.'
 pubDate: 2026-03-01
+updatedDate: 2026-07-18
 lang: hu
-tags: ['ritka nevek', 'érdekességek', 'eredet']
-readingMinutes: 6
+tags: ['utónevek', 'érdekességek', 'eredet']
+readingMinutes: 8
 ---
 
-A magyar nyelvben **rengeteg ritka, különös név** található — sok közülük akár **régi magyar gyökerű**, mások **mondai**, megint mások **modern alkotások**. Itt jön a top 15.
+Mitől „különös” egy név? Attól, hogy ritkán halljuk, szokatlan a hangzása, vagy érdekes történet kapcsolódik hozzá? Erre nincs objektív rangsor, ezért ez a cikk nem a „legfurcsább” neveket és nem gyakorisági toplistát közöl. Tizenöt olyan utónevet válogattunk össze, amelyek jó kiindulópontot adnak a magyar névkincs irodalmi, történeti és természeti rétegeinek felfedezéséhez.
 
-## 1. **Csenge** 🌹
-*Eredet*: magyar, "csendes" jelentésű ősi szóból
-*Stat*: 1990 óta engedélyezett
-*Hírés*: a fiatal generáció kedvence
+A név eredete sokszor összetettebb annál, mint amit egyetlen szavas internetes jelentés sugall. Az alábbi rövid ismertetők ezért elsősorban a biztosan azonosítható kulturális kapcsolatra figyelnek. Ha valamelyik nevet gyermeknek választanátok, az írásmódot és az aktuális anyakönyvezhetőséget mindig ellenőrizzétek a hatályos utónévjegyzékben.
 
-## 2. **Tünde** 🧚
-*Eredet*: Vörösmarty Mihály *Csongor és Tünde* című drámájából (1830)
-*Jelentés*: tündér
-*Hírés*: szabadszellemű, költői név
+## Irodalmi kapcsolódású nevek
 
-## 3. **Hajnalka** 🌅
-*Eredet*: magyar
-*Jelentés*: kis hajnal (illetve egy virág)
-*Hírés*: csak Magyarországon
+### 1. Tünde
 
-## 4. **Réka** 🌊
-*Eredet*: magyar mondatörténet — Attila hun király első felesége
-*Jelentés*: forrás (víz)
+A név Vörösmarty Mihály *Csongor és Tünde* című drámai költeményével vált a magyar irodalmi hagyomány részévé. Hangzása ma is könnyen felidézi a mű mesei világát. Névválasztásnál érdemes nemcsak a közkeletű „tündér” magyarázatot, hanem a név nyelvészeti adatlapját is elolvasni.
 
-## 5. **Csilla** ⭐
-*Eredet*: Vörösmarty — szintén irodalmi
-*Jelentés*: csillagocska (kicsinyítő képzővel)
+### 2. Csongor
 
-## 6. **Levente** ⚔️
-*Eredet*: ősmagyar — Levente herceg (Árpád-ház)
-*Jelentés*: a "lenni" jelentésű szóból
-*Hírés*: csak Magyarországon ismert
+Csongor Vörösmarty művének címszereplője, ám a név háttere nem merül ki az irodalmi alakban. Történeti és nyelvi előzményeiről a szakirodalom részletesebb képet ad, mint a gyakran ismételt egymondatos jelentések. A Tündével alkotott irodalmi névpár családi vagy testvérnévként erős utalás lehet, amit érdemes tudatosan vállalni.
 
-## 7. **Csongor** 🏰
-*Eredet*: Vörösmarty — *Csongor és Tünde* főhőse
-*Jelentés*: szárny
+### 3. Csilla
 
-## 8. **Bendegúz** 🦅
-*Eredet*: Attila hun király apja, Bendegúz
-*Jelentés*: bizonytalan eredet, hun
+A Csilla korábbi irodalmi névalkotás: első dokumentált használata Dugonics András 1788-ban megjelent *Etelka* című regényéhez kötődik, a név pedig a csillag szóhoz kapcsolódik. Rövid és könnyen becézhető, mégis jól felismerhető irodalmi háttere van. Ez jó példa arra, hogyan válhat egy szerzői névalkotás mindennap használt személynévvé.
 
-## 9. **Boglárka** 🌼
-*Eredet*: magyar virág-név
-*Jelentés*: kis virág (Ranunculus)
+### 4. Dalma
 
-## 10. **Hunor** 🐎
-*Eredet*: magyar monda — Hunor és Magor testvérek
-*Jelentés*: az ősmagyar "vad lófej-toll"
+A Dalma a magyar irodalmi névhasználattal is összefonódott. Hangalakja miatt sokféle spontán magyarázatot társítanak hozzá, de ezeket nem érdemes automatikusan etimológiának tekinteni. Ha a név jelentése döntő szempont, ellenőrizzétek a nyelvészeti leírást.
 
-## 11. **Etele / Atilla** 🏛️
-*Eredet*: hun, "kis apa"
-*Hírés*: Attila hun király névadó
+### 5. Gyöngyvér
 
-## 12. **Liliána** 🌷
-*Eredet*: magyar-latin keverék
-*Jelentés*: lillom
+A Gyöngyvér Arany János névalkotásaként ismert. A szó részei miatt magyarul azonnal képszerűnek hat, ezért különösen erős irodalmi hangulata van. Hosszabb családnév mellett mondjátok ki többször a teljes nevet, hogy a ritmusa kényelmes maradjon.
 
-## 13. **Zita** 👑
-*Eredet*: olasz - Szent Zita
-*Hírés*: I. Károly utolsó osztrák-magyar császár felesége
+## Mondai és történeti kötődésű nevek
 
-## 14. **Léna** ✨
-*Eredet*: orosz/szláv eredet, Helena rövidülése
-*Hírés*: 2010-es években robbant be Magyarországon
+### 6. Hunor
 
-## 15. **Mira** 🌸
-*Eredet*: szláv "béke" jelentésű szóból
-*Hírés*: nemzetközi és magyar is
+Hunor a Hunor és Magor eredetmondából ismert alak. A névhez erős kulturális képzetek társulnak, de ebből nem következik egyetlen, biztosan lefordítható „ősmagyar jelentés”. A mondai kapcsolat és a nyelvi eredet két külön kérdés.
 
----
+### 7. Magor
 
-## 💡 Hová sorolhatók?
+Magor Hunor testvéreként szerepel a magyar eredethagyományban. A két név együtt nagyon közvetlen mondai utalást alkot, külön-külön azonban önállóan használható. Testvérnevek választásakor gondoljátok át, szeretnétek-e ennyire szoros kulturális párost.
 
-A 15 név a következő kategóriákba esik:
+### 8. Bendegúz
 
-### **Magyar mondai** (1, 4, 6, 8, 10, 11)
-A magyar őstörténet hősei és tündérei. Erős nemzeti gyökerű nevek.
+A Bendegúz név a magyar történeti hagyományban Attila apjához kapcsolódik. Sokaknak Arany János *Buda halála* című műve vagy Rideg Sándor *Indul a bakterház* című regényének Regős Bendegúza is eszébe juthat róla. A többféle kulturális asszociáció miatt különösen érdemes megnézni, mit jelent a név a család számára.
 
-### **Irodalmi** (2, 5, 7)
-Magyar írók által teremtett karakterek nevei.
+### 9. Etele
 
-### **Természet** (3, 9, 12)
-Hajnal, virág, természet — magyar lírai hagyomány.
+Az Etele az Attila név magyar névhagyományban élő alakja. Nem pusztán „lefordított” változat, ezért a pontos eredettörténetet nem célszerű egyetlen jelentésre egyszerűsíteni. Rövidsége miatt a teljes név hangzáspróbáján jól összevethető hosszabb utónevekkel is.
 
-### **Nemzetközi adaptáció** (14, 15)
-Külföldről jövő, de magyar nyelvezetbe simulóan beolvadt.
+### 10. Levente
 
-### **Történelmi** (13)
-Európai történelem ismert szereplői.
+A Leventének történeti személynévi kapcsolatai vannak, többek között Árpád-házi névviselőkkel. Mai használatát azonban nem lehet kizárólag a történelmi háttérből levezetni. Egy régi név lehet jelenkori hangzású anélkül, hogy „új névnek” kellene neveznünk.
 
-## Hogyan kérvényezzem egy név engedélyezését?
+## Természethez kapcsolódó nevek
 
-Ha a **gyermekednek olyan nevet** szeretnél, ami **nincs a listán**:
-1. Anyakönyvi hivatal — kérvényt nyújts be
-2. **Nyelvtudományi Intézet** szakértői vélemény (kötelező)
-3. Várj 30-60 nap választ
-4. Pozitív → mehet az anyakönyvbe
-5. Negatív → fellebbezhetsz
+### 11. Boglárka
 
-## Hagyomány és innováció
+A boglárka növénynévként és utónévként is él a magyarban. Emiatt jelentése a beszélők számára közvetlenebbnek tűnhet, mint egy több nyelven át öröklődött névé. A Bogi becenév más nevekhez is kapcsolódhat, ezért hivatalos helyzetben mindig a teljes névalak az egyértelmű.
 
-A magyar nevek **gazdagok** — a hun mondáktól a modern szláv adaptációkig. **Egy név egy kis kultúrtörténet** — érdemes ismerni a sajátunkat.
+### 12. Hajnalka
 
-📲 Tudd meg a [saját neved](/) történetét és jelentését — vagy [böngészz](/names) az **1500+ magyar név** között!
+A Hajnalka egyszerre idézi fel a hajnalt és a hajnalka virágot. A természetkapcsolat jól érthető, de a név történetét itt is érdemes különválasztani a mai szóasszociációtól. A lehetséges becézéseket a teljes családnévvel együtt próbáljátok ki.
 
-Olvasd el a következő cikket: [Mi a névnap? — A magyar hagyomány](/blog/mi-a-nevnap)
+## Régi, zenei és irodalmi kapcsolódású nevek
+
+### 13. Bíborka
+
+A Bíborka a régi magyar Bíbor, illetve Bíbora női név kicsinyítőképzős, a XIX–XX. században felújított változata. Mai hangzása a bíbor színt vagy a hasonló növénynevet is felidézheti, de ezeket az asszociációkat érdemes elkülöníteni a név nyelvészeti eredetétől. Szokatlanabb névnél hasznos kérdés, hogy telefonban elsőre érthető-e, és a család szívesen pontosítja-e, ha valaki visszakérdez.
+
+### 14. Villő
+
+A Villő újabb keletű névalkotás, amely Kodály Zoltán 1925-ben szerzett *Villő* című gyermekkórusának címe nyomán vált utónévvé. Rövid, ékezetes alakja miatt különösen fontos a pontos írásmód. Külföldi használat előtt azt is érdemes kipróbálni, hogyan ejtik ki más nyelvi környezetben.
+
+### 15. Kincső
+
+A Kincső Jókai Mór névalkotása *A jövő század regénye* című művében. A „kincs” szóval való kapcsolata miatt mai magyar beszélők számára könnyen értelmezhető, de az irodalmi eredetet érdemes elkülöníteni a szülők személyes névmagyarázatától. A közvetlen jelentésűnek ható névnél is az a lényeg, hogy viselője később kényelmesen tudjon azonosulni vele.
+
+## Hogyan használjátok ezt a válogatást?
+
+Ne a különlegesség legyen az egyetlen cél. Írjátok le a teljes nevet, mondjátok ki hétköznapi helyzetekben, gyűjtsétek össze a természetes beceneveket, és beszéljétek meg a névhez kötődő erős kulturális utalásokat. Ha ritkábbnak érzitek, kérjetek meg néhány embert, hogy egyszeri hallás után írja le: ebből kiderülhet, mennyi pontosítást igényel majd.
+
+## Anyakönyvezhetőség és kérelem
+
+2025 óta a magyar utónévjegyzéket a kultúráért felelős miniszter állapítja meg rendeletben. Ha a kívánt név nem szerepel az aktuális jegyzékben, hivatalos kérelem nyújtható be a Közigazgatási és Területfejlesztési Minisztériumhoz. Az ELTE Nyelvtudományi Kutatóközpont Névbizottsága szakvéleményt készít, a jegyzékbe kerülésről azonban nem az intézet önállóan dönt.
+
+Az eljárás megkezdése előtt az ELTE NYTK aktuális tájékoztatóját és a Magyar Közlönyben kihirdetett jegyzéket nézzétek meg. A saját [névoldalaink](/names) ötleteléshez használhatók, de nem minősülnek hivatalos utónévjegyzéknek.
+
+## Források és ellenőrzés
+
+- [ELTE Nyelvtudományi Kutatóközpont – névadási tanácsadás, utónévjegyzék és utónévkereső](https://nytud.hu/szolgaltatas/nevadasi-tanacsadas)
+- [Nemzeti Jogszabálytár – 2010. évi I. törvény az anyakönyvi eljárásról](https://njt.jog.gov.hu/jogszabaly/2010-1-00-00)

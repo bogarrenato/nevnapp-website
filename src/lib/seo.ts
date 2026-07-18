@@ -98,7 +98,6 @@ export function buildNamedayDatasetSchema(nameCount: number) {
     inLanguage: 'hu-HU',
     creator: { '@id': SEO_IDS.creator },
     publisher: { '@id': SEO_IDS.organization },
-    temporalCoverage: '2026',
     spatialCoverage: {
       '@type': 'Country',
       name: 'Hungary',
@@ -112,7 +111,7 @@ export function buildNamedayDatasetSchema(nameCount: number) {
       'magyar keresztnév',
       'névnap naptár',
     ],
-    size: `${nameCount} magyar keresztnév`,
+    size: `${nameCount} naptárban szereplő névalak`,
   };
 }
 
@@ -121,8 +120,8 @@ export function buildDefinedTermSetSchema(nameCount: number) {
     '@context': 'https://schema.org',
     '@type': 'DefinedTermSet',
     '@id': SEO_IDS.nameTermSet,
-    name: 'Magyar keresztnevek',
-    description: `${nameCount} magyar keresztnév jelentése és névnapja.`,
+    name: 'A NévnapTárX naptárában szereplő keresztnevek',
+    description: `${nameCount} névalak névnapjai és az elérhető rövid névjelentések.`,
     url: absoluteUrl('/names'),
     inLanguage: 'hu-HU',
     publisher: { '@id': SEO_IDS.organization },

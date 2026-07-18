@@ -1,7 +1,7 @@
 /**
  * Data layer for the nevnap.app site.
  *
- * Reads the bundled `nevnapok.json` (1500 names indexed by date) and
+ * Reads the bundled `nevnapok.json` (names indexed by date) and
  * `name_meanings.json` (name → meaning string). Exposes helpers used by both
  * the static pages and the dynamic [name]/[date] routes.
  *
@@ -35,6 +35,11 @@ const BUDAPEST_TIME_ZONE = 'Europe/Budapest';
 const NAME_DAYS = (nameDaysData as NameDaysFile).namedays;
 const MEANINGS = meaningsData as Record<string, string>;
 
+/** Case-insensitive key that still preserves meaningful Hungarian accents. */
+function canonicalKey(value: string): string {
+  return value.toLocaleLowerCase('hu').trim();
+}
+
 /** All entries indexed by 'MM-DD'. */
 const ENTRIES_BY_DATE: Map<string, NameDayEntry> = new Map();
 for (const entry of NAME_DAYS) {
@@ -46,9 +51,12 @@ const DATES_BY_NAME: Map<string, NameDayEntry[]> = new Map();
 for (const entry of NAME_DAYS) {
   for (const list of [entry.primary, entry.secondary]) {
     for (const name of list) {
-      const key = normalize(name);
+      const key = canonicalKey(name);
       if (!DATES_BY_NAME.has(key)) DATES_BY_NAME.set(key, []);
-      DATES_BY_NAME.get(key)!.push(entry);
+      const entries = DATES_BY_NAME.get(key)!;
+      if (!entries.some((candidate) => candidate.month === entry.month && candidate.day === entry.day)) {
+        entries.push(entry);
+      }
     }
   }
 }
@@ -60,7 +68,7 @@ const ALL_NAMES_CANONICAL: string[] = [];
   for (const entry of NAME_DAYS) {
     for (const list of [entry.primary, entry.secondary]) {
       for (const name of list) {
-        const key = normalize(name);
+        const key = canonicalKey(name);
         if (!seen.has(key)) seen.set(key, name);
       }
     }
@@ -169,34 +177,58 @@ export function getUpcoming(n: number, now: Date = new Date()): {
 
 /** All dates a name appears on (any form). */
 export function getDatesForName(name: string): NameDayEntry[] {
-  return DATES_BY_NAME.get(normalize(name)) ?? [];
+  const exact = DATES_BY_NAME.get(canonicalKey(name));
+  if (exact) return exact;
+
+  // Friendly fallback for manually typed accent-less searches. Generated
+  // routes always use the exact canonical spelling, so distinct names such as
+  // Adam and Ádám remain separate entries.
+  const folded = normalize(name);
+  for (const [key, entries] of DATES_BY_NAME) {
+    if (normalize(key) === folded) return entries;
+  }
+  return [];
 }
 
-/** Resolve the meaning text (case-insensitive). */
+/** Resolve the meaning text for the exact name spelling (case-insensitive). */
 export function getMeaning(name: string): string | null {
-  const upper = name.toUpperCase();
-  // Direct match first
-  if (MEANINGS[upper]) return MEANINGS[upper];
-  // Fall back to a normalized scan (slower but robust)
-  const norm = normalize(name);
-  for (const [key, value] of Object.entries(MEANINGS)) {
-    if (normalize(key) === norm) return value;
-  }
-  return null;
+  const upper = name.toLocaleUpperCase('hu');
+  // Meanings are only attached to the exact spelling. Accent-folding here
+  // would incorrectly transfer entries between distinct names (Adam/Ádám,
+  // Abel/Ábel, Emilia/Emília, etc.).
+  return MEANINGS[upper] ?? null;
+}
+
+/**
+ * Normalise legacy dictionary lead-ins such as "A ANNA név" while keeping
+ * the source wording intact. This removes all-caps names and fixes the
+ * Hungarian article in user-facing copy.
+ */
+export function getDisplayMeaning(name: string): string | null {
+  const meaning = getMeaning(name);
+  if (!meaning) return null;
+
+  const article = /^[aáeéiíoóöőuúüű]/iu.test(name) ? 'Az' : 'A';
+  return meaning.replace(/^(?:A|Az)\s+.+?\s+név\b/iu, `${article} ${name} név`);
+}
+
+/** Number of canonical calendar names with a dictionary meaning. */
+export function getMeaningCoverageCount(): number {
+  return ALL_NAMES_CANONICAL.filter((name) => getMeaning(name) !== null).length;
 }
 
 /** A few related names — same letter group, deterministic. */
 export function getRelatedNames(name: string, max = 8): string[] {
-  const target = normalize(name);
-  const firstLetter = target[0];
+  const target = canonicalKey(name);
+  const firstLetter = normalize(name)[0];
   const candidates = ALL_NAMES_CANONICAL.filter(
-    (n) => normalize(n)[0] === firstLetter && normalize(n) !== target,
+    (n) => normalize(n)[0] === firstLetter && canonicalKey(n) !== target,
   );
   return candidates.slice(0, max);
 }
 
 /** True when a name is primary on its date (used for emphasis). */
 export function isPrimary(name: string, entry: NameDayEntry): boolean {
-  const norm = normalize(name);
-  return entry.primary.some((n) => normalize(n) === norm);
+  const key = canonicalKey(name);
+  return entry.primary.some((n) => canonicalKey(n) === key);
 }

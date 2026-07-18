@@ -1,0 +1,13 @@
+# Prevent alternate Pages and www hosts from becoming duplicate search results.
+https://nevnap-website.pages.dev/*
+  X-Robots-Tag: noindex, nofollow
+
+https://www.nevnap.app/*
+  X-Robots-Tag: noindex, follow
+
+# Machine-readable context files are discoverable, but not search landing pages.
+/llms.txt
+  X-Robots-Tag: noindex, follow
+
+/llms-full.txt
+  X-Robots-Tag: noindex, follow

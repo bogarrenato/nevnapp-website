@@ -10,8 +10,9 @@
  *
  * Consent storage:
  *  - localStorage key: 'nevnap-consent'
- *  - JSON: { necessary: true, analytics: bool, marketing: bool, ts: number }
- *  - Analytics + marketing scripts check this before running
+ *  - JSON: { necessary: true, analytics: bool, marketing: false, ts: number }
+ *  - This banner controls analytics only. Google ad consent is handled by a
+ *    separate Google-certified CMP when that account-side message is active.
  */
 import type { Lang } from '../i18n/strings';
 interface Props { lang: Lang }
@@ -19,8 +20,8 @@ const { lang } = Astro.props;
 
 const t = lang === 'hu' ? {
   title: 'Sütik használata',
-  body: 'Ez a weboldal sütiket használ a működéshez és a forgalom méréséhez. Az adatkezelés részleteit a Adatvédelmi tájékoztató és a Süti szabályzat tartalmazza.',
-  acceptAll: 'Mindent elfogadok',
+  body: 'Ez a weboldal helyi beállításokat használ a működéshez, hozzájárulásod esetén pedig sütiket a forgalom méréséhez. Az adatkezelés részleteit az Adatvédelmi tájékoztató és a Süti szabályzat tartalmazza.',
+  acceptAll: 'Analitika engedélyezése',
   acceptNec: 'Csak szükségesek',
   customize: 'Beállítások',
   saveSel: 'Választás mentése',
@@ -28,15 +29,13 @@ const t = lang === 'hu' ? {
   catNecBody: 'A weboldal alapvető működéséhez (téma, nyelv, beállítások).',
   catAnaHead: 'Analitikai sütik',
   catAnaBody: 'Anonim forgalmi statisztika (Google Analytics). Nélkülük nem látjuk hogyan használják az oldalt.',
-  catMarHead: 'Marketing sütik',
-  catMarBody: 'Releváns hirdetések megjelenítése Google AdSense használatával.',
   privacyLink: 'Adatvédelem',
   cookieLink: 'Süti szabályzat',
   closeAria: 'Süti banner bezárása',
 } : {
   title: 'Cookie usage',
-  body: 'This website uses cookies for functionality and traffic measurement. Details are in the Privacy Policy and Cookie Policy.',
-  acceptAll: 'Accept all',
+  body: 'This website uses local settings for functionality and, with your consent, cookies for traffic measurement. Details are in the Privacy Policy and Cookie Policy.',
+  acceptAll: 'Allow analytics',
   acceptNec: 'Only necessary',
   customize: 'Customize',
   saveSel: 'Save selection',
@@ -44,8 +43,6 @@ const t = lang === 'hu' ? {
   catNecBody: 'Required for basic functionality (theme, language, settings).',
   catAnaHead: 'Analytics cookies',
   catAnaBody: 'Anonymous traffic statistics (Google Analytics). Without these we cannot see how the site is used.',
-  catMarHead: 'Marketing cookies',
-  catMarBody: 'For displaying relevant ads with Google AdSense.',
   privacyLink: 'Privacy',
   cookieLink: 'Cookies',
   closeAria: 'Close cookie banner',
@@ -96,17 +93,10 @@ const cookieHref = lang === 'hu' ? '/cookies' : '/en/cookies';
         </div>
       </li>
       <li class="flex items-start gap-3">
-        <input type="checkbox" data-cat="analytics" checked class="mt-1 accent-primary-500" aria-label={t.catAnaHead} />
+        <input type="checkbox" data-cat="analytics" class="mt-1 accent-primary-500" aria-label={t.catAnaHead} />
         <div>
           <p class="text-sm font-semibold">{t.catAnaHead}</p>
           <p class="text-xs text-zinc-500 mt-0.5">{t.catAnaBody}</p>
-        </div>
-      </li>
-      <li class="flex items-start gap-3">
-        <input type="checkbox" data-cat="marketing" class="mt-1 accent-primary-500" aria-label={t.catMarHead} />
-        <div>
-          <p class="text-sm font-semibold">{t.catMarHead}</p>
-          <p class="text-xs text-zinc-500 mt-0.5">{t.catMarBody}</p>
         </div>
       </li>
     </ul>
@@ -146,7 +136,7 @@ const cookieHref = lang === 'hu' ? '/cookies' : '/en/cookies';
       if (!t) return;
       var act = t.getAttribute('data-action');
       if (act === 'accept-all') {
-        writeConsent({ necessary: true, analytics: true, marketing: true, ts: Date.now() });
+        writeConsent({ necessary: true, analytics: true, marketing: false, ts: Date.now() });
         close();
       } else if (act === 'accept-necessary') {
         writeConsent({ necessary: true, analytics: false, marketing: false, ts: Date.now() });
@@ -156,8 +146,7 @@ const cookieHref = lang === 'hu' ? '/cookies' : '/en/cookies';
         stepCustom.hidden = false;
       } else if (act === 'save-selection') {
         var ana = banner.querySelector('[data-cat="analytics"]').checked;
-        var mar = banner.querySelector('[data-cat="marketing"]').checked;
-        writeConsent({ necessary: true, analytics: ana, marketing: mar, ts: Date.now() });
+        writeConsent({ necessary: true, analytics: ana, marketing: false, ts: Date.now() });
         close();
       }
     });

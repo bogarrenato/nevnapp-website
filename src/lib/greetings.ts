@@ -1,7 +1,7 @@
 /**
  * Köszöntő szöveg-generátor — minden névhez deterministikusan kiválaszt 6-8
  * köszöntőt a 25-25 sablonból a név hash alapján. Így ugyanazt a névre mindig
- * ugyanazokat a köszöntőket látja a user, de a 1500 név közt jól szórt.
+ * ugyanazokat a köszöntőket látja a user, de a nevek közt jól szórt.
  *
  * SEO-impact: minden /name oldalra ~600-800 új szó tartalom kerül,
  * pontosan ami a long-tail keyword-öket célozza:

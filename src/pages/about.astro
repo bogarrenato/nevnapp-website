@@ -1,7 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { strings } from '../i18n/strings';
+import { getAllNames, getMeaningCoverageCount } from '../lib/names';
 const t = strings.hu;
+const nameCount = getAllNames().length;
+const meaningCount = getMeaningCoverageCount();
 ---
 <BaseLayout lang="hu" title={`Rólunk | ${t.brand}`} description="A NévnapTárX projekt küldetése: a magyar névnap-hagyomány megőrzése modern technológiával." altLangPath="/about">
   <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
@@ -15,17 +18,18 @@ const t = strings.hu;
       <div>
         <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">A küldetés</h2>
         <p class="mt-2">A névnap egy szép, sok évszázados magyar hagyomány — minden napra esik egy vagy több név, melyet a családok, barátok kis ünnepléssel jelölnek. A digitális korban azonban könnyen elfeledkezünk róla.</p>
-        <p class="mt-2">A NévnapTárX azzal az egyszerű céllal készült, hogy ne fordulhasson ilyen elő: <strong>1500 magyar névhez</strong> tartozó jelentéseket, eredeteket és a napi értesítéseket gyűjti egy modern, 2026-os designnal készült alkalmazásba — iOS-re és Androidra egyaránt.</p>
+        <p class="mt-2">A NévnapTárX azzal az egyszerű céllal készült, hogy ne fordulhasson ilyen elő: a jelenlegi naptár <strong>{nameCount} külön névalak</strong> névnapját rendezi kereshető formába, és <strong>{meaningCount} névhez</strong> tartalmaz rövid jelentést. Az alkalmazás iOS-en és Androidon napi emlékeztetőt is adhat.</p>
       </div>
 
       <div>
         <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Mit kínálunk?</h2>
         <ul class="mt-2 list-disc list-inside space-y-1">
-          <li><strong>1500+ magyar név</strong> részletes jelentésével és eredetével</li>
-          <li><strong>366 naptári nap</strong> névnapjai egy helyen</li>
+          <li><strong>{nameCount} névalak</strong> névnapjai kereshető naptárban</li>
+          <li><strong>{meaningCount} rövid névjelentés</strong>, egyértelműen jelzett hiányokkal</li>
+          <li><strong>Az év minden dátuma</strong>, a február 29-i szökőnappal együtt</li>
           <li><strong>Napi push értesítés</strong> a fontos névnapokról</li>
           <li><strong>Modern UI/UX</strong> sötét és világos témával</li>
-          <li><strong>Köszöntő ötletek</strong> és személyre szabás (jövőbeli funkció)</li>
+          <li><strong>Köszöntőötletek</strong> rövid és formális helyzetekhez</li>
           <li><strong>Teljesen ingyen</strong>, hirdetésmentes alapcsomag</li>
         </ul>
       </div>
@@ -44,7 +48,7 @@ const t = strings.hu;
 
       <div>
         <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Adatforrások</h2>
-        <p class="mt-2">A név-adatok többféle magyar nyelvészeti, hagyományos és nyilvános forrásból származnak. Folyamatosan bővítjük és javítjuk az adatbázist a felhasználói visszajelzések alapján.</p>
+        <p class="mt-2">A névnap nem hatósági adat, és az egyes naptárak eltérhetnek. A lefedettséget, a korlátokat, az ellenőrzés módját és az elsődleges hivatkozásokat az <a href="/adatbazis" class="text-primary-500 underline">adatbázis és módszertan</a> oldalon dokumentáljuk. Hibajelzést a kapcsolati címen fogadunk.</p>
       </div>
     </section>
   </article>

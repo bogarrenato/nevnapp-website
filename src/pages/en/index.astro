@@ -1,8 +1,6 @@
 ---
 /**
- * English landing page. Hu still hosts the heavy long-tail SEO work
- * (1500 név × keresztnév jelentés is HU-only), but having a polished
- * en/ root lets us attract expats and English-language press.
+ * English landing page for visitors learning about the Hungarian tradition.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Hero from '../../components/Hero.astro';
@@ -94,9 +92,9 @@ const jsonLd = [
         person whose name matches the day with a small gift, a call, or a sweet message.
       </p>
       <p>
-        <strong>NévnapTárX</strong> is a modern 2026 nameday calendar app with
-        <strong>1500 Hungarian names</strong>, full meanings, and daily reminders —
-        free on iOS and Android.
+        <strong>NévnapTárX</strong> is a modern nameday calendar app covering
+        <strong>{allNames.length} distinct name forms</strong>, with hundreds of short
+        name meanings and optional daily reminders on iOS and Android.
       </p>
     </div>
   </section>

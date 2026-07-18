@@ -4,8 +4,8 @@
  * Uses the same coral→pink gradient as the Flutter hero card so the
  * brand identity is consistent across surfaces.
  */
-import { strings, localizedPath, interpolate, type Lang } from '../i18n/strings';
-import { getBudapestCalendarDate, getTodayEntry, getMeaning } from '../lib/names';
+import { strings, localizedPath, type Lang } from '../i18n/strings';
+import { getBudapestCalendarDate, getTodayEntry } from '../lib/names';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -14,7 +14,6 @@ const today = getBudapestCalendarDate();
 const entry = getTodayEntry();
 const primary = entry?.primary ?? [];
 const secondary = entry?.secondary ?? [];
-const firstMeaning = primary.length ? getMeaning(primary[0]) : null;
 
 const todayLabel = lang === 'hu'
   ? `${t.months[today.month - 1]} ${today.day}.`
@@ -38,7 +37,7 @@ const todayLabel = lang === 'hu'
 
       {primary.length ? (
         <h2 id="today-card-heading" class="mt-5 text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.0]">
-          {primary.join(' és ')}
+          {primary.join(lang === 'hu' ? ' és ' : ' and ')}
         </h2>
       ) : (
         <h2 id="today-card-heading" class="mt-5 text-3xl md:text-4xl font-bold">{t.today.noNameday}</h2>
@@ -61,15 +60,6 @@ const todayLabel = lang === 'hu'
             </li>
           ))}
         </ul>
-      )}
-
-      {firstMeaning && (
-        <div class="mt-8 max-w-2xl">
-          <p class="text-xs uppercase tracking-widest font-semibold opacity-80 mb-2">
-            {interpolate(t.namePage.meaningHeading, { name: primary[0] })}
-          </p>
-          <p class="text-base md:text-lg opacity-95 leading-relaxed">{firstMeaning}</p>
-        </div>
       )}
 
       {secondary.length > 0 && (

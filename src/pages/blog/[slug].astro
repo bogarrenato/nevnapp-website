@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const t = strings.hu;
-const fmtDate = (d: Date) => `${d.getFullYear()}. ${t.months[d.getMonth()]} ${d.getDate()}.`;
+const fmtDate = (d: Date) => `${d.getFullYear()}. ${t.months[d.getMonth()].toLocaleLowerCase('hu')} ${d.getDate()}.`;
 const pagePath = `/blog/${post.id}`;
 
 const jsonLd = [
@@ -34,7 +34,7 @@ const jsonLd = [
     headline: post.data.title,
     description: post.data.description,
     datePublished: post.data.pubDate.toISOString(),
-    dateModified: post.data.pubDate.toISOString(),
+    dateModified: (post.data.updatedDate ?? post.data.pubDate).toISOString(),
     inLanguage: 'hu-HU',
     isAccessibleForFree: true,
     author: { '@id': SEO_IDS.creator },
@@ -45,7 +45,7 @@ const jsonLd = [
   },
 ];
 ---
-<BaseLayout lang="hu" title={`${post.data.title} | ${t.brand}`} description={post.data.description} jsonLd={jsonLd}>
+<BaseLayout lang="hu" title={`${post.data.title} | ${t.brand}`} description={post.data.description} jsonLd={jsonLd} adsEligible>
   <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
     <nav class="text-sm text-zinc-500" aria-label="Morzsamenü">
       <ol class="flex items-center gap-2 list-none">
@@ -58,8 +58,16 @@ const jsonLd = [
     </nav>
 
     <header class="mt-8">
-      <div class="flex items-center gap-3 text-xs text-zinc-500">
+      <div class="flex flex-wrap items-center gap-3 text-xs text-zinc-500">
+        <a href="/about" rel="author" class="hover:text-primary-500">Bogár Renátó</a>
+        <span aria-hidden="true">•</span>
         <time datetime={post.data.pubDate.toISOString()}>{fmtDate(post.data.pubDate)}</time>
+        {post.data.updatedDate && (
+          <>
+            <span aria-hidden="true">•</span>
+            <span>Frissítve: <time datetime={post.data.updatedDate.toISOString()}>{fmtDate(post.data.updatedDate)}</time></span>
+          </>
+        )}
         <span aria-hidden="true">•</span>
         <span>{interpolate(t.blog.readingTime, { min: String(post.data.readingMinutes) })}</span>
       </div>
@@ -82,6 +90,10 @@ const jsonLd = [
     </div>
 
     <footer class="mt-16 pt-8 border-t border-zinc-200 dark:border-white/10">
+      <p class="mb-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+        A cikket a NévnapTárX szerkesztője készítette. Az adatkezelésről, forrásokról és javítási elvekről az
+        <a href="/adatbazis" class="text-primary-500 hover:underline">adatbázis és módszertan</a> oldalon olvashatsz.
+      </p>
       <a href="/blog" class="text-primary-500 hover:underline font-semibold">{t.blog.backToBlog}</a>
     </footer>
   </article>

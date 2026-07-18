@@ -9,7 +9,7 @@ const t = strings.hu;
       <ol class="flex items-center gap-2 list-none"><li><a href="/" class="hover:text-primary-500">{t.brand}</a></li><li aria-hidden="true">›</li><li aria-current="page" class="text-zinc-700 dark:text-zinc-300">Süti szabályzat</li></ol>
     </nav>
     <h1 class="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight"><span class="gradient-text">Süti szabályzat</span></h1>
-    <p class="mt-2 text-sm text-zinc-500">Utoljára frissítve: 2026. január 1.</p>
+    <p class="mt-2 text-sm text-zinc-500">Utoljára frissítve: 2026. július 18.</p>
 
     <section class="mt-10 space-y-6 text-zinc-700 dark:text-zinc-300 leading-relaxed">
       <div>
@@ -21,13 +21,13 @@ const t = strings.hu;
         <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Milyen sütiket használunk?</h2>
 
         <div class="mt-4 rounded-2xl border border-zinc-200 dark:border-white/10 p-5">
-          <h3 class="font-bold">🟢 Szükséges (mindig aktív)</h3>
-          <p class="mt-1 text-sm">A weboldal alapvető működéséhez szükségesek. Nélkülük az oldal nem tud megfelelően működni.</p>
+          <h3 class="font-bold">🟢 Helyi beállítások (mindig elérhetők)</h3>
+          <p class="mt-1 text-sm">Ezek a böngésző localStorage tárhelyén, nem hagyományos sütiként tárolják a témát és a választott adatvédelmi beállítást.</p>
           <table class="mt-3 w-full text-xs">
             <thead class="text-left text-zinc-500"><tr><th class="py-1 pr-3">Név</th><th class="py-1 pr-3">Cél</th><th class="py-1">Élettartam</th></tr></thead>
             <tbody>
-              <tr class="border-t border-zinc-200/60 dark:border-white/5"><td class="py-1 pr-3">nevnap-theme</td><td class="py-1 pr-3">Téma (sötét/világos)</td><td class="py-1">12 hó</td></tr>
-              <tr class="border-t border-zinc-200/60 dark:border-white/5"><td class="py-1 pr-3">nevnap-consent</td><td class="py-1 pr-3">Süti hozzájárulás</td><td class="py-1">12 hó</td></tr>
+              <tr class="border-t border-zinc-200/60 dark:border-white/5"><td class="py-1 pr-3">nevnap-theme</td><td class="py-1 pr-3">Téma (sötét/világos)</td><td class="py-1">Módosításig vagy törlésig</td></tr>
+              <tr class="border-t border-zinc-200/60 dark:border-white/5"><td class="py-1 pr-3">nevnap-consent</td><td class="py-1 pr-3">Süti hozzájárulás</td><td class="py-1">Módosításig vagy törlésig</td></tr>
             </tbody>
           </table>
         </div>
@@ -44,8 +44,9 @@ const t = strings.hu;
         </div>
 
         <div class="mt-4 rounded-2xl border border-zinc-200 dark:border-white/10 p-5">
-          <h3 class="font-bold">🟠 Marketing (jövőbeli, hozzájárulás esetén)</h3>
-          <p class="mt-1 text-sm">Releváns hirdetések megjelenítéséhez. Jelenleg <strong>nem aktívak</strong>. Aktiválás előtt frissítjük a szabályzatot.</p>
+          <h3 class="font-bold">🟠 Hirdetési és hozzájárulási technológiák</h3>
+          <p class="mt-1 text-sm">A szerkesztett tartalmi oldalakon Google AdSense-kód működhet. A Google hozzájárulási keretrendszere például <code>FCCDCF</code> vagy <code>FCNEC</code>, jóváhagyott hirdetéskiszolgáláskor pedig <code>__gads</code> vagy <code>__gpi</code> nevű sütit használhat. A pontos készlet a régiótól, a hozzájárulástól és a Google beállításaitól függ.</p>
+          <p class="mt-2 text-sm">Az EGT-ben hirdetési hozzájárulást külön, Google által tanúsított CMP kezel; a webhely saját süti-bannerje csak az analitikát vezérli. Amíg a tanúsított üzenet nem aktív, a Google Consent Mode hirdetési tárolása alapértelmezetten tiltott. Részletek: <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener" class="text-primary-500 underline">a Google sütihasználata</a>.</p>
         </div>
       </div>
 
@@ -56,6 +57,7 @@ const t = strings.hu;
           <li><button type="button" id="reopen-banner" class="text-primary-500 underline">Süti-banner újranyitása</button></li>
           <li>Böngésződ beállításai (minden böngészőnek van süti-kezelője)</li>
           <li>Google Analytics opt-out: <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener" class="text-primary-500 underline">tools.google.com/dlpage/gaoptout</a></li>
+          <li>Google hirdetési beállítások: <a href="https://myadcenter.google.com/" target="_blank" rel="noopener" class="text-primary-500 underline">My Ad Center</a></li>
         </ul>
       </div>
 

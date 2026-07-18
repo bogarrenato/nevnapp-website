@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  lang="hu"
+  title="Az oldal nem található | NévnapTárX"
+  description="A kért oldal nem található."
+  robots="noindex,nofollow"
+  hideDownloadStrip
+>
+  <section class="container mx-auto px-6 max-w-2xl pt-20 md:pt-28 text-center">
+    <p class="text-sm uppercase tracking-widest font-semibold text-primary-600 dark:text-primary-400">404</p>
+    <h1 class="mt-3 text-4xl md:text-6xl font-extrabold tracking-tight">
+      <span class="gradient-text">Ez az oldal nem található</span>
+    </h1>
+    <p class="mt-5 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300">
+      Lehet, hogy a cím elgépelést tartalmaz, vagy az oldal időközben más helyre került.
+    </p>
+    <p class="mt-2 text-zinc-600 dark:text-zinc-400" lang="en">
+      The page you requested could not be found.
+    </p>
+    <nav class="mt-8 flex flex-wrap justify-center gap-3" aria-label="Hasznos oldalak">
+      <a href="/" class="px-5 py-3 rounded-full bg-primary-500 hover:bg-primary-600 text-white font-semibold transition">Mai névnap</a>
+      <a href="/names" class="px-5 py-3 rounded-full border border-zinc-200 dark:border-white/10 hover:border-primary-500 font-semibold transition">Nevek böngészése</a>
+      <a href="/blog" class="px-5 py-3 rounded-full border border-zinc-200 dark:border-white/10 hover:border-primary-500 font-semibold transition">Névnap blog</a>
+    </nav>
+  </section>
+</BaseLayout>

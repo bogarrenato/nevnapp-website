@@ -1,4 +1,4 @@
-import { getBudapestCalendarDate, getEntryByDate, getMeaning } from './names';
+import { getBudapestCalendarDate, getEntryByDate, getDisplayMeaning } from './names';
 
 const HU_MONTHS = [
   'Január',
@@ -36,7 +36,7 @@ export function buildTodaySocialContent(now: Date = new Date()): TodaySocialCont
   const namesLabel = formatHungarianList(primaryNames);
   const dateLabel = `${HU_MONTHS[date.month - 1]} ${date.day}.`;
   const meaningName = primaryNames[0] ?? null;
-  const meaning = meaningName ? getMeaning(meaningName) : null;
+  const meaning = meaningName ? getDisplayMeaning(meaningName) : null;
   const title = primaryNames.length
     ? `Ma ${namesLabel} névnapja van`
     : 'Mai névnap';

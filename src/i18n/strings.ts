@@ -1,7 +1,7 @@
 /**
  * Centralised i18n strings for the nevnap.app site.
  *
- * Static content lives in `hu` and `en`. The data (1500 nevek + jelentések)
+ * Static content lives in `hu` and `en`. The name-day data stays Hungarian.
  * stays Hungarian — that's the audience. Switching language only swaps the
  * surrounding UI, not the name meanings themselves.
  */
@@ -14,9 +14,9 @@ export const strings = {
   hu: {
     // Brand & meta
     brand: 'NévnapTárX',
-    tagline: 'Mai névnap, jelentések, köszöntők — 2026 modern névnap-naptár',
+    tagline: 'Mai névnap, jelentések és köszöntők egy modern névnap-naptárban',
     description:
-      'Mai névnap, 1500 magyar név jelentése és napi értesítés egy helyen. Töltsd le ingyen iOS-re és Androidra a NévnapTárX modern névnap-naptár appot.',
+      'Mai névnap, több mint 1300 név névnapja, több száz névjelentés és napi értesítés egy helyen. Töltsd le ingyen iOS-re és Androidra.',
     htmlLang: 'hu-HU',
 
     // Navigation
@@ -35,7 +35,7 @@ export const strings = {
       title: 'Ma {name} névnapja van',
       titleEmpty: 'Mai névnap',
       subtitle:
-        '1500 magyar név jelentése, napi értesítés, gyors köszöntés — egy modern app a zsebedben, iOS-re és Androidra.',
+        'Több mint 1300 név névnapja, több száz névjelentés, napi értesítés és gyors köszöntés — iOS-re és Androidra.',
       ctaPrimary: 'Töltsd le ingyen',
       ctaSecondary: 'Fedezd fel a neveket',
     },
@@ -57,23 +57,23 @@ export const strings = {
     },
     namesPage: {
       title: 'Magyar nevek listája — {count} keresztnév',
-      description: 'Az összes magyar keresztnév, jelentésekkel és névnapokkal — {count} név A-tól Z-ig.',
+      description: 'A NévnapTárX naptárában szereplő {count} keresztnév névnapjai A-tól Z-ig, az elérhető rövid jelentésekkel.',
       heading: 'Magyar nevek',
-      subtitle: '{count} magyar keresztnév, jelentésekkel és napi névnapokkal — A-tól Z-ig.',
+      subtitle: '{count} keresztnév névnapjai és az elérhető rövid jelentések — A-tól Z-ig.',
       jumpAria: 'Ugrás a betűhöz',
     },
     calendarPage: {
-      title: 'Magyar névnaptár 2026 — minden névnap egy helyen',
-      description: '2026 teljes magyar névnap-naptára: minden hónapban minden napra eső név, közvetlen linkkel a részletes oldalra.',
+      title: 'Magyar névnaptár — minden névnap egy helyen',
+      description: 'Teljes magyar névnap-naptár: minden hónap és nap nevei, közvetlen linkkel a részletes oldalakra.',
       heading: 'Magyar névnaptár',
-      subtitle: '2026 minden napjához tartozó név — kattints egy napra a részletekért.',
+      subtitle: 'Az év minden napjához tartozó nevek — kattints egy napra a részletekért.',
     },
     homeSeo: {
       heading: 'Mi a magyar névnap?',
-      p1: 'A magyar névnap-naptár hagyománya évszázados — minden napra esik egy vagy több keresztnév, melyet a családok, barátok kis ünnepléssel jelölnek. A NévnapTárX modern, 2026-os névnap appja 1500 magyar nevet tartalmaz, mindegyikhez részletes jelentéssel, eredettel és napi értesítéssel.',
+      p1: 'A magyar névnap-naptár hagyománya évszázados: a naptár napjaihoz egy vagy több keresztnév kapcsolódik, amelyeket a családok és barátok gyakran köszöntéssel ünnepelnek. A NévnapTárX a névnapok böngészését és a napi emlékeztetést teszi egyszerűvé; a névjelentés-adatbázis több száz névről ad rövid tájékoztatást.',
       p2: 'Akár mai névnap, holnapi névnap vagy egy konkrét név (pl. Anna, Bence, Csilla) jelentése érdekel, itt gyorsan megtalálod. Az alkalmazás iOS-re és Androidra is elérhető, ingyenesen.',
       statNames: 'magyar név',
-      statDays: 'naptári nap',
+      statDays: 'nap az idei naptárban',
       statFree: 'ingyenes letöltés',
     },
 
@@ -102,20 +102,20 @@ export const strings = {
       meaningHeading: '{article} {name} név jelentése',
       noMeaning:
         '{article} {name} név jelentése egyelőre nem elérhető szótárunkban. Bővítjük az adatbázist — nézz vissza később!',
-      sendGreeting: 'Küldj köszöntést {name}-nak az appban →',
-      relatedHeading: 'Hasonló nevek',
-      greetingsHeading: 'Névnapi köszöntők {name}-nek',
-      greetingsIntro: '8 ingyenes köszöntő, rímes vers és SMS-szöveg amit elküldhetsz {name} névnapjára:',
+      sendGreeting: 'Köszöntsd fel {name} névnapját az appból →',
+      relatedHeading: 'További nevek azonos kezdőbetűvel',
+      greetingsHeading: 'Névnapi köszöntők — {name}',
+      greetingsIntro: '8 köszöntőötlet, rímes vers és rövid üzenet {name} névnapjára:',
       faqHeading: 'Gyakori kérdések — {name}',
       faqQ1: 'Mikor van {name} névnapja?',
       faqA1Single: '{name} névnapja {dates}.',
       faqA1Multi: '{name} névnapja a magyar naptárban: {dates}.',
       faqA1None: '{name} jelenleg nem szerepel külön napon a NévnapTárX magyar névnap-adatbázisában.',
-      faqQ2: 'Mit jelent a {name} név?',
+      faqQ2: 'Mit jelent {article} {name} név?',
       faqA2WithMeaning: '{meaning}',
       faqA2NoMeaning: '{article} {name} név jelentése még nem szerepel az adatbázisunkban — folyamatosan bővítjük.',
-      faqQ3: 'Hogyan köszöntsünk egy {name}-t?',
-      faqA3: '{article} {name} névhez többféle köszöntő szöveget összegyűjtöttünk: rövid, rímes vers, SMS-be, hivatalos, vicces, és idézetes változatok. Görgess feljebb a köszöntők szekcióhoz!',
+      faqQ3: 'Milyen köszöntőt küldhetsz {name} névnapjára?',
+      faqA3: '{article} {name} névhez rövid, rímes, üzenetbe illő, hivatalos és vidám köszöntőötleteket találsz ezen az oldalon.',
       copyGreeting: 'Másolás',
       copied: 'Másolva ✓',
     },
@@ -132,7 +132,7 @@ export const strings = {
 
     // Footer
     footer: {
-      tagline: 'Modern névnap-naptár Magyarországnak — 2026',
+      tagline: 'Modern névnap-naptár Magyarországnak',
       sections: {
         product: 'Termék',
         explore: 'Felfedezés',
@@ -163,9 +163,9 @@ export const strings = {
 
   en: {
     brand: 'NévnapTárX',
-    tagline: "Today's nameday, meanings, greetings — Modern 2026 nameday calendar",
+    tagline: "Today's nameday, meanings and greetings in a modern nameday calendar",
     description:
-      "Today's Hungarian nameday, 1500 name meanings and daily reminders in one place. Download the modern NévnapTárX nameday calendar app for iOS and Android — free.",
+      "Today's Hungarian nameday, namedays for more than 1,300 names, hundreds of name meanings and daily reminders in one place.",
     htmlLang: 'en-US',
 
     nav: {
@@ -182,7 +182,7 @@ export const strings = {
       title: "Today is {name}'s nameday",
       titleEmpty: "Today's nameday",
       subtitle:
-        '1500 Hungarian name meanings, daily reminders, instant greetings — a modern app in your pocket, for iOS and Android.',
+        'Namedays for more than 1,300 names, hundreds of meanings, daily reminders and quick greetings — for iOS and Android.',
       ctaPrimary: 'Download free',
       ctaSecondary: 'Explore names',
     },
@@ -204,20 +204,20 @@ export const strings = {
     },
     namesPage: {
       title: 'List of Hungarian names — {count} first names',
-      description: 'All Hungarian first names with meanings and namedays — {count} names from A to Z.',
+      description: 'The {count} first names in the NévnapTárX calendar, with nameday dates and available short meanings, from A to Z.',
       heading: 'Hungarian names',
-      subtitle: '{count} Hungarian first names with meanings and daily namedays — A to Z.',
+      subtitle: '{count} first names with nameday dates and available short meanings — A to Z.',
       jumpAria: 'Jump to letter',
     },
     calendarPage: {
-      title: 'Hungarian nameday calendar 2026 — every nameday in one place',
-      description: 'Complete 2026 Hungarian nameday calendar: every name for every day of the year, with direct links to detailed pages.',
+      title: 'Hungarian nameday calendar — every nameday in one place',
+      description: 'Complete Hungarian nameday calendar: every month and day with direct links to detailed pages.',
       heading: 'Hungarian nameday calendar',
-      subtitle: 'One name for every day of 2026 — click any day for details.',
+      subtitle: 'Names for every day of the year — click any day for details.',
     },
     homeSeo: {
       heading: "What's a Hungarian nameday?",
-      p1: "The Hungarian nameday calendar tradition is centuries old — every day of the year is associated with one or more given names, celebrated by family and friends. NévnapTárX is a modern 2026 nameday calendar app with 1500 Hungarian names, each with a detailed meaning, origin and daily reminder.",
+      p1: "The Hungarian nameday tradition associates calendar dates with one or more given names, often marked by greetings from family and friends. NévnapTárX makes those dates easy to browse and includes short meaning entries for hundreds of names.",
       p2: "Whether you're looking for today's nameday, tomorrow's nameday or the meaning of a specific name (e.g. Anna, Bence, Csilla), you'll find it here quickly. The app is available for iOS and Android, free.",
       statNames: 'Hungarian names',
       statDays: 'calendar days',
@@ -276,7 +276,7 @@ export const strings = {
     },
 
     footer: {
-      tagline: 'Modern nameday calendar for Hungary — 2026',
+      tagline: 'Modern nameday calendar for Hungary',
       sections: {
         product: 'Product',
         explore: 'Explore',
@@ -322,5 +322,15 @@ export function interpolate(
 /** Build a localized path. Defaults to Hungarian (no prefix). */
 export function localizedPath(lang: Lang, path: string): string {
   const clean = path.startsWith('/') ? path : `/${path}`;
-  return lang === 'en' ? `/en${clean}` : clean;
+  const translatedRoutes = new Set([
+    '/',
+    '/about',
+    '/contact',
+    '/privacy',
+    '/cookies',
+    '/terms',
+    '/app-terms',
+    '/app-privacy',
+  ]);
+  return lang === 'en' && translatedRoutes.has(clean) ? `/en${clean}` : clean;
 }

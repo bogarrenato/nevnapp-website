@@ -60,7 +60,7 @@ export const GET: APIRoute = () => {
 
 - ${SITE_URL}/ — today's nameday and app landing page
 - ${SITE_URL}/names — all Hungarian first names
-- ${SITE_URL}/calendar — full 2026 Hungarian nameday calendar
+- ${SITE_URL}/calendar — full ${today.year} Hungarian nameday calendar
 - ${SITE_URL}/adatbazis — dataset coverage, URL structure and citation guidance
 - ${SITE_URL}/blog — nameday articles
 - ${SITE_URL}/about — project background

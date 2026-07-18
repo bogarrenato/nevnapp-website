@@ -1,10 +1,10 @@
 ---
 /**
- * Dynamic route — one SEO-optimized page per Hungarian first name.
+ * Dynamic route — one reference page per Hungarian first name.
  * URL: /name/Anna  /name/Mirkó  /name/Eszter ...
  *
- * Build-time generated. ~1500 pages total. Each one targets the long-tail
- * query "{name} névnap" + "{name} név jelentése" + brand searches.
+ * Build-time generated name reference pages. They remain available for users
+ * but are kept out of Search until they pass the editorial quality gate.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { strings, interpolate, huArticle } from '../../i18n/strings';
@@ -12,7 +12,7 @@ import DownloadDropdown from '../../components/DownloadDropdown.astro';
 import {
   getAllNames,
   getDatesForName,
-  getMeaning,
+  getDisplayMeaning,
   getRelatedNames,
   isPrimary,
 } from '../../lib/names';
@@ -36,7 +36,7 @@ const { name } = Astro.props as { name: string };
 const t = strings.hu;
 const article = huArticle(name);
 const dates = getDatesForName(name);
-const meaning = getMeaning(name);
+const meaning = getDisplayMeaning(name);
 const related = getRelatedNames(name);
 
 const datesLabel = dates
@@ -45,22 +45,22 @@ const datesLabel = dates
 
 const title = `${name} névnap, jelentése${datesLabel ? ` — ${datesLabel}` : ''} | ${t.brand}`;
 const description = meaning
-  ? `${article} ${name} név jelentése, eredete és magyar névnapjai. ${meaning.slice(0, 130)}…`
+  ? `${meaning.slice(0, 150)}${meaning.length > 150 ? '…' : ''}`
   : `Mikor van ${name} névnapja? Eredet, jelentés és modern névnap-naptár app a NévnapTárX-tól.`;
 
 const greetings = getGreetings(name, 'hu', 8);
 const pagePath = `/name/${encodeURIComponent(name)}`;
 
 const datesText = dates.length
-  ? dates.map((d) => `${t.months[d.month - 1]} ${d.day}.`).join(', ')
+  ? dates.map((d) => `${t.months[d.month - 1]} ${d.day}`).join(', ')
   : '';
 
 const namedayAnswer = dates.length
-  ? `${name} névnapja ${datesText}.`
+  ? `${name} névnapja: ${datesText}.`
   : `${name} jelenleg nem szerepel külön névnapként a NévnapTárX magyar névnap-adatbázisában.`;
 
 const meaningAnswer = meaning
-  ? `${article} ${name} név jelentése: ${meaning}`
+  ? meaning
   : interpolate(t.namePage.noMeaning, { name, article });
 
 const faqEntries: Array<{ q: string; a: string }> = [
@@ -71,13 +71,13 @@ const faqEntries: Array<{ q: string; a: string }> = [
       : interpolate(dates.length === 1 ? t.namePage.faqA1Single : t.namePage.faqA1Multi, { name, dates: datesText }),
   },
   {
-    q: interpolate(t.namePage.faqQ2, { name }),
+    q: interpolate(t.namePage.faqQ2, { name, article }),
     a: meaning
       ? interpolate(t.namePage.faqA2WithMeaning, { meaning })
       : interpolate(t.namePage.faqA2NoMeaning, { name, article }),
   },
   {
-    q: interpolate(t.namePage.faqQ3, { name }),
+    q: interpolate(t.namePage.faqQ3, { name, article }),
     a: interpolate(t.namePage.faqA3, { name, article }),
   },
 ];
@@ -117,6 +117,8 @@ const jsonLd = [
   title={title}
   description={description}
   jsonLd={jsonLd}
+  robots="noindex,follow"
+  hideDownloadStrip
 >
   <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
     <nav class="text-sm text-zinc-500" aria-label={t.namePage.breadcrumbAria}>
