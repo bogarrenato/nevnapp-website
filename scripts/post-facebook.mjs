@@ -1,3 +1,5 @@
+import { fetchJson, findDailyPost, getBudapestIsoDate, graphRequest, requireCurrentMedia } from './social-publishing.mjs';
+
 const GRAPH_VERSION = process.env.FB_GRAPH_VERSION || 'v22.0';
 const SITE_URL = normalizeSiteUrl(process.env.PUBLIC_SITE_URL || 'https://nevnap.app');
 const PAGE_ID = process.env.FB_PAGE_ID;
@@ -16,6 +18,7 @@ if (!ALLOW_STALE && socialContent.date?.iso !== expectedIso) {
 
 const imageUrl = `${SITE_URL}/social/today.png?v=${encodeURIComponent(socialContent.date.iso)}`;
 const caption = process.env.FB_CAPTION_OVERRIDE || socialContent.facebookCaption;
+await requireCurrentMedia(SITE_URL, 'image', expectedIso);
 
 if (DRY_RUN) {
   console.log('Facebook post dry run');
@@ -27,55 +30,32 @@ if (!PAGE_ID || !PAGE_ACCESS_TOKEN) {
   throw new Error('Missing FB_PAGE_ID or FB_PAGE_ACCESS_TOKEN environment variable.');
 }
 
-const body = new URLSearchParams({
+const recent = await graphRequest(GRAPH_VERSION, PAGE_ACCESS_TOKEN, `/${PAGE_ID}/posts`, {
+  fields: 'id,message,created_time,permalink_url', limit: '25',
+});
+const existing = findDailyPost(recent.data ?? [], caption, expectedIso, 'facebook');
+if (existing) {
+  console.log(`Today's Facebook post already exists: ${existing.permalink_url || existing.id}`);
+  process.exit(0);
+}
+
+const payload = await graphRequest(GRAPH_VERSION, PAGE_ACCESS_TOKEN, `/${PAGE_ID}/photos`, {
   url: imageUrl,
   caption,
   published: 'true',
-  access_token: PAGE_ACCESS_TOKEN,
-});
-
-const response = await fetch(`https://graph.facebook.com/${GRAPH_VERSION}/${PAGE_ID}/photos`, {
-  method: 'POST',
-  body,
-});
-const payload = await response.json().catch(() => ({}));
-
-if (!response.ok || payload.error) {
-  const message = payload.error?.message || response.statusText;
-  throw new Error(`Facebook publish failed (${response.status}): ${message}`);
-}
+}, 'POST');
 
 console.log(`Published Facebook photo post: ${payload.post_id || payload.id}`);
 
-async function fetchJson(url) {
-  const response = await fetch(url, {
-    headers: {
-      Accept: 'application/json',
-    },
+try {
+  const post = await graphRequest(GRAPH_VERSION, PAGE_ACCESS_TOKEN, `/${payload.post_id || payload.id}`, {
+    fields: 'permalink_url',
   });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);
-  }
-
-  return response.json();
+  console.log(`Facebook permalink: ${post.permalink_url}`);
+} catch {
+  console.warn('Post published; permalink lookup unavailable.');
 }
 
 function normalizeSiteUrl(input) {
   return input.replace(/\/+$/, '');
-}
-
-function getBudapestIsoDate(now = new Date()) {
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Europe/Budapest',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts(now);
-  const values = Object.fromEntries(
-    parts
-      .filter((part) => part.type !== 'literal')
-      .map((part) => [part.type, part.value]),
-  );
-  return `${values.year}-${values.month}-${values.day}`;
 }

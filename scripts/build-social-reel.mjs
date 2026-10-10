@@ -162,6 +162,10 @@ try {
 }
 
 const stats = fs.statSync(videoPath);
+fs.writeFileSync(path.join(socialDir, 'build.json'), JSON.stringify({
+  imageDate: meta.date.iso,
+  reelDate: meta.date.iso,
+}));
 console.log(`Created ${path.relative(rootDir, videoPath)} (${Math.round(stats.size / 1024)} KB)`);
 console.log(
   hasAudio

@@ -1,5 +1,7 @@
+import { fetchJson, findDailyPost, getBudapestIsoDate, graphRequest, requireCurrentMedia } from './social-publishing.mjs';
+
 const GRAPH_VERSION = process.env.IG_GRAPH_VERSION || 'v25.0';
-const SITE_URL = normalizeSiteUrl(process.env.PUBLIC_SITE_URL || 'https://www.nevnap.app');
+const SITE_URL = normalizeSiteUrl(process.env.PUBLIC_SITE_URL || 'https://nevnap.app');
 const IG_USER_ID = process.env.IG_USER_ID;
 const ACCESS_TOKEN = process.env.IG_ACCESS_TOKEN;
 const DRY_RUN = process.argv.includes('--dry-run') || process.env.IG_DRY_RUN === '1';
@@ -18,6 +20,7 @@ const videoUrl =
   process.env.IG_REEL_VIDEO_URL_OVERRIDE ||
   `${SITE_URL}/social/today-reel.mp4?v=${encodeURIComponent(socialContent.date.iso)}`;
 const caption = process.env.IG_CAPTION_OVERRIDE || socialContent.facebookCaption;
+await requireCurrentMedia(SITE_URL, 'reel', expectedIso);
 
 if (DRY_RUN) {
   console.log('Instagram Reel dry run');
@@ -29,13 +32,21 @@ if (!IG_USER_ID || !ACCESS_TOKEN) {
   throw new Error('Missing IG_USER_ID or IG_ACCESS_TOKEN environment variable.');
 }
 
-const container = await graphPost(`/${IG_USER_ID}/media`, {
+const recent = await graphRequest(GRAPH_VERSION, ACCESS_TOKEN, `/${IG_USER_ID}/media`, {
+  fields: 'id,caption,timestamp,permalink', limit: '25',
+});
+const existing = findDailyPost(recent.data ?? [], caption, expectedIso, 'instagram');
+if (existing) {
+  console.log(`Today's Instagram Reel already exists: ${existing.permalink || existing.id}`);
+  process.exit(0);
+}
+
+const container = await graphRequest(GRAPH_VERSION, ACCESS_TOKEN, `/${IG_USER_ID}/media`, {
   media_type: 'REELS',
   video_url: videoUrl,
   caption,
   share_to_feed: 'true',
-  access_token: ACCESS_TOKEN,
-});
+}, 'POST');
 
 const containerId = container.id;
 if (!containerId) {
@@ -44,20 +55,23 @@ if (!containerId) {
 
 await waitForContainer(containerId);
 
-const published = await graphPost(`/${IG_USER_ID}/media_publish`, {
+const published = await graphRequest(GRAPH_VERSION, ACCESS_TOKEN, `/${IG_USER_ID}/media_publish`, {
   creation_id: containerId,
-  access_token: ACCESS_TOKEN,
-});
+}, 'POST');
 
 console.log(`Published Instagram Reel: ${published.id}`);
+try {
+  const media = await graphRequest(GRAPH_VERSION, ACCESS_TOKEN, `/${published.id}`, { fields: 'permalink' });
+  console.log(`Instagram permalink: ${media.permalink}`);
+} catch {
+  console.warn('Reel published; permalink lookup unavailable.');
+}
 
 async function waitForContainer(containerId) {
   for (let attempt = 1; attempt <= 30; attempt++) {
-    const status = await fetchJson(
-      `https://graph.facebook.com/${GRAPH_VERSION}/${containerId}?fields=status_code,status&access_token=${encodeURIComponent(ACCESS_TOKEN)}`,
-    );
+    const status = await graphRequest(GRAPH_VERSION, ACCESS_TOKEN, `/${containerId}`, { fields: 'status_code,status' });
 
-    if (status.status_code === 'FINISHED') return;
+    if (status.status_code === 'FINISHED') { return; }
     if (status.status_code === 'ERROR' || status.status_code === 'EXPIRED') {
       throw new Error(`Instagram container failed: ${JSON.stringify(status)}`);
     }
@@ -68,50 +82,6 @@ async function waitForContainer(containerId) {
   throw new Error(`Instagram container ${containerId} did not finish processing in time.`);
 }
 
-async function graphPost(path, params) {
-  const response = await fetch(`https://graph.facebook.com/${GRAPH_VERSION}${path}`, {
-    method: 'POST',
-    body: new URLSearchParams(params),
-  });
-  const payload = await response.json().catch(() => ({}));
-
-  if (!response.ok || payload.error) {
-    const message = payload.error?.message || response.statusText;
-    throw new Error(`Instagram API error (${response.status}): ${message}`);
-  }
-
-  return payload;
-}
-
-async function fetchJson(url) {
-  const response = await fetch(url, {
-    headers: {
-      Accept: 'application/json',
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);
-  }
-
-  return response.json();
-}
-
 function normalizeSiteUrl(input) {
   return input.replace(/\/+$/, '');
-}
-
-function getBudapestIsoDate(now = new Date()) {
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Europe/Budapest',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts(now);
-  const values = Object.fromEntries(
-    parts
-      .filter((part) => part.type !== 'literal')
-      .map((part) => [part.type, part.value]),
-  );
-  return `${values.year}-${values.month}-${values.day}`;
 }

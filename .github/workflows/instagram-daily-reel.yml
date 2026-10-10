@@ -8,9 +8,20 @@ on:
     - cron: '5 5 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
+  keepalive:
+    permissions:
+      actions: write
+    uses: ./.github/workflows/scheduled-keepalive.yml
+    with:
+      workflow: instagram-daily-reel.yml
+
   post:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     concurrency:
       group: daily-instagram-nameday-reel
       cancel-in-progress: false
@@ -23,7 +34,7 @@ jobs:
 
       - name: Post today's nameday Reel to Instagram
         env:
-          PUBLIC_SITE_URL: https://www.nevnap.app
+          PUBLIC_SITE_URL: https://nevnap.app
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
         run: |
@@ -36,7 +47,7 @@ jobs:
             fi
           fi
           if [ -z "$IG_USER_ID" ] || [ -z "$IG_ACCESS_TOKEN" ]; then
-            echo "Instagram secrets are not configured yet; skipping Reel post."
-            exit 0
+            echo "::error::Missing Instagram publishing credentials."
+            exit 1
           fi
           npm run instagram:reel

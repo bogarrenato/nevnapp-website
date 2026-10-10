@@ -20,6 +20,14 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  keepalive:
+    if: github.event_name != 'push'
+    permissions:
+      actions: write
+    uses: ./.github/workflows/scheduled-keepalive.yml
+    with:
+      workflow: daily-deploy.yml
+
   deploy:
     runs-on: ubuntu-latest
     steps:
@@ -42,7 +50,7 @@ jobs:
         run: npm run build
 
       - name: Test request-time namedays and Budapest date boundaries
-        run: node --test tests/daily-runtime.test.mjs
+        run: node --test tests/daily-runtime.test.mjs tests/social-publishing.test.mjs
 
       - name: Build social reel
         run: npm run social:reel

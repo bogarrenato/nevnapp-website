@@ -1,0 +1,23 @@
+name: Keep scheduled workflow active
+
+on:
+  workflow_call:
+    inputs:
+      workflow:
+        required: true
+        type: string
+
+permissions:
+  actions: write
+
+jobs:
+  renew:
+    runs-on: ubuntu-latest
+    steps:
+      # Re-enabling an active schedule renews its inactivity timer, without
+      # dummy commits, extra credentials or enabling unrelated workflows.
+      - name: Renew this workflow's scheduled activity
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WORKFLOW_FILE: ${{ inputs.workflow }}
+        run: gh api --method PUT "repos/$GITHUB_REPOSITORY/actions/workflows/$WORKFLOW_FILE/enable"

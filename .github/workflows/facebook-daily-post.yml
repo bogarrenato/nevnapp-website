@@ -8,9 +8,20 @@ on:
     - cron: '0 5 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
+  keepalive:
+    permissions:
+      actions: write
+    uses: ./.github/workflows/scheduled-keepalive.yml
+    with:
+      workflow: facebook-daily-post.yml
+
   post:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     concurrency:
       group: daily-facebook-nameday-post
       cancel-in-progress: false
@@ -36,7 +47,7 @@ jobs:
             fi
           fi
           if [ -z "$FB_PAGE_ID" ] || [ -z "$FB_PAGE_ACCESS_TOKEN" ]; then
-            echo "Facebook secrets are not configured yet; skipping post."
-            exit 0
+            echo "::error::Missing Facebook publishing credentials."
+            exit 1
           fi
           npm run facebook:post
