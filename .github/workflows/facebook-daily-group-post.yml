@@ -26,11 +26,12 @@ jobs:
 
       - name: Post today's nameday video to Facebook group
         env:
-          PUBLIC_SITE_URL: https://www.nevnap.app
+          PUBLIC_SITE_URL: https://nevnap.app
           FB_GROUP_ID: '1473018134570043'
           FB_GROUP_ACCESS_TOKEN: ${{ secrets.FB_GROUP_ACCESS_TOKEN }}
           FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
           FB_GROUP_POST_FORMAT: video
+          FB_GROUP_DISABLE_FALLBACK: '1'
         run: |
           if [ "${{ github.event_name }}" = "schedule" ]; then
             budapest_offset="$(TZ=Europe/Budapest date +%z)"

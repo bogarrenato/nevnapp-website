@@ -89,6 +89,8 @@ existing authorization and platform approval are still required. TikTok fails
 instead of silently downgrading public content to private or claiming a pending
 upload was published. YouTube reports the actual visibility returned by the
 API and fails if it differs from the requested visibility.
+The legacy Facebook group workflow also uses the new video/hash and defaults
+to video-only: a failed group video cannot silently become a photo/feed post.
 
 Local run, after `npm install`:
 

@@ -1,3 +1,6 @@
+import { requireCurrentMedia } from './social-publishing.mjs';
+import { REEL_VERSION } from './reel-template.mjs';
+
 const GRAPH_VERSION = process.env.FB_GRAPH_VERSION || 'v25.0';
 const SITE_URL = normalizeSiteUrl(process.env.PUBLIC_SITE_URL || 'https://www.nevnap.app');
 const GROUP_ID = process.env.FB_GROUP_ID;
@@ -5,7 +8,8 @@ const ACCESS_TOKEN = process.env.FB_GROUP_ACCESS_TOKEN || process.env.FB_PAGE_AC
 const DRY_RUN = process.argv.includes('--dry-run') || process.env.FB_GROUP_DRY_RUN === '1';
 const ALLOW_STALE = process.env.FB_GROUP_ALLOW_STALE === '1';
 const POST_FORMAT = process.env.FB_GROUP_POST_FORMAT || 'video';
-const DISABLE_FALLBACK = process.env.FB_GROUP_DISABLE_FALLBACK === '1';
+// Daily publishing is video-only; a failed video must never become a photo.
+const DISABLE_FALLBACK = process.env.FB_GROUP_DISABLE_FALLBACK !== '0';
 
 const socialContent = await fetchJson(`${SITE_URL}/social/today.json?ts=${Date.now()}`);
 const expectedIso = getBudapestIsoDate();
@@ -17,7 +21,9 @@ if (!ALLOW_STALE && socialContent.date?.iso !== expectedIso) {
 }
 
 const imageUrl = `${SITE_URL}/social/today.png?v=${encodeURIComponent(socialContent.date.iso)}`;
-const videoUrl = `${SITE_URL}/social/today-reel.mp4?v=${encodeURIComponent(socialContent.date.iso)}`;
+const media = POST_FORMAT === 'video'
+  ? await requireCurrentMedia(SITE_URL, 'reel', expectedIso, REEL_VERSION) : null;
+const videoUrl = `${SITE_URL}/social/today-reel.mp4?v=${encodeURIComponent(`${socialContent.date.iso}-${media?.reelSha256 || ''}`)}`;
 const caption = process.env.FB_GROUP_CAPTION_OVERRIDE || socialContent.facebookCaption;
 const title =
   process.env.FB_GROUP_VIDEO_TITLE_OVERRIDE ||

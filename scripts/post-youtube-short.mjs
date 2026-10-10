@@ -81,7 +81,7 @@ async function refreshAccessToken() {
 
   if (!response.ok || !payload.access_token) {
     const message = payload.error_description || payload.error || response.statusText;
-    throw new Error(`YouTube OAuth refresh failed (${response.status}): ${message}`);
+    throw new Error(`YouTube OAuth refresh failed (${response.status}, ${payload.error || 'unknown'}): ${message}`);
   }
 
   return payload.access_token;
