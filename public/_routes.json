@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "include": ["/", "/en", "/en/", "/social/today.json", "/llms.txt", "/llms-full.txt"],
+  "exclude": []
+}

@@ -45,15 +45,16 @@ const upcoming = getUpcoming(UPCOMING_DAYS_COUNT + 1).slice(1);
       return (
         <li>
           <a
+            data-upcoming-link={u.daysAhead}
             href={href}
             class={`card-lift block rounded-3xl p-5 text-white bg-gradient-to-br ${UPCOMING_GRADIENTS[i % UPCOMING_GRADIENTS.length]} shadow-lg shadow-zinc-900/10`}
             aria-label={`${dayLabel}, ${dateLabel} — ${namesText}`}
           >
             <div class="flex items-center justify-between gap-2 text-xs opacity-90 mb-3">
               <span class="px-2.5 py-1 rounded-full bg-white/25 backdrop-blur font-semibold">{dayLabel}</span>
-              <time datetime={isoDate} class="whitespace-nowrap shrink-0">{dateLabel}</time>
+              <time data-upcoming-date={u.daysAhead} datetime={isoDate} class="whitespace-nowrap shrink-0">{dateLabel}</time>
             </div>
-            <p class="text-xl md:text-2xl font-extrabold leading-tight">{namesText}</p>
+            <p data-upcoming-names={u.daysAhead} class="text-xl md:text-2xl font-extrabold leading-tight">{namesText}</p>
           </a>
         </li>
       );

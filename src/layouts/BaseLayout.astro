@@ -137,7 +137,7 @@ const jsonLdEntries = jsonLd
     </script>
 
     {jsonLdEntries.map((entry) => (
-      <script is:inline type="application/ld+json" set:html={JSON.stringify(entry)} />
+      <script is:inline type="application/ld+json" data-schema-type={(entry as Record<string, unknown>)['@type']} set:html={JSON.stringify(entry)} />
     ))}
 
   <!-- Google Analytics GA4 — csak prod + felhasználói consent után -->

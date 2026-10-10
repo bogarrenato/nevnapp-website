@@ -10,60 +10,17 @@ import Hero from '../components/Hero.astro';
 import TodayCard from '../components/TodayCard.astro';
 import UpcomingStrip from '../components/UpcomingStrip.astro';
 import { strings } from '../i18n/strings';
-import { getAllNames, getBudapestCalendarDate, getTodayEntry } from '../lib/names';
-import {
-  SEO_IDS,
-  buildFaqSchema,
-  buildNamedayDatasetSchema,
-  buildWebPageSchema,
-} from '../lib/seo';
+import { getDailyPage } from '../lib/daily-page';
+import { buildNamedayDatasetSchema } from '../lib/seo';
 
 const t = strings.hu;
-const today = getBudapestCalendarDate();
-const entry = getTodayEntry();
-const primaryNames = entry?.primary ?? [];
-const allNames = getAllNames();
-const daysInCurrentYear = new Date(Date.UTC(today.year, 1, 29)).getUTCMonth() === 1 ? 366 : 365;
-
-const pageTitle = primaryNames.length
-  ? `Mai névnap: ${primaryNames.join(' és ')} — ${t.months[today.month - 1]} ${today.day}. | ${t.brand}`
-  : `Mai névnap — ${t.months[today.month - 1]} ${today.day}. | ${t.brand}`;
-
-const pageDescription = primaryNames.length
-  ? `Ma ${primaryNames.join(' és ')} névnapja van. Jelentés, eredet, köszöntők és napi névnap értesítések a NévnapTárX modern névnap-naptár appal.`
-  : t.description;
-
-const todayAnswer = primaryNames.length
-  ? `Ma, ${t.months[today.month - 1].toLocaleLowerCase('hu')} ${today.day}-án ${primaryNames.join(' és ')} névnapja van a magyar névnap-naptár szerint.`
-  : `Ma, ${t.months[today.month - 1].toLocaleLowerCase('hu')} ${today.day}-án nincs kiemelt névnap az adatbázisban.`;
-
-const faqEntries = [
-  {
-    q: 'Kinek van ma névnapja?',
-    a: todayAnswer,
-  },
-  {
-    q: 'Hány magyar név szerepel a NévnapTárX adatbázisában?',
-    a: `A NévnapTárX adatbázisa ${allNames.length} magyar keresztnevet tartalmaz névnapokkal és sok esetben névjelentéssel.`,
-  },
-  {
-    q: 'Hol található a teljes magyar névnap-naptár?',
-    a: 'A teljes, napokra bontott magyar névnap-naptár a /calendar oldalon érhető el, a név szerinti kereséshez pedig a /names oldal használható.',
-  },
-];
+const daily = getDailyPage('hu');
+const { today, allNames, daysInCurrentYear, pageTitle, pageDescription, faqEntries } = daily;
 
 const jsonLd = [
-  buildWebPageSchema({
-    path: '/',
-    name: pageTitle,
-    description: pageDescription,
-    about: [
-      { '@id': SEO_IDS.namedayDataset },
-      { '@id': SEO_IDS.app },
-    ],
-  }),
+  daily.webPageSchema,
   buildNamedayDatasetSchema(allNames.length),
-  buildFaqSchema(faqEntries),
+  daily.faqSchema,
 ].filter(Boolean) as object[];
 ---
 
@@ -85,15 +42,15 @@ const jsonLd = [
       Mai névnap és magyar névnap-adatbázis
     </h2>
     <dl class="mt-6 grid gap-4 md:grid-cols-3">
-      {faqEntries.map((entry) => (
+      {faqEntries.map((entry, i) => (
         <div class="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-5">
           <dt class="font-bold text-zinc-900 dark:text-zinc-100">{entry.q}</dt>
-          <dd class="mt-2 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">{entry.a}</dd>
+          <dd data-daily={i === 0 ? 'answer' : undefined} class="mt-2 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">{entry.a}</dd>
         </div>
       ))}
     </dl>
     <p class="mt-3 text-sm text-zinc-500 dark:text-zinc-500">
-      Adatforrás: a NévnapTárX tájékoztató jellegű magyar névnap-naptára. Lefedettség és módszertan: <a href="/adatbazis" class="text-primary-600 dark:text-primary-400 hover:underline">adatbázis és források</a>. Utolsó napi oldalfrissítés: {today.iso}.
+      Adatforrás: a NévnapTárX tájékoztató jellegű magyar névnap-naptára. Lefedettség és módszertan: <a href="/adatbazis" class="text-primary-600 dark:text-primary-400 hover:underline">adatbázis és források</a>. Aktuális nap: <span data-daily="iso">{today.iso}</span>.
     </p>
   </section>
 
@@ -112,7 +69,7 @@ const jsonLd = [
         { label: '0 Ft', text: t.homeSeo.statFree },
       ].map((stat) => (
         <div class="glass rounded-2xl p-5 text-center">
-          <p class="text-3xl font-extrabold gradient-text">{stat.label}</p>
+          <p data-daily={stat.text === t.homeSeo.statDays ? 'year-days' : undefined} class="text-3xl font-extrabold gradient-text">{stat.label}</p>
           <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">{stat.text}</p>
         </div>
       ))}

@@ -32,19 +32,18 @@ const todayLabel = lang === 'hu'
       <p class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/25 backdrop-blur text-xs font-semibold tracking-wide uppercase">
         <span>{t.today.heading}</span>
         <span aria-hidden="true">—</span>
-        <time datetime={today.iso}>{todayLabel}</time>
+        <time data-daily="today-date" datetime={today.iso}>{todayLabel}</time>
       </p>
 
       {primary.length ? (
-        <h2 id="today-card-heading" class="mt-5 text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.0]">
+        <h2 data-daily="primary" id="today-card-heading" class="mt-5 text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.0]">
           {primary.join(lang === 'hu' ? ' és ' : ' and ')}
         </h2>
       ) : (
-        <h2 id="today-card-heading" class="mt-5 text-3xl md:text-4xl font-bold">{t.today.noNameday}</h2>
+        <h2 data-daily="primary" id="today-card-heading" class="mt-5 text-3xl md:text-4xl font-bold">{t.today.noNameday}</h2>
       )}
 
-      {primary.length > 0 && (
-        <ul class="mt-6 flex flex-wrap items-center gap-2 list-none">
+        <ul data-daily="primary-links" hidden={!primary.length} class="mt-6 flex flex-wrap items-center gap-2 list-none">
           {primary.map((name) => (
             <li>
               <a
@@ -60,12 +59,9 @@ const todayLabel = lang === 'hu'
             </li>
           ))}
         </ul>
-      )}
-
-      {secondary.length > 0 && (
-        <div class="mt-8 pt-6 border-t border-white/20">
+        <div data-daily="secondary-section" hidden={!secondary.length} class="mt-8 pt-6 border-t border-white/20">
           <h3 class="text-xs uppercase tracking-widest font-semibold opacity-80 mb-3">{t.today.secondaryHeading}</h3>
-          <ul class="flex flex-wrap gap-2 list-none">
+          <ul data-daily="secondary-links" class="flex flex-wrap gap-2 list-none">
             {secondary.map((name) => (
               <li>
                 <a
@@ -78,7 +74,6 @@ const todayLabel = lang === 'hu'
             ))}
           </ul>
         </div>
-      )}
     </div>
   </article>
 </section>

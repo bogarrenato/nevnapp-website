@@ -1,21 +1,23 @@
 name: Daily rebuild & deploy
 
-# A site statikus: a "mai névnap" a build idejéhez kötődik.
-# Ezért naponta, magyar idő szerint 00:30-kor újraépítjük és deployoljuk,
-# hogy mindig az aktuális nap névnapja látsszon.
-# A két cron a nyári (CEST, UTC+2) és a téli (CET, UTC+1) időzónát is lefedi,
-# így egész évben 00:30 budapesti idő körül frissül.
+# The live homepage computes the Budapest date in Pages Functions on each
+# request. This daily build refreshes static fallback pages and social media;
+# a disabled GitHub schedule can no longer freeze the live homepage.
 
 on:
+  push:
+    branches: [main]
   schedule:
-    # A magyar névnap a magyar naptári naphoz kötődik, ezért a buildnek
-    # az Europe/Budapest szerinti éjfél UTÁN kell futnia. A GitHub cron UTC-ben
-    # jár és nem ismeri a nyári/téli időszámítást, ezért MINDKÉT eltolást lefedjük:
-    - cron: '30 22 * * *'  # 00:30 Budapest nyáron (CEST = UTC+2)
-    - cron: '30 23 * * *'  # 00:30 Budapest télen (CET = UTC+1)
-    # Egész évben pontosan az egyik fut 00:30-kor (az új napot építve),
-    # a másik ~01:30-kor ártalmatlan, ismételt deployt csinál ugyanarról a napról.
+    # Always after Budapest midnight: 00:45 CET / 01:45 CEST.
+    - cron: '45 23 * * *'
   workflow_dispatch:        # kézi indítás is lehetséges
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-pages-deploy
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -26,6 +28,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
       - name: Install FFmpeg
         run: |
@@ -35,14 +38,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build (bakes today's nameday)
+      - name: Build static pages and daily fallback
         run: npm run build
+
+      - name: Test request-time namedays and Budapest date boundaries
+        run: node --test tests/daily-runtime.test.mjs
 
       - name: Build social reel
         run: npm run social:reel
 
       - name: Deploy to Cloudflare Pages
-        run: npx wrangler pages deploy dist --project-name=nevnap-website --branch=main
+        run: npx wrangler@4.149.0 pages deploy dist --project-name=nevnap-website --branch=main
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Verify current nameday on the live website
+        run: node scripts/check-daily-site.mjs
