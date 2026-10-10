@@ -3,17 +3,25 @@ name: Daily Facebook nameday Reel
 on:
   schedule:
     # GitHub cron runs in UTC. Cover both Budapest offsets, then guard below
-    # so the Reel is published once at 06:10 Europe/Budapest year-round.
-    - cron: '10 4 * * *'
-    - cron: '10 5 * * *'
+    # so the Reel is published once at 06:00 Europe/Budapest year-round.
+    - cron: '0 4 * * *'
+    - cron: '0 5 * * *'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
+  keepalive:
+    permissions:
+      actions: write
+    uses: ./.github/workflows/scheduled-keepalive.yml
+    with:
+      workflow: facebook-daily-reel.yml
+
   post:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     concurrency:
       group: daily-facebook-nameday-reel
       cancel-in-progress: false
@@ -26,20 +34,20 @@ jobs:
 
       - name: Post today's nameday Reel to Facebook
         env:
-          PUBLIC_SITE_URL: https://www.nevnap.app
+          PUBLIC_SITE_URL: https://nevnap.app
           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
           FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
         run: |
           if [ "${{ github.event_name }}" = "schedule" ]; then
             budapest_offset="$(TZ=Europe/Budapest date +%z)"
             schedule="${{ github.event.schedule }}"
-            if { [ "$budapest_offset" = "+0200" ] && [ "$schedule" != "10 4 * * *" ]; } || { [ "$budapest_offset" = "+0100" ] && [ "$schedule" != "10 5 * * *" ]; }; then
+            if { [ "$budapest_offset" = "+0200" ] && [ "$schedule" != "0 4 * * *" ]; } || { [ "$budapest_offset" = "+0100" ] && [ "$schedule" != "0 5 * * *" ]; }; then
               echo "Skipping duplicate offset schedule: schedule=$schedule, Budapest offset=$budapest_offset."
               exit 0
             fi
           fi
           if [ -z "$FB_PAGE_ID" ] || [ -z "$FB_PAGE_ACCESS_TOKEN" ]; then
-            echo "Facebook secrets are not configured yet; skipping Reel post."
-            exit 0
+            echo "::error::Missing Facebook publishing credentials."
+            exit 1
           fi
           npm run facebook:reel

@@ -1,24 +1,13 @@
-name: Daily Facebook nameday post
+name: Manual Facebook nameday photo
 
 on:
-  schedule:
-    # GitHub cron runs in UTC. Cover both Budapest offsets, then guard below
-    # so the post is published once at 06:00 Europe/Budapest year-round.
-    - cron: '0 4 * * *'
-    - cron: '0 5 * * *'
+  # Daily Facebook publishing uses facebook-daily-reel.yml, not photos.
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  keepalive:
-    permissions:
-      actions: write
-    uses: ./.github/workflows/scheduled-keepalive.yml
-    with:
-      workflow: facebook-daily-post.yml
-
   post:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -38,14 +27,6 @@ jobs:
           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
           FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
         run: |
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            budapest_offset="$(TZ=Europe/Budapest date +%z)"
-            schedule="${{ github.event.schedule }}"
-            if { [ "$budapest_offset" = "+0200" ] && [ "$schedule" != "0 4 * * *" ]; } || { [ "$budapest_offset" = "+0100" ] && [ "$schedule" != "0 5 * * *" ]; }; then
-              echo "Skipping duplicate offset schedule: schedule=$schedule, Budapest offset=$budapest_offset."
-              exit 0
-            fi
-          fi
           if [ -z "$FB_PAGE_ID" ] || [ -z "$FB_PAGE_ACCESS_TOKEN" ]; then
             echo "::error::Missing Facebook publishing credentials."
             exit 1

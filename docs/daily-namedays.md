@@ -16,7 +16,7 @@ The live daily page no longer depends on GitHub scheduling. GitHub may disable
 scheduled workflows in a public repository after 60 days of repository
 inactivity. Re-enable the daily workflow for fresh static fallback files and
 social images/videos, but this is no longer necessary for the live homepage.
-The deploy, Facebook photo and Instagram Reel workflows now also call the
+The deploy, Facebook Reel and Instagram Reel workflows now also call the
 GitHub workflow-enable API on every scheduled/manual run to renew their
 inactivity timer. This needs only the job-scoped `actions: write` permission;
 no extra personal token, dummy commits or local computer is needed.
@@ -40,7 +40,8 @@ only in the test worker, never as a public endpoint or URL option.
 
 ## Daily social publishing
 
-Facebook photo: scheduled for 06:00 Budapest. Instagram Reel: 06:05 Budapest.
+Facebook Reel: scheduled for 06:00 Budapest. Instagram Reel: 06:05 Budapest.
+Facebook photos are manual-only and have no scheduled trigger.
 GitHub scheduling may delay those times. Both retain manual `workflow_dispatch`
 in Actions, use the existing Meta secrets, and fail visibly if credentials
 are missing or the API rejects them. Future token expiry/revocation requires
@@ -56,6 +57,6 @@ from creating duplicates. The workflow concurrency locks serialize retries.
 
 ```sh
 node --test tests/social-publishing.test.mjs
-gh workflow run facebook-daily-post.yml
+gh workflow run facebook-daily-reel.yml
 gh workflow run instagram-daily-reel.yml
 ```

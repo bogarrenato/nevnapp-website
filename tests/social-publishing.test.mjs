@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { findDailyPost, getBudapestIsoDate, graphRequest, requireCurrentMedia } from '../scripts/social-publishing.mjs';
+import { readFileSync } from 'node:fs';
+import { findDailyPost, getBudapestIsoDate, graphRequest, requireCurrentMedia, waitForFacebookReel } from '../scripts/social-publishing.mjs';
 
 test('Budapest date changes at local midnight in summer and winter', () => {
   assert.equal(getBudapestIsoDate(new Date('2026-10-09T22:01:00Z')), '2026-10-10');
@@ -45,4 +46,38 @@ test('Meta API failures surface the error code but redact credentials', async (t
     assert.equal(error.message.includes('secret-token'), false);
     return true;
   });
+});
+
+test('Facebook Reel deduplication does not mistake a photo for a video', () => {
+  const caption = '📅 Ma, október 10. Gedeon névnapja van.';
+  const photo = { message: caption, created_time: '2026-10-10T04:00:00Z' };
+  assert.equal(findDailyPost([photo], caption, '2026-10-10', 'facebook-reel'), undefined);
+  const video = { description: caption, created_time: photo.created_time, id: 'reel' };
+  assert.equal(findDailyPost([video], caption, '2026-10-10', 'facebook-reel'), video);
+});
+
+test('Facebook waits for confirmed publishing, not just accepted upload', async (t) => {
+  let calls = 0;
+  t.mock.method(globalThis, 'fetch', async () => Response.json({ status: {
+    publishing_phase: { status: ++calls === 1 ? 'in_progress' : 'complete' },
+  } }));
+  await waitForFacebookReel('v25.0', 'secret-token', 'video', { attempts: 2, delayMs: 0 });
+  assert.equal(calls, 2);
+});
+
+test('Facebook surfaces processing failures and unconfirmed publication', async (t) => {
+  t.mock.method(globalThis, 'fetch', async () => Response.json({ status: { video_status: 'error' } }));
+  await assert.rejects(waitForFacebookReel('v25.0', 'secret-token', 'video'), /failed during processing/);
+  t.mock.method(globalThis, 'fetch', async () => Response.json({ status: { video_status: 'processing' } }));
+  await assert.rejects(waitForFacebookReel('v25.0', 'secret-token', 'video', { attempts: 1 }), /did not confirm publication/);
+});
+
+test('Facebook daily workflow publishes video; photos have no schedule', () => {
+  const photo = readFileSync(new URL('../.github/workflows/facebook-daily-post.yml', import.meta.url), 'utf8');
+  const reel = readFileSync(new URL('../.github/workflows/facebook-daily-reel.yml', import.meta.url), 'utf8');
+  assert.doesNotMatch(photo, /^  schedule:/m);
+  assert.match(reel, /^  schedule:/m);
+  assert.match(reel, /npm run facebook:reel/);
+  assert.doesNotMatch(reel, /npm run facebook:post/);
+  assert.match(reel, /workflow: facebook-daily-reel.yml/);
 });

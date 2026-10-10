@@ -23,13 +23,27 @@ export async function requireCurrentMedia(siteUrl, kind, expectedIso) {
 export function findDailyPost(posts, caption, iso, platform) {
   const firstLine = caption.split('\n')[0].trim();
   return posts.find((post) => {
-    const text = platform === 'facebook' ? post.message : post.caption;
-    const timestamp = platform === 'facebook' ? post.created_time : post.timestamp;
+    const text = platform === 'facebook' ? post.message
+      : platform === 'facebook-reel' ? post.description : post.caption;
+    const timestamp = platform === 'instagram' ? post.timestamp : post.created_time;
     if (!text || !timestamp) { return false; }
     const date = new Date(timestamp);
     return !Number.isNaN(date.valueOf()) && getBudapestIsoDate(date) === iso
       && text.split('\n')[0].trim() === firstLine;
   });
+}
+
+export async function waitForFacebookReel(version, token, videoId, { attempts = 30, delayMs = 10000 } = {}) {
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    const { status } = await graphRequest(version, token, `/${videoId}`, { fields: 'status' });
+    if (status?.publishing_phase?.status === 'complete') { return; }
+    const phases = ['uploading_phase', 'processing_phase', 'publishing_phase'];
+    if (status?.video_status === 'error' || phases.some((phase) => ['error', 'failed'].includes(status?.[phase]?.status))) {
+      throw new Error(`Facebook Reel ${videoId} failed during processing/publishing.`);
+    }
+    if (attempt < attempts) { await new Promise((resolve) => setTimeout(resolve, delayMs)); }
+  }
+  throw new Error(`Facebook Reel ${videoId} did not confirm publication in time. Check its status before retrying.`);
 }
 
 export async function graphRequest(version, token, path, params, method = 'GET') {
