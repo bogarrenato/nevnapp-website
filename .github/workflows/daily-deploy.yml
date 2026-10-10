@@ -46,11 +46,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install headless Chromium for the reel renderer
+        run: npx playwright install --with-deps --only-shell chromium
+
       - name: Build static pages and daily fallback
         run: npm run build
 
       - name: Test request-time namedays and Budapest date boundaries
-        run: node --test tests/daily-runtime.test.mjs tests/social-publishing.test.mjs
+        run: node --test tests/daily-runtime.test.mjs tests/social-publishing.test.mjs tests/reel-template.test.mjs
 
       - name: Build social reel
         run: npm run social:reel

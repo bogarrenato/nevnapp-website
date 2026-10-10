@@ -1,4 +1,5 @@
 import { fetchJson, findDailyPost, getBudapestIsoDate, graphRequest, requireCurrentMedia, waitForFacebookReel } from './social-publishing.mjs';
+import { REEL_VERSION } from './reel-template.mjs';
 
 const GRAPH_VERSION = process.env.FB_GRAPH_VERSION || 'v25.0';
 const SITE_URL = normalizeSiteUrl(process.env.PUBLIC_SITE_URL || 'https://nevnap.app');
@@ -6,6 +7,7 @@ const PAGE_ID = process.env.FB_PAGE_ID;
 const PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN;
 const DRY_RUN = process.argv.includes('--dry-run') || process.env.FB_DRY_RUN === '1';
 const ALLOW_STALE = process.env.FB_ALLOW_STALE === '1';
+const REPUBLISH = process.env.SOCIAL_REPUBLISH === '1';
 
 const socialContent = await fetchJson(`${SITE_URL}/social/today.json?ts=${Date.now()}`);
 const expectedIso = getBudapestIsoDate();
@@ -16,12 +18,12 @@ if (!ALLOW_STALE && socialContent.date?.iso !== expectedIso) {
   );
 }
 
-const videoUrl = `${SITE_URL}/social/today-reel.mp4?v=${encodeURIComponent(socialContent.date.iso)}`;
+const media = await requireCurrentMedia(SITE_URL, 'reel', expectedIso, REEL_VERSION);
+const videoUrl = `${SITE_URL}/social/today-reel.mp4?v=${encodeURIComponent(`${socialContent.date.iso}-${media.reelSha256}`)}`;
 const description = process.env.FB_REEL_DESCRIPTION_OVERRIDE || socialContent.facebookCaption;
 const title =
   process.env.FB_REEL_TITLE_OVERRIDE ||
   `Mai névnap: ${(socialContent.primaryNames || ['NévnapTárX']).join(', ')}`;
-await requireCurrentMedia(SITE_URL, 'reel', expectedIso);
 
 if (DRY_RUN) {
   console.log('Facebook Reel dry run');
@@ -38,7 +40,7 @@ const recent = await graphRequest(GRAPH_VERSION, PAGE_ACCESS_TOKEN, `/${PAGE_ID}
   fields: 'id,description,created_time,permalink_url', limit: '25',
 });
 const existing = findDailyPost(recent.data ?? [], description, expectedIso, 'facebook-reel');
-if (existing) {
+if (existing && !REPUBLISH) {
   console.log(`Today's Facebook Reel already exists: ${existing.permalink_url || existing.id}`);
   process.exit(0);
 }

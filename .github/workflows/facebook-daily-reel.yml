@@ -7,6 +7,11 @@ on:
     - cron: '0 4 * * *'
     - cron: '0 5 * * *'
   workflow_dispatch:
+    inputs:
+      republish:
+        description: Publish a revised video even if today's Reel already exists
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -37,6 +42,7 @@ jobs:
           PUBLIC_SITE_URL: https://nevnap.app
           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
           FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
+          SOCIAL_REPUBLISH: ${{ inputs.republish && '1' || '0' }}
         run: |
           if [ "${{ github.event_name }}" = "schedule" ]; then
             budapest_offset="$(TZ=Europe/Budapest date +%z)"

@@ -59,7 +59,10 @@ const accessToken = await refreshAccessToken();
 const uploadUrl = await createUploadSession(accessToken, uploadMetadata);
 const uploaded = await uploadVideo(uploadUrl, VIDEO_PATH, accessToken);
 
-console.log(`Published YouTube Short: https://youtu.be/${uploaded.id}`);
+console.log(`Uploaded YouTube Short: https://youtu.be/${uploaded.id} (visibility: ${uploaded.status?.privacyStatus || 'unknown'}, upload status: ${uploaded.status?.uploadStatus || 'unknown'})`);
+if (uploaded.status?.privacyStatus !== PRIVACY_STATUS) {
+  throw new Error(`YouTube uploaded ${uploaded.id}, but did not allow the requested ${PRIVACY_STATUS} visibility. Do not reupload; review this video's status.`);
+}
 
 async function refreshAccessToken() {
   const response = await fetch('https://oauth2.googleapis.com/token', {

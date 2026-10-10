@@ -12,8 +12,16 @@ permissions:
   contents: read
 
 jobs:
+  keepalive:
+    permissions:
+      actions: write
+    uses: ./.github/workflows/scheduled-keepalive.yml
+    with:
+      workflow: tiktok-daily-reel.yml
+
   post:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: daily-tiktok-nameday-reel
       cancel-in-progress: false
@@ -31,9 +39,8 @@ jobs:
           TIKTOK_ACCESS_TOKEN: ${{ secrets.TIKTOK_ACCESS_TOKEN }}
         run: |
           if [ -z "$TIKTOK_REFRESH_TOKEN" ] && [ -z "$TIKTOK_ACCESS_TOKEN" ]; then
-            echo "TikTok secrets are not configured yet; skipping Reel post."
-            echo "configured=false" >> "$GITHUB_OUTPUT"
-            exit 0
+            echo "::error::Missing TikTok publishing credentials."
+            exit 1
           fi
           echo "configured=true" >> "$GITHUB_OUTPUT"
 
@@ -46,6 +53,10 @@ jobs:
       - name: Install dependencies
         if: steps.tiktok-secrets.outputs.configured == 'true'
         run: npm ci
+
+      - name: Install headless Chromium for the reel renderer
+        if: steps.tiktok-secrets.outputs.configured == 'true'
+        run: npx playwright install --with-deps --only-shell chromium
 
       - name: Build today's Reel
         if: steps.tiktok-secrets.outputs.configured == 'true'

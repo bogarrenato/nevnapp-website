@@ -13,11 +13,15 @@ export async function fetchJson(url) {
   return response.json();
 }
 
-export async function requireCurrentMedia(siteUrl, kind, expectedIso) {
+export async function requireCurrentMedia(siteUrl, kind, expectedIso, expectedVersion) {
   const manifest = await fetchJson(`${siteUrl}/social/build.json?ts=${Date.now()}`);
   if (manifest[`${kind}Date`] !== expectedIso) {
     throw new Error(`The deployed ${kind} is stale: got ${manifest[`${kind}Date`] ?? 'unknown'}, expected ${expectedIso}. Run Daily rebuild & deploy before posting.`);
   }
+  if (expectedVersion && manifest.reelVersion !== expectedVersion) {
+    throw new Error(`The deployed reel renderer is outdated: expected ${expectedVersion}. Run Daily rebuild & deploy before posting.`);
+  }
+  return manifest;
 }
 
 export function findDailyPost(posts, caption, iso, platform) {

@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { COVER_MS } from './reel-template.mjs';
+
 const API_BASE = 'https://open.tiktokapis.com/v2';
 const SITE_URL = normalizeSiteUrl(process.env.PUBLIC_SITE_URL || 'https://www.nevnap.app');
 const ROOT_DIR = process.cwd();
@@ -12,7 +14,7 @@ const ACCESS_TOKEN = process.env.TIKTOK_ACCESS_TOKEN;
 const REFRESH_TOKEN = process.env.TIKTOK_REFRESH_TOKEN;
 const CLIENT_KEY = process.env.TIKTOK_CLIENT_KEY;
 const CLIENT_SECRET = process.env.TIKTOK_CLIENT_SECRET;
-const REQUESTED_PRIVACY_LEVEL = process.env.TIKTOK_PRIVACY_LEVEL || 'SELF_ONLY';
+const REQUESTED_PRIVACY_LEVEL = process.env.TIKTOK_PRIVACY_LEVEL || 'PUBLIC_TO_EVERYONE';
 const DRY_RUN = process.argv.includes('--dry-run') || process.env.TIKTOK_DRY_RUN === '1';
 const ALLOW_STALE = process.env.TIKTOK_ALLOW_STALE === '1';
 const STATUS_ATTEMPTS = Number.parseInt(process.env.TIKTOK_STATUS_ATTEMPTS || '30', 10);
@@ -64,7 +66,7 @@ const init = await apiPost('/post/publish/video/init/', token, {
     disable_duet: envBool('TIKTOK_DISABLE_DUET', false),
     disable_comment: envBool('TIKTOK_DISABLE_COMMENT', false),
     disable_stitch: envBool('TIKTOK_DISABLE_STITCH', false),
-    video_cover_timestamp_ms: Number.parseInt(process.env.TIKTOK_COVER_TIMESTAMP_MS || '1000', 10),
+    video_cover_timestamp_ms: Number.parseInt(process.env.TIKTOK_COVER_TIMESTAMP_MS || String(COVER_MS), 10),
     brand_content_toggle: envBool('TIKTOK_BRAND_CONTENT', false),
     brand_organic_toggle: envBool('TIKTOK_BRAND_ORGANIC', true),
     is_aigc: envBool('TIKTOK_IS_AIGC', false),
@@ -189,8 +191,7 @@ async function waitForPublish(token, publishId) {
     await new Promise((resolve) => setTimeout(resolve, STATUS_DELAY_MS));
   }
 
-  console.log(`TikTok Reel is still processing: ${publishId} (${lastStatus?.data?.status || 'unknown'})`);
-  return lastStatus || { data: { status: 'UNKNOWN' } };
+  throw new Error(`TikTok Reel is still processing: ${publishId} (${lastStatus?.data?.status || 'unknown'}). Check its status before retrying.`);
 }
 
 async function loadSocialContent() {
@@ -216,10 +217,8 @@ async function fetchJson(url) {
 }
 
 function choosePrivacyLevel(options) {
-  if (options.includes(REQUESTED_PRIVACY_LEVEL)) return REQUESTED_PRIVACY_LEVEL;
-  if (options.includes('SELF_ONLY')) return 'SELF_ONLY';
-  if (options.length > 0) return options[0];
-  return REQUESTED_PRIVACY_LEVEL;
+  if (options.includes(REQUESTED_PRIVACY_LEVEL)) { return REQUESTED_PRIVACY_LEVEL; }
+  throw new Error(`TikTok does not permit the requested ${REQUESTED_PRIVACY_LEVEL} visibility; refusing a silent private fallback.`);
 }
 
 function envBool(name, defaultValue) {

@@ -30,6 +30,14 @@ test('current static image and video manifests are accepted', async (t) => {
   await requireCurrentMedia('https://nevnap.app', 'reel', '2026-10-10');
 });
 
+test('a rebuilt video must use the new renderer version before republishing', async (t) => {
+  t.mock.method(globalThis, 'fetch', async () => Response.json({ reelDate: '2026-10-10' }));
+  await assert.rejects(requireCurrentMedia('https://nevnap.app', 'reel', '2026-10-10', 'calendar-sheets-v1'), /renderer is outdated/);
+  const manifest = { reelDate: '2026-10-10', reelVersion: 'calendar-sheets-v1', reelSha256: 'abc123' };
+  t.mock.method(globalThis, 'fetch', async () => Response.json(manifest));
+  assert.deepEqual(await requireCurrentMedia('https://nevnap.app', 'reel', '2026-10-10', 'calendar-sheets-v1'), manifest);
+});
+
 test('Meta reads use bearer auth, not a credential-bearing URL', async (t) => {
   t.mock.method(globalThis, 'fetch', async (url, options) => {
     assert.equal(url.searchParams.has('access_token'), false);

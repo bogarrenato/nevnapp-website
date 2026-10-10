@@ -60,3 +60,42 @@ node --test tests/social-publishing.test.mjs
 gh workflow run facebook-daily-reel.yml
 gh workflow run instagram-daily-reel.yml
 ```
+
+## Daily reel video
+
+`npm run social:reel` (`scripts/build-social-reel.mjs`) renders
+`dist/social/today-reel.mp4`: 1080×1920, 30 fps, 11.5 s, H.264 + AAC. The
+layout lives in `scripts/reel-template.mjs` as one HTML page with five scenes
+(tear-off calendar hook, name, meaning, other names + tomorrow, share + app)
+and a brand sticker. Headless Chromium (Playwright) steps the page frame by
+frame and FFmpeg encodes the result, so the video is deterministic.
+
+All copy comes from `dist/social/today.json`, `src/data/nevnapok.json`
+(tomorrow's name) and `src/data/name_meanings.json`; text is auto-sized, and a
+name without a usable meaning gets a greeting instead. The weekday picks the
+colour theme (`THEMES`). `COVER_MS` is the cover frame sent to Instagram
+(`thumb_offset`) and TikTok (`video_cover_timestamp_ms`), because frame 0 still
+shows yesterday's calendar sheet.
+
+The build manifest also records `reelVersion` and the encoded video's
+`reelSha256`. Facebook and Instagram URLs include this hash, so republishing a
+revised video on the same date cannot reuse the old cached MP4. The manual
+`republish` input intentionally bypasses the same-day duplicate guard; it is
+false by default and is never enabled by the daily schedule. Old platform posts
+are not deleted when publishing a revision.
+
+TikTok and YouTube schedules have the same inactivity keepalive as Meta. Their
+existing authorization and platform approval are still required. TikTok fails
+instead of silently downgrading public content to private or claiming a pending
+upload was published. YouTube reports the actual visibility returned by the
+API and fails if it differs from the requested visibility.
+
+Local run, after `npm install`:
+
+```sh
+npx playwright install chromium   # once per machine
+npm run build && npm run social:reel
+```
+
+The workflows that build the reel (`daily-deploy.yml`, `tiktok-daily-reel.yml`,
+`youtube-daily-short.yml`) install the headless Chromium right after `npm ci`.

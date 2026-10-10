@@ -1,3 +1,4 @@
+import { COVER_MS, REEL_VERSION } from './reel-template.mjs';
 import { fetchJson, findDailyPost, getBudapestIsoDate, graphRequest, requireCurrentMedia } from './social-publishing.mjs';
 
 const GRAPH_VERSION = process.env.IG_GRAPH_VERSION || 'v25.0';
@@ -6,6 +7,7 @@ const IG_USER_ID = process.env.IG_USER_ID;
 const ACCESS_TOKEN = process.env.IG_ACCESS_TOKEN;
 const DRY_RUN = process.argv.includes('--dry-run') || process.env.IG_DRY_RUN === '1';
 const ALLOW_STALE = process.env.IG_ALLOW_STALE === '1';
+const REPUBLISH = process.env.SOCIAL_REPUBLISH === '1';
 
 const socialContent = await fetchJson(`${SITE_URL}/social/today.json?ts=${Date.now()}`);
 const expectedIso = getBudapestIsoDate();
@@ -16,11 +18,11 @@ if (!ALLOW_STALE && socialContent.date?.iso !== expectedIso) {
   );
 }
 
+const media = await requireCurrentMedia(SITE_URL, 'reel', expectedIso, REEL_VERSION);
 const videoUrl =
   process.env.IG_REEL_VIDEO_URL_OVERRIDE ||
-  `${SITE_URL}/social/today-reel.mp4?v=${encodeURIComponent(socialContent.date.iso)}`;
+  `${SITE_URL}/social/today-reel.mp4?v=${encodeURIComponent(`${socialContent.date.iso}-${media.reelSha256}`)}`;
 const caption = process.env.IG_CAPTION_OVERRIDE || socialContent.facebookCaption;
-await requireCurrentMedia(SITE_URL, 'reel', expectedIso);
 
 if (DRY_RUN) {
   console.log('Instagram Reel dry run');
@@ -36,7 +38,7 @@ const recent = await graphRequest(GRAPH_VERSION, ACCESS_TOKEN, `/${IG_USER_ID}/m
   fields: 'id,caption,timestamp,permalink', limit: '25',
 });
 const existing = findDailyPost(recent.data ?? [], caption, expectedIso, 'instagram');
-if (existing) {
+if (existing && !REPUBLISH) {
   console.log(`Today's Instagram Reel already exists: ${existing.permalink || existing.id}`);
   process.exit(0);
 }
@@ -46,6 +48,8 @@ const container = await graphRequest(GRAPH_VERSION, ACCESS_TOKEN, `/${IG_USER_ID
   video_url: videoUrl,
   caption,
   share_to_feed: 'true',
+  // Frame 0 still shows yesterday's calendar sheet; use the name scene as the cover.
+  thumb_offset: String(process.env.IG_THUMB_OFFSET_MS || COVER_MS),
 }, 'POST');
 
 const containerId = container.id;

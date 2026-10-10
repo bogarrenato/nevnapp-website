@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "deploy:production": "npm run build && npx wrangler pages deploy dist --project-name=nevnap-website --branch=main",
+    "deploy:production": "npm run build && npm run social:reel && npx wrangler pages deploy dist --project-name=nevnap-website --branch=main",
     "preview": "astro preview",
     "astro": "astro",
     "facebook:post": "node scripts/post-facebook.mjs",
@@ -27,9 +27,13 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource/instrument-serif": "^5.3.0",
     "@tailwindcss/vite": "^4.3.0",
     "esbuild": "^0.27.7",
     "miniflare": "^4.20260730.0",
+    "playwright": "1.56.0",
     "tailwindcss": "^4.3.0",
     "typescript": "^6.0.3"
   }
