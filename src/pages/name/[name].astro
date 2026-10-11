@@ -121,37 +121,35 @@ const jsonLd = [
   robots="noindex,follow"
   hideDownloadStrip
 >
-  <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
-    <nav class="text-sm text-zinc-500" aria-label={t.namePage.breadcrumbAria}>
-      <ol class="flex items-center gap-2 list-none">
-        <li><a href="/" class="hover:text-primary-500">{t.brand}</a></li>
+  <article class="container mx-auto px-6 max-w-3xl pt-3 lg:pt-10">
+    <nav class="nx-crumbs" aria-label={t.namePage.breadcrumbAria}>
+      <ol>
+        <li><a href="/">{t.brand}</a></li>
         <li aria-hidden="true">›</li>
-        <li><a href="/names" class="hover:text-primary-500">{t.namePage.breadcrumbNames}</a></li>
+        <li><a href="/names">{t.namePage.breadcrumbNames}</a></li>
         <li aria-hidden="true">›</li>
-        <li aria-current="page" class="text-zinc-700 dark:text-zinc-300">{name}</li>
+        <li aria-current="page">{name}</li>
       </ol>
     </nav>
 
-    <header class="mt-6">
-      <p class="text-sm uppercase tracking-widest font-semibold text-primary-600 dark:text-primary-400">{t.namePage.eyebrow}</p>
-      <h1 class="mt-2 text-5xl md:text-6xl font-extrabold tracking-tight">
-        <span class="gradient-text">{name}</span>
-      </h1>
-      <p class="mt-3 text-zinc-600 dark:text-zinc-400 text-lg">
+    <header class="mt-4 lg:mt-6">
+      <p class="nx-eyebrow text-nx-accent nx-rise">{t.namePage.eyebrow}</p>
+      <h1 class="mt-3 nx-page-title text-nx-accent nx-rise" style="--i:1">{name}</h1>
+      <p class="mt-4 nx-lead nx-rise" style="--i:2">
         {interpolate(t.namePage.heading, { name })}
       </p>
     </header>
 
-    <section class="mt-8 rounded-2xl border border-primary-500/20 bg-primary-50/70 dark:bg-primary-500/10 p-5" aria-labelledby="quick-answer-heading">
-      <h2 id="quick-answer-heading" class="text-sm uppercase tracking-widest font-semibold text-primary-700 dark:text-primary-300">
+    <section class="mt-8 nx-answer nx-rise" style="--i:3" aria-labelledby="quick-answer-heading">
+      <h2 id="quick-answer-heading" class="nx-eyebrow font-body text-nx-accent-ink">
         Rövid válasz
       </h2>
-      <p class="mt-3 text-lg font-semibold text-zinc-900 dark:text-zinc-100">{namedayAnswer}</p>
-      <p class="mt-2 text-zinc-700 dark:text-zinc-300 leading-relaxed">{meaningAnswer}</p>
+      <p class="mt-3 text-lg font-semibold text-nx-ink">{namedayAnswer}</p>
+      <p class="mt-2 text-nx-muted leading-relaxed">{meaningAnswer}</p>
     </section>
 
-    <section class="mt-10 glass rounded-3xl p-6 md:p-8" aria-labelledby="dates-heading">
-      <h2 id="dates-heading" class="text-xs uppercase tracking-widest font-semibold text-zinc-500 dark:text-zinc-400">
+    <section class="mt-6 nx-card p-5 sm:p-7" aria-labelledby="dates-heading" data-reveal>
+      <h2 id="dates-heading" class="nx-eyebrow font-body text-nx-subtle">
         {interpolate(t.namePage.datesHeading, { name })}
       </h2>
       {dates.length ? (
@@ -164,15 +162,10 @@ const jsonLd = [
               <li>
                 <a
                   href={`/day/${monthPadded}-${dayPadded}`}
-                  class:list={[
-                    'inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold transition',
-                    isPrimary(name, d)
-                      ? 'bg-gradient-to-r from-primary-500 to-violet-500 text-white shadow-lg shadow-primary-500/30'
-                      : 'bg-zinc-100 dark:bg-white/10 hover:bg-zinc-200 dark:hover:bg-white/15',
-                  ]}
+                  class:list={['nx-chip gap-2 font-semibold', isPrimary(name, d) && 'nx-chip-on']}
                 >
-                  <svg class="size-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
-                    <path d="M19 4h-2V2h-2v2H9V2H7v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/>
+                  <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>
                   </svg>
                   <time datetime={`--${monthPadded}-${dayPadded}`}>{dateLabel}</time>
                 </a>
@@ -181,20 +174,20 @@ const jsonLd = [
           })}
         </ul>
       ) : (
-        <p class="mt-3 text-zinc-600 dark:text-zinc-400">{t.namePage.noDates}</p>
+        <p class="mt-3 text-nx-muted">{t.namePage.noDates}</p>
       )}
     </section>
 
-    <section class="mt-8" aria-labelledby="meaning-heading">
-      <h2 id="meaning-heading" class="text-2xl md:text-3xl font-extrabold tracking-tight">
+    <section class="mt-12 lg:mt-14" aria-labelledby="meaning-heading" data-reveal>
+      <h2 id="meaning-heading" class="nx-h2">
         {interpolate(t.namePage.meaningHeading, { name, article })}
       </h2>
-      <p class="mt-4 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300" lang="hu">
+      <p class="mt-4 text-lg leading-relaxed text-nx-muted" lang="hu">
         {meaning ?? interpolate(t.namePage.noMeaning, { name, article })}
       </p>
     </section>
 
-    <aside class="mt-12">
+    <aside class="mt-10" data-reveal>
       <DownloadDropdown
         lang="hu"
         variant="cta"
@@ -204,30 +197,36 @@ const jsonLd = [
     </aside>
 
     {/* Köszöntők szekció — SEO long-tail keyword target */}
-    <section class="mt-16" aria-labelledby="greetings-heading">
-      <h2 id="greetings-heading" class="text-2xl md:text-3xl font-extrabold tracking-tight">
-        {interpolate(t.namePage.greetingsHeading, { name })}
-      </h2>
-      <p class="mt-3 text-zinc-600 dark:text-zinc-400">
-        {interpolate(t.namePage.greetingsIntro, { name })}
-      </p>
-      <ul class="mt-6 space-y-4 list-none" lang="hu">
+    <section class="mt-14 lg:mt-20" aria-labelledby="greetings-heading">
+      <div data-reveal>
+        <h2 id="greetings-heading" class="nx-h2">
+          {interpolate(t.namePage.greetingsHeading, { name })}
+        </h2>
+        <p class="mt-3 text-nx-muted">
+          {interpolate(t.namePage.greetingsIntro, { name })}
+        </p>
+      </div>
+      <ul class="mt-6 flex flex-col gap-3 list-none" lang="hu">
         {greetings.map((g) => (
-          <li class="group relative rounded-2xl border border-zinc-200 dark:border-white/10 bg-white/60 dark:bg-white/5 backdrop-blur p-5 hover:border-primary-500/40 transition">
-            <div class="flex items-start justify-between gap-3 mb-2">
-              <span class="text-xs uppercase tracking-widest font-semibold text-primary-600 dark:text-primary-400">
+          <li class="nx-card p-5 transition-colors duration-300 hover:border-nx-accent-line" data-reveal>
+            <div class="flex items-center justify-between gap-3">
+              <span class="nx-eyebrow text-xs text-nx-accent">
                 {KIND_LABELS_HU[g.kind]}
               </span>
               <button
                 type="button"
-                class="copy-btn text-xs text-zinc-500 hover:text-primary-500 transition opacity-60 group-hover:opacity-100"
+                class="copy-btn -my-2 -mr-2 inline-flex items-center gap-1.5 min-h-11 px-3 rounded-full text-[0.8125rem] font-semibold text-nx-muted hover:text-nx-ink hover:bg-nx-line transition-colors cursor-pointer"
                 data-copy-text={g.text}
+                data-copied-label={t.namePage.copied.replace('✓', '').trim()}
                 aria-label={`${t.namePage.copyGreeting} — ${KIND_LABELS_HU[g.kind]}`}
               >
-                📋 {t.namePage.copyGreeting}
+                <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/>
+                </svg>
+                <span data-copy-label>{t.namePage.copyGreeting}</span>
               </button>
             </div>
-            <p class="text-base md:text-lg leading-relaxed whitespace-pre-line text-zinc-800 dark:text-zinc-200">
+            <p class="mt-2 text-base md:text-lg leading-relaxed whitespace-pre-line text-nx-ink">
               {g.text}
             </p>
           </li>
@@ -236,32 +235,27 @@ const jsonLd = [
     </section>
 
     {/* FAQ szekció + FAQPage schema (a frontmatterben már része a jsonLd-nek) */}
-    <section class="mt-16" aria-labelledby="faq-heading">
-      <h2 id="faq-heading" class="text-2xl md:text-3xl font-extrabold tracking-tight">
+    <section class="mt-14 lg:mt-20" aria-labelledby="faq-heading" data-reveal>
+      <h2 id="faq-heading" class="nx-h2">
         {interpolate(t.namePage.faqHeading, { name })}
       </h2>
-      <dl class="mt-6 space-y-4">
+      <dl class="mt-6 nx-faq">
         {faqEntries.map((f) => (
-          <div class="rounded-2xl border border-zinc-200 dark:border-white/10 p-5">
-            <dt class="font-bold text-zinc-900 dark:text-zinc-100">{f.q}</dt>
-            <dd class="mt-2 text-zinc-700 dark:text-zinc-300 leading-relaxed">{f.a}</dd>
+          <div>
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
           </div>
         ))}
       </dl>
     </section>
 
     {related.length > 0 && (
-      <section class="mt-16" aria-labelledby="related-heading">
-        <h2 id="related-heading" class="text-xl md:text-2xl font-extrabold tracking-tight">{t.namePage.relatedHeading}</h2>
+      <section class="mt-14 lg:mt-20" aria-labelledby="related-heading" data-reveal>
+        <h2 id="related-heading" class="text-xl md:text-2xl font-bold tracking-tight">{t.namePage.relatedHeading}</h2>
         <ul class="mt-4 flex flex-wrap gap-2 list-none">
           {related.map((r) => (
             <li>
-              <a
-                href={`/name/${encodeURIComponent(r)}`}
-                class="px-4 py-2 rounded-full bg-zinc-100 dark:bg-white/10 hover:bg-primary-100 dark:hover:bg-primary-500/20 hover:text-primary-700 dark:hover:text-primary-300 transition text-sm font-medium"
-              >
-                {r}
-              </a>
+              <a href={`/name/${encodeURIComponent(r)}`} class="nx-chip-sm">{r}</a>
             </li>
           ))}
         </ul>
@@ -270,17 +264,20 @@ const jsonLd = [
   </article>
 
 <script is:inline>
+  // Copy a greeting to the clipboard and confirm it on the button for a moment.
   document.addEventListener('click', function (e) {
     var btn = e.target && e.target.closest('.copy-btn');
     if (!btn) return;
     var text = btn.getAttribute('data-copy-text') || '';
-    if (!text) return;
+    var label = btn.querySelector('[data-copy-label]');
+    if (!text || !label || btn.hasAttribute('data-copied')) return;
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text);
     }
-    var original = btn.innerHTML;
-    btn.innerHTML = '✓ ' + (document.documentElement.lang === 'en' ? 'Copied' : 'Másolva');
-    setTimeout(function () { btn.innerHTML = original; }, 1500);
+    var original = label.textContent;
+    label.textContent = btn.getAttribute('data-copied-label') || original;
+    btn.setAttribute('data-copied', '');
+    setTimeout(function () { label.textContent = original; btn.removeAttribute('data-copied'); }, 1500);
   });
 </script>
 </BaseLayout>

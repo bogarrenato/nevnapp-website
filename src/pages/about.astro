@@ -7,22 +7,22 @@ const nameCount = getAllNames().length;
 const meaningCount = getMeaningCoverageCount();
 ---
 <BaseLayout lang="hu" title={`Rólunk | ${t.brand}`} description="A NévnapTárX projekt küldetése: a magyar névnap-hagyomány megőrzése modern technológiával." altLangPath="/about">
-  <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
-    <nav class="text-sm text-zinc-500" aria-label="Morzsamenü">
-      <ol class="flex items-center gap-2 list-none"><li><a href="/" class="hover:text-primary-500">{t.brand}</a></li><li aria-hidden="true">›</li><li aria-current="page" class="text-zinc-700 dark:text-zinc-300">Rólunk</li></ol>
+  <article class="container mx-auto px-6 max-w-3xl pt-3 lg:pt-10">
+    <nav class="nx-crumbs" aria-label="Morzsamenü">
+      <ol><li><a href="/">{t.brand}</a></li><li aria-hidden="true">›</li><li aria-current="page">Rólunk</li></ol>
     </nav>
-    <h1 class="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight"><span class="gradient-text">Rólunk</span></h1>
-    <p class="mt-4 text-lg text-zinc-700 dark:text-zinc-300">A magyar névnap-hagyomány megőrzése modern technológiával.</p>
+    <h1 class="mt-6 nx-page-title nx-page-title--sm nx-rise">Rólunk</h1>
+    <p class="mt-4 text-lg text-nx-muted">A magyar névnap-hagyomány megőrzése modern technológiával.</p>
 
-    <section class="mt-10 space-y-6 text-zinc-700 dark:text-zinc-300 leading-relaxed">
+    <section class="mt-10 space-y-6 text-nx-muted leading-relaxed">
       <div>
-        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">A küldetés</h2>
+        <h2 class="text-2xl font-bold text-nx-ink">A küldetés</h2>
         <p class="mt-2">A névnap egy szép, sok évszázados magyar hagyomány — minden napra esik egy vagy több név, melyet a családok, barátok kis ünnepléssel jelölnek. A digitális korban azonban könnyen elfeledkezünk róla.</p>
         <p class="mt-2">A NévnapTárX azzal az egyszerű céllal készült, hogy ne fordulhasson ilyen elő: a jelenlegi naptár <strong>{nameCount} külön névalak</strong> névnapját rendezi kereshető formába, és <strong>{meaningCount} névhez</strong> tartalmaz rövid jelentést. Az alkalmazás iOS-en és Androidon napi emlékeztetőt is adhat.</p>
       </div>
 
       <div>
-        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Mit kínálunk?</h2>
+        <h2 class="text-2xl font-bold text-nx-ink">Mit kínálunk?</h2>
         <ul class="mt-2 list-disc list-inside space-y-1">
           <li><strong>{nameCount} névalak</strong> névnapjai kereshető naptárban</li>
           <li><strong>{meaningCount} rövid névjelentés</strong>, egyértelműen jelzett hiányokkal</li>
@@ -35,20 +35,20 @@ const meaningCount = getMeaningCoverageCount();
       </div>
 
       <div>
-        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">A fejlesztő</h2>
+        <h2 class="text-2xl font-bold text-nx-ink">A fejlesztő</h2>
         <p class="mt-2">A NévnapTárX-ot <strong>Bogár Renátó</strong> magyar fejlesztő készíti — lelkesedésből, szeretettel a magyar hagyomány iránt. A projekt nyitott a visszajelzésekre és ötletekre.</p>
-        <p class="mt-3">📧 <a href="mailto:bogarrenato@gmail.com" class="text-primary-500 underline">bogarrenato@gmail.com</a></p>
+        <p class="mt-3"><a href="mailto:bogarrenato@gmail.com" class="text-nx-accent underline">bogarrenato@gmail.com</a></p>
       </div>
 
       <div>
-        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Támogatás</h2>
+        <h2 class="text-2xl font-bold text-nx-ink">Támogatás</h2>
         <p class="mt-2">A projekt szabadidőben készül, semmilyen vállalat nem áll mögötte. Ha értékesnek tartod a munkát és szeretnéd, hogy folytatódjon:</p>
-        <p class="mt-3"><a href="https://ko-fi.com/bogarrenato" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-amber-400 hover:bg-amber-300 text-zinc-900 font-bold transition">☕ Támogass egy kávéval</a></p>
+        <p class="mt-3"><a href="https://ko-fi.com/bogarrenato" target="_blank" rel="noopener" class="inline-flex items-center gap-2.5 h-12 px-6 rounded-full bg-[#ffb95c] hover:bg-[#ffc87f] text-[#1a1206] font-bold transition-[transform,background-color] duration-300 hover:-translate-y-0.5"><svg class="size-[1.125rem]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9z"/><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 3v2.5M12 3v2.5"/></svg> Támogass egy kávéval</a></p>
       </div>
 
       <div>
-        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Adatforrások</h2>
-        <p class="mt-2">A névnap nem hatósági adat, és az egyes naptárak eltérhetnek. A lefedettséget, a korlátokat, az ellenőrzés módját és az elsődleges hivatkozásokat az <a href="/adatbazis" class="text-primary-500 underline">adatbázis és módszertan</a> oldalon dokumentáljuk. Hibajelzést a kapcsolati címen fogadunk.</p>
+        <h2 class="text-2xl font-bold text-nx-ink">Adatforrások</h2>
+        <p class="mt-2">A névnap nem hatósági adat, és az egyes naptárak eltérhetnek. A lefedettséget, a korlátokat, az ellenőrzés módját és az elsődleges hivatkozásokat az <a href="/adatbazis" class="text-nx-accent underline">adatbázis és módszertan</a> oldalon dokumentáljuk. Hibajelzést a kapcsolati címen fogadunk.</p>
       </div>
     </section>
   </article>

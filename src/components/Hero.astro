@@ -1,92 +1,152 @@
 ---
 /**
- * Above-the-fold hero. Displays today's primary nameday in giant gradient
- * type, with the two main CTAs (App Store + name browser).
+ * Above-the-fold hero: today's nameday in display type, the other names of
+ * the day, both store buttons, and an illustration of the app.
+ *
+ * Everything that changes daily carries a `data-daily` / `data-upcoming-*`
+ * hook; functions/_middleware.js rewrites those on every request, so the
+ * markup here and the strings in src/lib/daily-page.ts are the contract.
  *
  * a11y notes:
- *  - <h1> is the page's main heading and includes both date + name text
- *  - The "today" kicker chip uses <time datetime="..."> for SR + machine
- *  - Decorative blob divs are aria-hidden + pointer-events-none
+ *  - <h1> is the page's main heading; the name(s) in it link to their pages
+ *  - The kicker uses <time datetime="...">
+ *  - The phone illustration is one role="img" with a text alternative
  */
-import { strings, interpolate, localizedPath, type Lang } from '../i18n/strings';
-import DownloadDropdown from './DownloadDropdown.astro';
-import { getBudapestCalendarDate, getTodayEntry } from '../lib/names';
+import { strings, localizedPath, interpolate, type Lang } from '../i18n/strings';
+import StoreBadge from './StoreBadge.astro';
+import { STORE_LINKS } from '../lib/constants';
+import { getDailyPage } from '../lib/daily-page';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = strings[lang];
+const hu = lang === 'hu';
 
-const today = getBudapestCalendarDate();
-const entry = getTodayEntry();
-const primaryNames = entry?.primary ?? [];
-
-const todayFormatted = lang === 'hu'
-  ? `${t.months[today.month - 1]} ${today.day}.`
-  : `${t.months[today.month - 1]} ${today.day}`;
-
-const todayIso = today.iso;
-const heroTitle = primaryNames.length
-  ? interpolate(t.hero.title, { name: primaryNames.join(lang === 'hu' ? ' és ' : ' and ') })
-  : t.hero.titleEmpty;
-
-const kicker = interpolate(t.hero.kicker, { date: todayFormatted });
+const daily = getDailyPage(lang);
+const { today, primaryNames, secondaryNames, hero } = daily;
+/** The phone shows the next three days; the strip below shows all seven. */
+const phoneDays = daily.upcoming.slice(0, 3);
+const nameHref = (name: string) => localizedPath(lang, `/name/${encodeURIComponent(name)}`);
+const noNameday = hu ? 'Nincs névnap' : 'No nameday';
 ---
 
-<section class="relative z-10" aria-labelledby="hero-title">
-  <!-- Blobs: saját overflow-hidden wrapperben, hogy a dropdown szabad lehessen -->
-  <div aria-hidden="true" class="absolute inset-0 overflow-hidden pointer-events-none">
-  <div
-    aria-hidden="true"
-    class="pointer-events-none absolute -top-32 -right-32 w-[26rem] h-[26rem] rounded-full opacity-50 dark:opacity-40 blur-3xl animate-blob"
-    style="background: radial-gradient(circle, var(--color-violet-500), transparent 70%);"
-  ></div>
-  <div
-    aria-hidden="true"
-    class="pointer-events-none absolute -bottom-40 -left-32 w-[28rem] h-[28rem] rounded-full opacity-40 dark:opacity-30 blur-3xl animate-blob-delay"
-    style="background: radial-gradient(circle, var(--color-coral-500), transparent 70%);"
-  ></div>
-  </div><!-- /blobs wrapper -->
+<section class="relative overflow-hidden" aria-labelledby="hero-title">
+  <div class="nx-hero-grid" aria-hidden="true"></div>
 
-  <div class="container mx-auto px-6 pt-16 pb-24 md:pt-24 md:pb-32 relative">
-    <div class="max-w-3xl">
-      <p class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-100/70 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 text-sm font-semibold animate-float-in">
-        <svg class="size-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
-          <path d="M19 4h-2V2h-2v2H9V2H7v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/>
+  <div class="container mx-auto px-6 pt-8 pb-14 lg:pt-12 lg:pb-24 relative grid items-center gap-x-16 gap-y-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+    <div class="flex flex-col items-start gap-5 lg:gap-6 min-w-0">
+      <p class="nx-rise inline-flex items-center gap-2 h-9 pl-3 pr-3.5 rounded-full border border-nx-accent-line bg-nx-accent-soft text-nx-accent-ink text-sm font-semibold">
+        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>
         </svg>
-        <span class="sr-only">{lang === 'hu' ? 'Mai dátum:' : 'Today is:'}</span>
-        <time data-daily="hero-date" datetime={todayIso}>{kicker}</time>
+        <span class="sr-only">{hu ? 'Mai dátum:' : 'Today is:'}</span>
+        <time data-daily="hero-date" datetime={today.iso}>{hero.kicker}</time>
       </p>
 
-      <h1
-        id="hero-title"
-        data-daily="hero-title"
-        class="mt-6 text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.03] animate-float-in"
-        style="animation-delay: 80ms"
-      >
+      <h1 id="hero-title" data-daily="hero-title" class="nx-hero-title nx-rise" style="--i:1">
         {primaryNames.length ? (
-          lang === 'hu' ? (
-            <>Ma <span class="gradient-text">{primaryNames.join(' és ')}</span> névnapja van</>
+          hu ? (
+            <>Ma {primaryNames.map((name, i) => (<>{i > 0 && ' és '}<a class="hero-name" href={nameHref(name)}>{name}</a></>))} névnapja van</>
           ) : (
-            <>Today is <span class="gradient-text">{primaryNames.join(' & ')}</span>'s nameday</>
+            <>Today is {primaryNames.map((name, i) => (<>{i > 0 && ' & '}<a class="hero-name" href={nameHref(name)}>{name}</a></>))}'s nameday</>
           )
-        ) : (
-          <span class="gradient-text">{heroTitle}</span>
-        )}
+        ) : t.hero.titleEmpty}
       </h1>
 
-      <p class="mt-6 text-lg md:text-xl text-zinc-900 dark:text-zinc-300 max-w-2xl animate-float-in" style="animation-delay: 160ms">
+      <p class="nx-rise max-w-[34rem] text-[1.0625rem] lg:text-[1.1875rem] leading-relaxed text-nx-muted text-pretty" style="--i:2">
         {t.hero.subtitle}
       </p>
 
-      <div class="mt-10 flex flex-wrap gap-3 animate-float-in" style="animation-delay: 240ms" role="group" aria-label={lang === 'hu' ? 'Fő műveletek' : 'Primary actions'}>
-        <DownloadDropdown lang={lang} variant="primary" id="hero-download" label={t.hero.ctaPrimary} />
-        <a
-          href={localizedPath(lang, '/names')}
-          class="inline-flex items-center gap-2 px-6 py-3 rounded-full glass font-semibold hover:bg-white/80 dark:hover:bg-zinc-900/80 transition"
-        >
+      <div data-daily="secondary-section" hidden={!secondaryNames.length} class="nx-rise flex flex-col gap-2.5" style="--i:3">
+        <h2 class="nx-eyebrow font-body text-nx-subtle">{t.today.secondaryHeading}</h2>
+        <ul data-daily="secondary-links" class="flex flex-wrap gap-2 list-none">{secondaryNames.map((name) => (<li><a href={nameHref(name)} class="nx-chip">{name}</a></li>))}</ul>
+      </div>
+
+      <div class="nx-rise w-full flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-x-3 gap-y-2 mt-2" style="--i:4" role="group" aria-label={hu ? 'Fő műveletek' : 'Primary actions'}>
+        <div class="grid grid-cols-1 min-[22.5rem]:grid-cols-2 gap-2.5 sm:flex sm:gap-3">
+          <StoreBadge store="apple" href={STORE_LINKS.appStore} lang={lang} />
+          <StoreBadge store="google" href={STORE_LINKS.playStore} lang={lang} />
+        </div>
+        <a href={localizedPath(lang, '/names')} class="group self-center inline-flex items-center gap-2 min-h-11 px-2.5 font-semibold text-nx-ink">
           {t.hero.ctaSecondary}
+          <svg class="size-4 text-nx-accent transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M5 12h14M13 6l6 6-6 6"/>
+          </svg>
         </a>
+      </div>
+    </div>
+
+    <!-- App illustration. Decorative as a whole; the phone is always "dark" because it depicts the app. -->
+    <div class="nx-stage w-full max-w-[26rem] lg:max-w-[28.75rem] mx-auto" data-parallax role="img" aria-label={t.hero.phone.alt}>
+      <div class="nx-glow"></div>
+
+      <div class="nx-phone-in">
+        <div class="nx-parallax" style="--depth:-10px">
+          <div class="nx-float">
+            <div class="nx-phone">
+              <div class="nx-phone-screen">
+                <p data-daily="phone-date" class="text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-[#a08bff]">{hero.phoneDate}</p>
+                <p data-daily="phone-name" class="font-display text-[2.375rem] lg:text-[2.625rem] font-extrabold leading-none tracking-tight">{hero.phoneName}</p>
+                <p class="flex items-center justify-center h-[2.625rem] rounded-[0.875rem] bg-[#6e5bff] text-white text-sm font-semibold">{t.hero.phone.greet}</p>
+                <p class="mt-1 text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-[#8c8aa3]">{t.today.upcomingHeading}</p>
+                <div class="flex flex-col gap-2">
+                  {phoneDays.map((u) => (
+                    <div class="nx-phone-row">
+                      <div class="nx-phone-date">
+                        <span data-upcoming-day={u.daysAhead} class="font-display text-base font-extrabold">{u.date.day}</span>
+                        <span data-upcoming-mon={u.daysAhead} class="text-[0.5625rem] font-semibold uppercase">{t.monthsShort[u.date.month - 1]}</span>
+                      </div>
+                      <span data-upcoming-names={u.daysAhead} class="flex-1 min-w-0 truncate text-sm font-semibold">{u.entry?.primary.join(', ') || noNameday}</span>
+                      <span class="text-[0.6875rem] text-[#8c8aa3]">{u.daysAhead === 1 ? t.upcoming.tomorrow : interpolate(t.upcoming.inDays, { n: u.daysAhead })}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nx-notif-pos nx-parallax" style="--depth:14px">
+        <div class="nx-notif">
+          <img src="/icons/app-icon.png" alt="" width="36" height="36" class="size-9 lg:size-10 rounded-[0.625rem] shrink-0" />
+          <div class="flex-1 min-w-0 leading-snug">
+            <p class="flex justify-between gap-2 text-xs text-[#8c8aa3]"><span class="font-semibold text-[#b1afc4]">{t.brand}</span><span>{t.hero.phone.now}</span></p>
+            <p data-daily="phone-notif" class="text-[0.8125rem] lg:text-sm font-semibold">{hero.phoneNotif}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="nx-tear">
+        <p data-daily="tile-month" class="flex items-center justify-center h-[1.375rem] lg:h-[1.625rem] bg-[#6e5bff] text-white text-[0.625rem] lg:text-[0.6875rem] font-bold tracking-[0.14em]">{hero.tileMonth}</p>
+        <p data-daily="tile-day" class="flex items-center justify-center h-[3.875rem] lg:h-[4.625rem] font-display text-[2.875rem] lg:text-[3.375rem] font-extrabold tracking-tighter">{hero.tileDay}</p>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+  /**
+   * Pointer parallax for the hero illustration: the phone and the notification
+   * drift a few pixels in opposite directions. Only for precise pointers and
+   * only when the visitor has not asked for reduced motion.
+   */
+  const stage = document.querySelector<HTMLElement>('[data-parallax]');
+  const fine = window.matchMedia('(hover: hover) and (pointer: fine)');
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (stage && fine.matches && !calm.matches) {
+    let frame = 0;
+    window.addEventListener('pointermove', (e) => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const rect = stage.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+        const x = (e.clientX - (rect.left + rect.width / 2)) / window.innerWidth;
+        const y = (e.clientY - (rect.top + rect.height / 2)) / window.innerHeight;
+        stage.style.setProperty('--px', (Math.max(-1, Math.min(1, x * 2))).toFixed(3));
+        stage.style.setProperty('--py', (Math.max(-1, Math.min(1, y * 2))).toFixed(3));
+      });
+    }, { passive: true });
+  }
+</script>

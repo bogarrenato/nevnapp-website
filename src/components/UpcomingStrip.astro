@@ -1,60 +1,71 @@
 ---
 /**
- * Horizontal/grid strip of the next 7 days' namedays. Each card links to
- * the primary name's detail page (or to the day page when no nameday).
+ * The next 7 days' namedays. Each tile links to the primary name's detail
+ * page (or to the day page when there is no nameday).
+ *
+ *  - below lg: one horizontally scrolling, snap-aligned row (the next tile peeks in)
+ *  - lg and up: seven equal columns
  *
  * a11y notes:
  *  - Whole strip is a labelled <section>
- *  - Each card uses <time datetime="..."> for machine-readable date
- *  - aria-label on the card communicates both date + names to SR users
+ *  - Each tile uses <time datetime="..."> for the machine-readable date
+ *  - aria-label on the tile communicates both date + names to SR users
+ *
+ * The data-upcoming-* hooks are rewritten per request by functions/_middleware.js.
  */
 import { strings, localizedPath, interpolate, type Lang } from '../i18n/strings';
-import { UPCOMING_GRADIENTS, UPCOMING_DAYS_COUNT } from '../lib/constants';
+import { UPCOMING_DAYS_COUNT } from '../lib/constants';
 import { getUpcoming, dateKey } from '../lib/names';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = strings[lang];
+const hu = lang === 'hu';
 
 // 1 (tomorrow) … N (next week)
 const upcoming = getUpcoming(UPCOMING_DAYS_COUNT + 1).slice(1);
 ---
 
-<section class="container mx-auto px-6 mt-20" aria-labelledby="upcoming-heading">
-  <div class="flex items-end justify-between mb-6">
-    <h2 id="upcoming-heading" class="text-2xl md:text-3xl font-extrabold tracking-tight">{t.today.upcomingHeading}</h2>
-    <p class="text-xs uppercase tracking-widest text-zinc-500">
-      {interpolate(t.upcoming.inDays, { n: UPCOMING_DAYS_COUNT })}
-    </p>
+<section class="container mx-auto px-6" aria-labelledby="upcoming-heading">
+  <div class="flex items-center justify-between gap-4 mb-5 lg:mb-7" data-reveal>
+    <h2 id="upcoming-heading" class="nx-h2">{t.today.upcomingHeading}</h2>
+    <a href={localizedPath(lang, '/calendar')} class="group shrink-0 inline-flex items-center gap-2 min-h-11 text-[0.9375rem] font-semibold text-nx-accent-ink">
+      <span class="max-sm:sr-only">{hu ? 'Teljes naptár' : 'Full calendar'}</span>
+      <span class="inline-grid place-items-center max-sm:size-11 max-sm:rounded-full max-sm:border max-sm:border-nx-line2">
+        <svg class="size-4 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M5 12h14M13 6l6 6-6 6"/>
+        </svg>
+      </span>
+    </a>
   </div>
 
-  <ul class="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 list-none">
+  <ul class="nx-strip list-none flex gap-3 -mx-6 px-6 py-2 overflow-x-auto snap-x snap-mandatory scroll-px-6 lg:grid lg:grid-cols-7 lg:mx-0 lg:px-0 lg:overflow-visible">
     {upcoming.map((u, i) => {
       const dayLabel = u.daysAhead === 1
         ? t.upcoming.tomorrow
         : interpolate(t.upcoming.inDays, { n: u.daysAhead });
-      const dateLabel = `${t.monthsShort[u.date.month - 1]} ${u.date.day}.`;
+      const monthLabel = t.monthsShort[u.date.month - 1];
+      const dateLabel = `${monthLabel} ${u.date.day}.`;
       const names = u.entry?.primary ?? [];
-      const isoDate = u.date.iso;
-      const namesText = names.length
-        ? names.join(', ')
-        : (lang === 'hu' ? 'Nincs névnap' : 'No nameday');
+      const namesText = names.length ? names.join(', ') : (hu ? 'Nincs névnap' : 'No nameday');
       const href = names[0]
         ? localizedPath(lang, `/name/${encodeURIComponent(names[0])}`)
         : localizedPath(lang, `/day/${dateKey(u.date.month, u.date.day)}`);
       return (
-        <li>
+        <li class="shrink-0 w-[9.25rem] snap-start lg:w-auto" data-reveal style={`--i:${i}`}>
           <a
             data-upcoming-link={u.daysAhead}
             href={href}
-            class={`card-lift block rounded-3xl p-5 text-white bg-gradient-to-br ${UPCOMING_GRADIENTS[i % UPCOMING_GRADIENTS.length]} shadow-lg shadow-zinc-900/10`}
+            class="nx-tile"
+            data-first={i === 0 ? '' : undefined}
             aria-label={`${dayLabel}, ${dateLabel} — ${namesText}`}
           >
-            <div class="flex items-center justify-between gap-2 text-xs opacity-90 mb-3">
-              <span class="px-2.5 py-1 rounded-full bg-white/25 backdrop-blur font-semibold">{dayLabel}</span>
-              <time data-upcoming-date={u.daysAhead} datetime={isoDate} class="whitespace-nowrap shrink-0">{dateLabel}</time>
-            </div>
-            <p data-upcoming-names={u.daysAhead} class="text-xl md:text-2xl font-extrabold leading-tight">{namesText}</p>
+            <span class="nx-tile-badge">{dayLabel}</span>
+            <time data-upcoming-date={u.daysAhead} datetime={u.date.iso} class="flex items-baseline gap-1.5 leading-none">
+              <span data-upcoming-day={u.daysAhead} class="font-display text-[2.75rem] font-extrabold tracking-tighter">{u.date.day}</span>
+              <span data-upcoming-mon={u.daysAhead} class="text-sm text-nx-muted">{monthLabel}</span>
+            </time>
+            <span data-upcoming-names={u.daysAhead} class="mt-auto font-display text-xl font-bold leading-tight tracking-tight line-clamp-2">{namesText}</span>
           </a>
         </li>
       );

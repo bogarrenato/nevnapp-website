@@ -4,7 +4,6 @@
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Hero from '../../components/Hero.astro';
-import TodayCard from '../../components/TodayCard.astro';
 import UpcomingStrip from '../../components/UpcomingStrip.astro';
 import { strings } from '../../i18n/strings';
 import { getDailyPage } from '../../lib/daily-page';
@@ -29,30 +28,31 @@ const jsonLd = [
   jsonLd={jsonLd}
 >
   <Hero lang="en" />
-  <TodayCard lang="en" />
   <UpcomingStrip lang="en" />
 
-  <section class="container mx-auto px-6 mt-20 max-w-4xl" aria-labelledby="direct-answers-heading">
-    <p class="text-sm uppercase tracking-widest font-semibold text-primary-600 dark:text-primary-400">Quick answers</p>
-    <h2 id="direct-answers-heading" class="mt-2 text-3xl md:text-4xl font-extrabold tracking-tight">
-      Today's Hungarian nameday
-    </h2>
-    <dl class="mt-6 grid gap-4 md:grid-cols-3">
-      {faqEntries.map((entry, i) => (
-        <div class="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-5">
-          <dt class="font-bold text-zinc-900 dark:text-zinc-100">{entry.q}</dt>
-          <dd data-daily={i === 0 ? 'answer' : undefined} class="mt-2 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">{entry.a}</dd>
-        </div>
-      ))}
-    </dl>
-    <p class="mt-3 text-sm text-zinc-500 dark:text-zinc-500">
-      Current date: <span data-daily="iso">{today.iso}</span>, Europe/Budapest.
-    </p>
+  <section class="container mx-auto px-6 mt-20 lg:mt-28 grid gap-x-16 gap-y-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]" aria-labelledby="direct-answers-heading">
+    <div class="lg:sticky lg:top-28 self-start" data-reveal>
+      <p class="nx-eyebrow text-nx-accent">Quick answers</p>
+      <h2 id="direct-answers-heading" class="nx-h2 mt-3">Today's Hungarian nameday</h2>
+    </div>
+    <div>
+      <dl class="flex flex-col border-b border-nx-line2">
+        {faqEntries.map((entry, i) => (
+          <div class="flex flex-col gap-2 py-5 lg:py-6 border-t border-nx-line2" data-reveal>
+            <dt class="text-lg lg:text-[1.1875rem] font-semibold leading-snug">{entry.q}</dt>
+            <dd data-daily={i === 0 ? 'answer' : undefined} class="leading-relaxed text-nx-muted">{entry.a}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="mt-5 text-sm leading-relaxed text-nx-subtle" data-reveal>
+        Current date: <span data-daily="iso">{today.iso}</span>, Europe/Budapest.
+      </p>
+    </div>
   </section>
 
-  <section class="container mx-auto px-6 mt-24 max-w-3xl">
-    <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">What's a Hungarian nameday?</h2>
-    <div class="mt-6 space-y-4 text-zinc-700 dark:text-zinc-300 leading-relaxed">
+  <section class="container mx-auto px-6 mt-20 lg:mt-28 grid gap-x-16 gap-y-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]" aria-labelledby="home-seo-heading">
+    <h2 id="home-seo-heading" class="nx-h2" data-reveal>What's a Hungarian nameday?</h2>
+    <div class="flex flex-col gap-4 text-[1.0625rem] leading-relaxed text-nx-muted text-pretty [&_strong]:text-nx-ink" data-reveal>
       <p>
         In Hungary, every day of the year is associated with one or two given names —
         a <strong>nameday</strong> (<em>névnap</em>). Family and friends celebrate the

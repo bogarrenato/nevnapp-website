@@ -38,6 +38,14 @@ export const strings = {
         'Több mint 1300 név névnapja, több száz névjelentés, napi értesítés és gyors köszöntés — iOS-re és Androidra.',
       ctaPrimary: 'Töltsd le ingyen',
       ctaSecondary: 'Fedezd fel a neveket',
+      /** Copy inside the hero's app illustration (decorative, but kept truthful). */
+      phone: {
+        today: 'Ma',
+        greet: 'Köszöntő küldése',
+        notif: 'Ma {name} névnapja van. Köszöntsd fel!',
+        now: 'most',
+        alt: 'A NévnapTárX app illusztrációja: a mai névnap, napi értesítés és a közelgő névnapok',
+      },
     },
     support: {
       eyebrow: 'Szeretsz névnapot köszönteni?',
@@ -185,6 +193,13 @@ export const strings = {
         'Namedays for more than 1,300 names, hundreds of meanings, daily reminders and quick greetings — for iOS and Android.',
       ctaPrimary: 'Download free',
       ctaSecondary: 'Explore names',
+      phone: {
+        today: 'Today',
+        greet: 'Send a greeting',
+        notif: "It's {name}'s nameday today. Send a greeting!",
+        now: 'now',
+        alt: "Illustration of the NévnapTárX app: today's nameday, a daily reminder and upcoming namedays",
+      },
     },
     support: {
       eyebrow: 'Do you love celebrating namedays?',

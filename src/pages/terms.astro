@@ -4,26 +4,26 @@ import { strings } from '../i18n/strings';
 const t = strings.hu;
 ---
 <BaseLayout lang="hu" title={`Felhasználási feltételek | ${t.brand}`} description="A nevnap.app és a NévnapTárX használati feltételei." altLangPath="/terms">
-  <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
-    <nav class="text-sm text-zinc-500" aria-label="Morzsamenü">
-      <ol class="flex items-center gap-2 list-none"><li><a href="/" class="hover:text-primary-500">{t.brand}</a></li><li aria-hidden="true">›</li><li aria-current="page" class="text-zinc-700 dark:text-zinc-300">Felhasználási feltételek</li></ol>
+  <article class="container mx-auto px-6 max-w-3xl pt-3 lg:pt-10">
+    <nav class="nx-crumbs" aria-label="Morzsamenü">
+      <ol><li><a href="/">{t.brand}</a></li><li aria-hidden="true">›</li><li aria-current="page">Felhasználási feltételek</li></ol>
     </nav>
-    <h1 class="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight"><span class="gradient-text">Felhasználási feltételek</span></h1>
-    <p class="mt-2 text-sm text-zinc-500">Utoljára frissítve: 2026. július 18.</p>
+    <h1 class="mt-6 nx-page-title nx-page-title--sm nx-rise">Felhasználási feltételek</h1>
+    <p class="mt-2 text-sm text-nx-subtle">Utoljára frissítve: 2026. július 18.</p>
 
-    <section class="mt-10 space-y-6 text-zinc-700 dark:text-zinc-300 leading-relaxed">
+    <section class="mt-10 space-y-6 text-nx-muted leading-relaxed">
       <div>
-        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">1. A szolgáltatás</h2>
+        <h2 class="text-2xl font-bold text-nx-ink">1. A szolgáltatás</h2>
         <p class="mt-2">A nevnap.app weboldal és a NévnapTárX mobilalkalmazás (továbbiakban: „Szolgáltatás") ingyenes információs szolgáltatás magyar névnapokról, név-jelentésekről és kapcsolódó tartalomról. A Szolgáltatást Bogár Renátó (továbbiakban: „Üzemeltető") nyújtja.</p>
       </div>
 
       <div>
-        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">2. Elfogadás</h2>
+        <h2 class="text-2xl font-bold text-nx-ink">2. Elfogadás</h2>
         <p class="mt-2">A Szolgáltatás használatával elfogadod a jelen feltételeket. Ha nem értesz egyet velük, kérjük ne használd a Szolgáltatást.</p>
       </div>
 
       <div>
-        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">3. Megengedett használat</h2>
+        <h2 class="text-2xl font-bold text-nx-ink">3. Megengedett használat</h2>
         <p class="mt-2">A Szolgáltatás személyes, nem-kereskedelmi használatra elérhető. Tilos:</p>
         <ul class="mt-2 list-disc list-inside space-y-1">
           <li>Az oldal tartalmának engedély nélküli másolása vagy újraközlése</li>
@@ -34,17 +34,17 @@ const t = strings.hu;
       </div>
 
       <div>
-        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">4. Szellemi tulajdon</h2>
+        <h2 class="text-2xl font-bold text-nx-ink">4. Szellemi tulajdon</h2>
         <p class="mt-2">A NévnapTárX saját forráskódját, designját, arculatát és szerkesztői cikkeit szerzői jog védi. A hivatkozott külső anyagok jogai az eredeti jogosultakat illetik; a puszta naptári és tényszerű adatokra az Üzemeltető nem állít kizárólagos jogot.</p>
       </div>
 
       <div>
-        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">5. Tartalom pontossága</h2>
-        <p class="mt-2">A névnap-naptár és a rövid névjelentések tájékoztató jellegű összeállítások; a naptárak eltérhetnek, a jelentések forrásellenőrzése pedig folyamatos. A lefedettséget és a korlátokat az <a href="/adatbazis" class="text-primary-500 underline">adatbázis és módszertan</a> oldal dokumentálja. Az Üzemeltető <strong>nem garantálja</strong> a teljes pontosságot.</p>
+        <h2 class="text-2xl font-bold text-nx-ink">5. Tartalom pontossága</h2>
+        <p class="mt-2">A névnap-naptár és a rövid névjelentések tájékoztató jellegű összeállítások; a naptárak eltérhetnek, a jelentések forrásellenőrzése pedig folyamatos. A lefedettséget és a korlátokat az <a href="/adatbazis" class="text-nx-accent underline">adatbázis és módszertan</a> oldal dokumentálja. Az Üzemeltető <strong>nem garantálja</strong> a teljes pontosságot.</p>
       </div>
 
       <div>
-        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">6. Felelősség korlátozása</h2>
+        <h2 class="text-2xl font-bold text-nx-ink">6. Felelősség korlátozása</h2>
         <p class="mt-2">A Szolgáltatás „ahogy van" alapon érhető el. Az Üzemeltető nem vállal felelősséget:</p>
         <ul class="mt-2 list-disc list-inside space-y-1">
           <li>A Szolgáltatás esetleges leállásáért</li>
@@ -55,28 +55,28 @@ const t = strings.hu;
       </div>
 
       <div>
-        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">7. Harmadik fél linkek</h2>
+        <h2 class="text-2xl font-bold text-nx-ink">7. Harmadik fél linkek</h2>
         <p class="mt-2">A Szolgáltatás tartalmazhat külső linkeket (App Store, Google Play, Ko-fi, jövőbeli partner-oldalak). Ezen oldalakért nem vállalunk felelősséget.</p>
       </div>
 
       <div>
-        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">8. Adatvédelem</h2>
-        <p class="mt-2">Adataidat az <a href="/privacy" class="text-primary-500 underline">Adatvédelmi tájékoztató</a> szerint kezeljük.</p>
+        <h2 class="text-2xl font-bold text-nx-ink">8. Adatvédelem</h2>
+        <p class="mt-2">Adataidat az <a href="/privacy" class="text-nx-accent underline">Adatvédelmi tájékoztató</a> szerint kezeljük.</p>
       </div>
 
       <div>
-        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">9. Módosítások</h2>
+        <h2 class="text-2xl font-bold text-nx-ink">9. Módosítások</h2>
         <p class="mt-2">A feltételek időről időre frissülhetnek. Lényeges változásokról a weboldalon értesítünk. A feltételek további használattal kerülnek elfogadásra.</p>
       </div>
 
       <div>
-        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">10. Irányadó jog</h2>
+        <h2 class="text-2xl font-bold text-nx-ink">10. Irányadó jog</h2>
         <p class="mt-2">A jelen feltételekre a magyar jog az irányadó. Vitás kérdésekben a magyar bíróságok rendelkeznek joghatósággal.</p>
       </div>
 
       <div>
-        <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">11. Kapcsolat</h2>
-        <p class="mt-2">Kérdés esetén írj: <a href="mailto:bogarrenato@gmail.com" class="text-primary-500 underline">bogarrenato@gmail.com</a></p>
+        <h2 class="text-2xl font-bold text-nx-ink">11. Kapcsolat</h2>
+        <p class="mt-2">Kérdés esetén írj: <a href="mailto:bogarrenato@gmail.com" class="text-nx-accent underline">bogarrenato@gmail.com</a></p>
       </div>
     </section>
   </article>

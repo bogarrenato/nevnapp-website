@@ -9,21 +9,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   robots="noindex,nofollow"
   hideDownloadStrip
 >
-  <section class="container mx-auto px-6 max-w-2xl pt-20 md:pt-28 text-center">
-    <p class="text-sm uppercase tracking-widest font-semibold text-primary-600 dark:text-primary-400">404</p>
-    <h1 class="mt-3 text-4xl md:text-6xl font-extrabold tracking-tight">
-      <span class="gradient-text">Ez az oldal nem található</span>
+  <section class="container mx-auto px-6 max-w-2xl pt-16 md:pt-28 text-center">
+    <p class="font-display font-extrabold text-[clamp(5rem,26vw,9rem)] leading-none tracking-[-0.06em] text-nx-accent nx-rise" aria-hidden="true">404</p>
+    <h1 class="mt-4 nx-page-title nx-page-title--sm nx-rise" style="--i:1">
+      Ez az oldal nem található
     </h1>
-    <p class="mt-5 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300">
+    <p class="mt-5 nx-lead nx-rise" style="--i:2">
       Lehet, hogy a cím elgépelést tartalmaz, vagy az oldal időközben más helyre került.
     </p>
-    <p class="mt-2 text-zinc-600 dark:text-zinc-400" lang="en">
+    <p class="mt-2 text-nx-muted" lang="en">
       The page you requested could not be found.
     </p>
-    <nav class="mt-8 flex flex-wrap justify-center gap-3" aria-label="Hasznos oldalak">
-      <a href="/" class="px-5 py-3 rounded-full bg-primary-500 hover:bg-primary-600 text-white font-semibold transition">Mai névnap</a>
-      <a href="/names" class="px-5 py-3 rounded-full border border-zinc-200 dark:border-white/10 hover:border-primary-500 font-semibold transition">Nevek böngészése</a>
-      <a href="/blog" class="px-5 py-3 rounded-full border border-zinc-200 dark:border-white/10 hover:border-primary-500 font-semibold transition">Névnap blog</a>
+    <nav class="mt-8 flex flex-wrap justify-center gap-2.5 nx-rise" style="--i:3" aria-label="Hasznos oldalak">
+      <a href="/" class="nx-btn-primary h-12 px-6">Mai névnap</a>
+      <a href="/names" class="nx-chip h-12 px-6 font-semibold">Nevek böngészése</a>
+      <a href="/blog" class="nx-chip h-12 px-6 font-semibold">Névnap blog</a>
     </nav>
   </section>
 </BaseLayout>

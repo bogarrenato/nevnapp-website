@@ -46,20 +46,20 @@ const jsonLd = [
 ];
 ---
 <BaseLayout lang="hu" title={`${post.data.title} | ${t.brand}`} description={post.data.description} jsonLd={jsonLd} adsEligible>
-  <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
-    <nav class="text-sm text-zinc-500" aria-label="Morzsamenü">
-      <ol class="flex items-center gap-2 list-none">
-        <li><a href="/" class="hover:text-primary-500">{t.brand}</a></li>
+  <article class="container mx-auto px-6 max-w-3xl pt-3 lg:pt-10">
+    <nav class="nx-crumbs" aria-label="Morzsamenü">
+      <ol>
+        <li><a href="/">{t.brand}</a></li>
         <li aria-hidden="true">›</li>
-        <li><a href="/blog" class="hover:text-primary-500">{t.blog.title}</a></li>
+        <li><a href="/blog">{t.blog.title}</a></li>
         <li aria-hidden="true">›</li>
-        <li aria-current="page" class="text-zinc-700 dark:text-zinc-300 truncate">{post.data.title}</li>
+        <li aria-current="page" class="truncate">{post.data.title}</li>
       </ol>
     </nav>
 
-    <header class="mt-8">
-      <div class="flex flex-wrap items-center gap-3 text-xs text-zinc-500">
-        <a href="/about" rel="author" class="hover:text-primary-500">Bogár Renátó</a>
+    <header class="mt-4 lg:mt-6">
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.8125rem] text-nx-subtle nx-rise">
+        <a href="/about" rel="author">Bogár Renátó</a>
         <span aria-hidden="true">•</span>
         <time datetime={post.data.pubDate.toISOString()}>{fmtDate(post.data.pubDate)}</time>
         {post.data.updatedDate && (
@@ -71,14 +71,14 @@ const jsonLd = [
         <span aria-hidden="true">•</span>
         <span>{interpolate(t.blog.readingTime, { min: String(post.data.readingMinutes) })}</span>
       </div>
-      <h1 class="mt-4 text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">{post.data.title}</h1>
-      <p class="mt-4 text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">{post.data.description}</p>
+      <h1 class="mt-4 nx-page-title nx-page-title--sm nx-rise" style="--i:1">{post.data.title}</h1>
+      <p class="mt-4 nx-lead nx-rise" style="--i:2">{post.data.description}</p>
 
       {post.data.tags.length > 0 && (
         <ul class="mt-5 flex flex-wrap gap-2 list-none">
           {post.data.tags.map((tag: string) => (
             <li>
-              <span class="inline-flex items-center px-3 py-1 rounded-full bg-zinc-100 dark:bg-white/10 text-xs">#{tag}</span>
+              <span class="inline-flex items-center h-7 px-3 rounded-full bg-nx-line text-xs font-medium text-nx-muted">#{tag}</span>
             </li>
           ))}
         </ul>
@@ -89,12 +89,12 @@ const jsonLd = [
       <Content />
     </div>
 
-    <footer class="mt-16 pt-8 border-t border-zinc-200 dark:border-white/10">
-      <p class="mb-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+    <footer class="mt-16 pt-8 border-t border-nx-line2" data-reveal>
+      <p class="mb-4 text-sm leading-relaxed text-nx-muted">
         A cikket a NévnapTárX szerkesztője készítette. Az adatkezelésről, forrásokról és javítási elvekről az
-        <a href="/adatbazis" class="text-primary-500 hover:underline">adatbázis és módszertan</a> oldalon olvashatsz.
+        <a href="/adatbazis" class="text-nx-accent hover:underline">adatbázis és módszertan</a> oldalon olvashatsz.
       </p>
-      <a href="/blog" class="text-primary-500 hover:underline font-semibold">{t.blog.backToBlog}</a>
+      <a href="/blog" class="inline-flex items-center min-h-11 text-nx-accent hover:underline font-semibold">{t.blog.backToBlog}</a>
     </footer>
   </article>
 </BaseLayout>

@@ -1,13 +1,18 @@
 ---
 /**
- * Sticky top header — brand, primary nav, language switcher, theme slider
- * and a Download dropdown that lists both stores.
+ * Sticky site header.
+ *
+ *  - lg and up: brand · primary nav · support pill · language · theme · download
+ *  - below lg: brand · download · support (icon) · menu button
+ *
+ * The support (Ko-fi) link is part of the bar at every width, right beside
+ * the menu button on small screens. The mobile menu is a panel anchored to
+ * the header and inset from both screen edges, so it cannot overflow.
  *
  * a11y:
- *  - <header role="banner"> implicit
- *  - <nav aria-label="..."> distinct from secondary navs
+ *  - <header role="banner"> implicit; two <nav>s with distinct labels
  *  - aria-current on the active page link
- *  - Theme slider uses role="switch" via the ThemeSlider component
+ *  - Menu button: aria-expanded + aria-controls; Escape and the scrim close it
  */
 import { strings, localizedPath, type Lang } from '../i18n/strings';
 import DownloadDropdown from './DownloadDropdown.astro';
@@ -20,117 +25,166 @@ interface Props {
 const { lang, altLangPath } = Astro.props;
 const t = strings[lang];
 const otherLang: Lang = lang === 'hu' ? 'en' : 'hu';
+const hu = lang === 'hu';
 
 const navItems = [
   { href: localizedPath(lang, '/'), label: t.nav.today },
   { href: localizedPath(lang, '/names'), label: t.nav.names },
   { href: localizedPath(lang, '/calendar'), label: t.nav.calendar },
   { href: localizedPath(lang, '/blog'), label: t.blog.title },
-];
+].map((item) => ({
+  ...item,
+  isActive: (item.href.replace(/\/$/, '') || '/') === (Astro.url.pathname.replace(/\/$/, '') || '/'),
+}));
 
-const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
-const navAriaLabel = lang === 'hu' ? 'Fő navigáció' : 'Main navigation';
+const langHref = altLangPath ? (otherLang === 'hu' ? altLangPath : `/en${altLangPath}`) : null;
+const langLabel = otherLang === 'hu' ? 'Magyar nyelv' : 'English language';
+const supportLabel = hu ? 'Támogass a Ko-fi-on' : 'Support on Ko-fi';
+const menuOpenLabel = hu ? 'Navigáció megnyitása' : 'Open navigation';
+const menuCloseLabel = hu ? 'Navigáció bezárása' : 'Close navigation';
 ---
 
-<header class="sticky top-0 z-40 backdrop-blur-xl bg-white/90 dark:bg-zinc-950/80 border-b border-zinc-200 dark:border-white/8 shadow-sm dark:shadow-none">
-  <div class="container mx-auto px-6 py-3 flex items-center justify-between gap-6">
-    <a
-      href={localizedPath(lang, '/')}
-      class="flex items-center gap-2 group rounded-xl"
-      aria-label={t.brand}
-    >
+<header class="nx-header" data-site-header>
+  <div class="container mx-auto px-6 h-16 lg:h-[4.5rem] flex items-center justify-between gap-3 relative">
+    <a href={localizedPath(lang, '/')} class="group flex items-center gap-2.5 min-h-11 rounded-xl" aria-label={t.brand}>
       <img
         src="/icons/app-icon.png"
         alt=""
         width="36"
         height="36"
-        class="rounded-xl shadow-md shadow-primary-500/20 group-hover:scale-105 transition"
+        class="rounded-[0.625rem] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105 group-hover:-rotate-3"
       />
-      <span class="font-display text-lg font-extrabold tracking-tight hidden sm:block">{t.brand}</span>
+      <span class="font-display text-[1.1875rem] font-bold tracking-tight hidden min-[28rem]:block">{t.brand}</span>
     </a>
 
-    <nav class="hidden md:flex items-center gap-6 text-sm font-medium" aria-label={navAriaLabel}>
-      {navItems.map((item) => {
-        const itemPath = item.href.replace(/\/$/, '') || '/';
-        const isActive = itemPath === currentPath;
-        return (
-          <a
-            href={item.href}
-            class:list={[
-              'transition hover:text-primary-500',
-              isActive && 'text-primary-500',
-            ]}
-            aria-current={isActive ? 'page' : undefined}
-          >
-            {item.label}
-          </a>
-        );
-      })}
+    <nav class="hidden lg:flex items-center gap-1" aria-label={hu ? 'Fő navigáció' : 'Main navigation'}>
+      {navItems.map((item) => (
+        <a href={item.href} class="nx-navlink" aria-current={item.isActive ? 'page' : undefined}>{item.label}</a>
+      ))}
     </nav>
 
-    <div class="flex items-center gap-3">
-      <details class="relative md:hidden">
-        <summary
-          class="size-10 grid place-items-center rounded-full border border-zinc-200 dark:border-white/10 hover:border-primary-500 hover:text-primary-500 cursor-pointer list-none"
-          aria-label={lang === 'hu' ? 'Navigáció megnyitása' : 'Open navigation'}
-        >
-          <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <path d="M4 7h16M4 12h16M4 17h16" />
-          </svg>
-        </summary>
-        <nav
-          class="absolute right-0 top-12 w-56 rounded-2xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-900 p-2 shadow-2xl"
-          aria-label={lang === 'hu' ? 'Mobil navigáció' : 'Mobile navigation'}
-        >
-          <ul class="list-none">
-            {navItems.map((item) => {
-              const itemPath = item.href.replace(/\/$/, '') || '/';
-              const isActive = itemPath === currentPath;
-              return (
-                <li>
-                  <a
-                    href={item.href}
-                    class:list={[
-                      'block rounded-xl px-4 py-3 text-sm font-semibold hover:bg-zinc-100 dark:hover:bg-white/10',
-                      isActive && 'text-primary-500 bg-primary-50 dark:bg-primary-500/10',
-                    ]}
-                    aria-current={isActive ? 'page' : undefined}
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-      </details>
-
-      <!-- Ko-fi support — animated amber beacon -->
+    <div class="flex items-center gap-2">
+      <!-- Ko-fi support: icon-only below lg, icon + label from lg up. -->
       <a
         href="https://ko-fi.com/bogarrenato"
         target="_blank"
         rel="noopener noreferrer"
-        class="relative hidden sm:inline-flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 rounded-full text-xs font-bold text-amber-400 bg-amber-400/10 border border-amber-400/30 hover:bg-amber-400/20 hover:border-amber-400/60 transition-all group"
-        aria-label={lang === 'hu' ? 'Támogass a Ko-fi-on' : 'Support on Ko-fi'}
+        class="nx-kofi order-2 lg:order-none lg:pl-3 lg:pr-4"
+        aria-label={supportLabel}
       >
-        <span aria-hidden="true" class="pointer-events-none absolute -inset-0.5 rounded-full bg-amber-400/20 animate-ping opacity-75 group-hover:opacity-100"></span>
-        <span aria-hidden="true" class="text-base leading-none">☕</span>
-        <span class="hidden sm:inline">{lang === 'hu' ? t.nav.support : t.nav.support}</span>
+        <svg class="nx-beat size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9z"/>
+          <path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17"/>
+          <path class="nx-steam" d="M8 3v2.5M12 3v2.5"/>
+        </svg>
+        <span class="hidden lg:inline">{t.nav.support}</span>
       </a>
-      {altLangPath && (
+
+      {langHref && (
         <a
-          href={otherLang === 'hu' ? altLangPath : `/en${altLangPath}`}
-          class="px-2.5 py-1 text-xs font-semibold uppercase tracking-wider rounded-full border border-zinc-200 dark:border-white/10 hover:border-primary-500 hover:text-primary-500 transition"
+          href={langHref}
+          class="nx-iconbtn hidden lg:inline-flex"
           hreflang={otherLang === 'hu' ? 'hu-HU' : 'en-US'}
-          aria-label={otherLang === 'hu' ? 'Magyar nyelv' : 'English language'}
+          aria-label={langLabel}
         >
           {otherLang.toUpperCase()}
         </a>
       )}
 
-      <ThemeSlider lang={lang} />
+      <ThemeSlider lang={lang} class="hidden lg:inline-flex" />
 
-      <DownloadDropdown lang={lang} variant="ghost" id="header-download" label={t.nav.download} align="right" />
+      <div class="order-1 lg:order-none flex">
+        <DownloadDropdown lang={lang} variant="ghost" id="header-download" label={t.nav.download} align="right" />
+      </div>
+
+      <button
+        type="button"
+        class="nx-iconbtn order-3 lg:hidden text-nx-ink"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="site-menu"
+        aria-label={menuOpenLabel}
+        data-label-open={menuOpenLabel}
+        data-label-close={menuCloseLabel}
+      >
+        <span class="nx-burger" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
     </div>
+
+    <nav id="site-menu" class="nx-menu lg:hidden" aria-label={hu ? 'Mobil navigáció' : 'Mobile navigation'} hidden>
+      {navItems.map((item, i) => (
+        <a href={item.href} class="nx-menu-link" style={`--i:${i}`} aria-current={item.isActive ? 'page' : undefined}>
+          {item.label}
+        </a>
+      ))}
+      <div class="flex items-center justify-between gap-3 mt-1.5 pt-3 pb-1 pl-4 pr-2 border-t border-nx-line">
+        <span class="text-sm text-nx-muted">{hu ? 'Nyelv és megjelenés' : 'Language and appearance'}</span>
+        <div class="flex gap-2">
+          {langHref && (
+            <a href={langHref} class="nx-iconbtn text-nx-ink" hreflang={otherLang === 'hu' ? 'hu-HU' : 'en-US'} aria-label={langLabel}>
+              {otherLang.toUpperCase()}
+            </a>
+          )}
+          <ThemeSlider lang={lang} class="text-nx-ink" />
+        </div>
+      </div>
+    </nav>
   </div>
 </header>
+
+<!-- Dims the page under the open mobile menu. Lives outside <header> so it
+     can cover the viewport while the header (and its close button) stays on top. -->
+<button type="button" class="nx-scrim lg:hidden" data-menu-scrim tabindex="-1" aria-label={menuCloseLabel} hidden></button>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
+  const toggle = header?.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.getElementById('site-menu');
+  const scrim = document.querySelector<HTMLElement>('[data-menu-scrim]');
+
+  if (header) {
+    // Subtle elevation once the page has scrolled under the bar.
+    const onScroll = () => header.toggleAttribute('data-scrolled', window.scrollY > 8);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  if (toggle && menu && scrim) {
+    let closeTimer: number | undefined;
+    const isOpen = () => toggle.getAttribute('aria-expanded') === 'true';
+
+    const open = () => {
+      window.clearTimeout(closeTimer);
+      menu.hidden = false;
+      scrim.hidden = false;
+      // Two frames: the panel must render in its closed state before animating.
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        menu.classList.add('is-open');
+        scrim.classList.add('is-open');
+      }));
+      toggle.setAttribute('aria-expanded', 'true');
+      toggle.setAttribute('aria-label', toggle.dataset.labelClose ?? '');
+      document.documentElement.style.overflow = 'hidden';
+    };
+    const close = (refocus = false) => {
+      if (!isOpen()) return;
+      menu.classList.remove('is-open');
+      scrim.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', toggle.dataset.labelOpen ?? '');
+      // Keep the scroll lock if the download sheet has just taken over.
+      if (document.getElementById('download-sheet')?.hidden ?? true) document.documentElement.style.overflow = '';
+      closeTimer = window.setTimeout(() => { menu.hidden = true; scrim.hidden = true; }, 280);
+      if (refocus) toggle.focus({ preventScroll: true });
+    };
+
+    toggle.addEventListener('click', () => (isOpen() ? close() : open()));
+    scrim.addEventListener('click', () => close());
+    menu.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) close(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && isOpen()) close(true); });
+    // The download button sits next to the menu button: opening one closes the other.
+    window.addEventListener('nx:download-sheet', () => close());
+    // Leaving the mobile layout (rotation, resize) must not strand an open menu.
+    window.matchMedia('(min-width: 1024px)').addEventListener('change', (e) => { if (e.matches) close(); });
+  }
+</script>

@@ -35,63 +35,63 @@ const jsonLd = [
 ---
 
 <BaseLayout lang="hu" title={title} description={description} jsonLd={jsonLd}>
-  <article class="container mx-auto px-6 max-w-3xl pt-12 md:pt-16">
-    <nav class="text-sm text-zinc-500" aria-label="Morzsamenü">
-      <ol class="flex items-center gap-2 list-none">
-        <li><a href="/" class="hover:text-primary-500">{t.brand}</a></li>
+  <article class="container mx-auto px-6 max-w-3xl pt-3 lg:pt-10">
+    <nav class="nx-crumbs" aria-label="Morzsamenü">
+      <ol>
+        <li><a href="/">{t.brand}</a></li>
         <li aria-hidden="true">›</li>
-        <li aria-current="page" class="text-zinc-700 dark:text-zinc-300">Névnap-adatbázis</li>
+        <li aria-current="page">Névnap-adatbázis</li>
       </ol>
     </nav>
 
     <header class="mt-6">
-      <p class="text-sm uppercase tracking-widest font-semibold text-primary-600 dark:text-primary-400">Adatforrás</p>
-      <h1 class="mt-2 text-4xl md:text-6xl font-extrabold tracking-tight">
-        <span class="gradient-text">Névnap-adatbázis és módszertan</span>
+      <p class="nx-eyebrow text-nx-accent">Adatforrás</p>
+      <h1 class="mt-2 nx-page-title nx-rise">
+        Névnap-adatbázis és módszertan
       </h1>
-      <p class="mt-4 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300">
+      <p class="mt-4 text-lg leading-relaxed text-nx-muted">
         A NévnapTárX egy tájékoztató jellegű, szerkesztett névnap-naptárt használ. Célja, hogy gyorsan megtalálható legyen a mai névnap, egy névhez tartozó dátum és — ahol már elkészült a szerkesztett bejegyzés — a név rövid jelentése. Ez az oldal pontosan elválasztja a saját naptáradatot a hivatalos magyar utónévjegyzéktől és a népszerűségi statisztikáktól.
       </p>
     </header>
 
     <section class="mt-10 grid gap-4 sm:grid-cols-3" aria-label="Adatbázis számok">
-      <div class="rounded-2xl border border-zinc-200 dark:border-white/10 p-5">
-        <p class="text-3xl font-extrabold gradient-text">{names.length}</p>
-        <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">külön névalak a naptárban</p>
+      <div class="rounded-2xl border border-nx-line2 p-5">
+        <p class="font-display text-3xl font-extrabold tracking-tight text-nx-accent">{names.length}</p>
+        <p class="mt-1 text-sm text-nx-muted">külön névalak a naptárban</p>
       </div>
-      <div class="rounded-2xl border border-zinc-200 dark:border-white/10 p-5">
-        <p class="text-3xl font-extrabold gradient-text">{meaningCount}</p>
-        <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">rövid névjelentés</p>
+      <div class="rounded-2xl border border-nx-line2 p-5">
+        <p class="font-display text-3xl font-extrabold tracking-tight text-nx-accent">{meaningCount}</p>
+        <p class="mt-1 text-sm text-nx-muted">rövid névjelentés</p>
       </div>
-      <div class="rounded-2xl border border-zinc-200 dark:border-white/10 p-5">
-        <p class="text-3xl font-extrabold gradient-text">{today.iso}</p>
-        <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">az oldal build dátuma</p>
+      <div class="rounded-2xl border border-nx-line2 p-5">
+        <p class="font-display text-3xl font-extrabold tracking-tight text-nx-accent">{today.iso}</p>
+        <p class="mt-1 text-sm text-nx-muted">az oldal build dátuma</p>
       </div>
     </section>
 
     <section class="mt-12 space-y-8">
       <section aria-labelledby="coverage-heading">
         <h2 id="coverage-heading" class="text-2xl md:text-3xl font-extrabold tracking-tight">Lefedettség és jelenlegi korlátok</h2>
-        <div class="mt-4 space-y-3 leading-relaxed text-zinc-700 dark:text-zinc-300">
+        <div class="mt-4 space-y-3 leading-relaxed text-nx-muted">
           <p>A naptár {names.length} külön névalakot tart nyilván. Az ékezetes és ékezet nélküli alakokat — például az Ádám és Adam nevet — külön rekordként kezeljük, mert önálló névalakok lehetnek. Ugyanazt a dátumot egy névnél csak egyszer jelenítjük meg.</p>
           <p>{meaningCount} névhez tartozik korábban összeállított rövid jelentés; {missingMeaningCount} névnél ezt nyíltan hiányzóként jelöljük. Ezek nem teljes etimológiai tanulmányok, és még nem mindegyik kapott önálló, forrásonként dokumentált szerkesztői ellenőrzést. Ezért a részletes névoldalakat nem monetizáljuk és nem tesszük keresőindexbe. Bizonytalan eredetet, népszerűséget vagy hivatalos anyakönyvezhetőséget nem következtetünk pusztán a névnap-naptárból.</p>
-          <p>A névnap hagyományos naptári adat, ezért különböző kiadványok elsődleges és további dátumai eltérhetnek. A <a href="/names" class="text-primary-600 dark:text-primary-400 hover:underline">névindex</a> és a <a href="/calendar" class="text-primary-600 dark:text-primary-400 hover:underline">naptár</a> a NévnapTárX saját, következetesen használt változatát mutatja, nem hatósági nyilvántartást.</p>
+          <p>A névnap hagyományos naptári adat, ezért különböző kiadványok elsődleges és további dátumai eltérhetnek. A <a href="/names" class="text-nx-accent hover:underline">névindex</a> és a <a href="/calendar" class="text-nx-accent hover:underline">naptár</a> a NévnapTárX saját, következetesen használt változatát mutatja, nem hatósági nyilvántartást.</p>
         </div>
       </section>
 
       <section aria-labelledby="sources-heading">
         <h2 id="sources-heading" class="text-2xl md:text-3xl font-extrabold tracking-tight">Elsődleges kontrollforrások</h2>
-        <p class="mt-4 leading-relaxed text-zinc-700 dark:text-zinc-300">Az alábbi források nem cserélhetők fel egymással: más kérdésre válaszolnak, ezért csak a saját területükön használjuk őket ellenőrzésre.</p>
-        <ul class="mt-4 space-y-3 text-zinc-700 dark:text-zinc-300">
-          <li><a href="https://nytud.hu/szolgaltatas/nevadasi-tanacsadas" target="_blank" rel="noopener" class="text-primary-600 dark:text-primary-400 hover:underline">ELTE Nyelvtudományi Kutatóközpont — névadási tanácsadás és utónévkereső</a>: névalak, eredet, rokon nevek és az aktuális hivatalos eljárás szakmai háttere.</li>
-          <li><a href="https://njt.jog.gov.hu/jogszabaly/2010-1-00-00" target="_blank" rel="noopener" class="text-primary-600 dark:text-primary-400 hover:underline">Nemzeti Jogszabálytár — 2010. évi I. törvény</a>: az anyakönyvi eljárás és a magyar utónévjegyzék jogi kerete. A hatályos utónévjegyzéket a kultúráért felelős miniszter rendeletben állapítja meg.</li>
-          <li><a href="https://www.ksh.hu/nepesseg-es-nepmozgalom?lang=hu" target="_blank" rel="noopener" class="text-primary-600 dark:text-primary-400 hover:underline">Központi Statisztikai Hivatal — népesség és népmozgalom</a>: kizárólag névválasztási és népességi statisztikákhoz. A gyakoriság nem bizonyít néveredetet vagy névnap-dátumot.</li>
+        <p class="mt-4 leading-relaxed text-nx-muted">Az alábbi források nem cserélhetők fel egymással: más kérdésre válaszolnak, ezért csak a saját területükön használjuk őket ellenőrzésre.</p>
+        <ul class="mt-4 space-y-3 text-nx-muted">
+          <li><a href="https://nytud.hu/szolgaltatas/nevadasi-tanacsadas" target="_blank" rel="noopener" class="text-nx-accent hover:underline">ELTE Nyelvtudományi Kutatóközpont — névadási tanácsadás és utónévkereső</a>: névalak, eredet, rokon nevek és az aktuális hivatalos eljárás szakmai háttere.</li>
+          <li><a href="https://njt.jog.gov.hu/jogszabaly/2010-1-00-00" target="_blank" rel="noopener" class="text-nx-accent hover:underline">Nemzeti Jogszabálytár — 2010. évi I. törvény</a>: az anyakönyvi eljárás és a magyar utónévjegyzék jogi kerete. A hatályos utónévjegyzéket a kultúráért felelős miniszter rendeletben állapítja meg.</li>
+          <li><a href="https://www.ksh.hu/nepesseg-es-nepmozgalom?lang=hu" target="_blank" rel="noopener" class="text-nx-accent hover:underline">Központi Statisztikai Hivatal — népesség és népmozgalom</a>: kizárólag névválasztási és népességi statisztikákhoz. A gyakoriság nem bizonyít néveredetet vagy névnap-dátumot.</li>
         </ul>
       </section>
 
       <section aria-labelledby="workflow-heading">
         <h2 id="workflow-heading" class="text-2xl md:text-3xl font-extrabold tracking-tight">Szerkesztési és indexelési folyamat</h2>
-        <ol class="mt-4 list-decimal pl-5 space-y-3 leading-relaxed text-zinc-700 dark:text-zinc-300">
+        <ol class="mt-4 list-decimal pl-5 space-y-3 leading-relaxed text-nx-muted">
           <li>A névalakokat pontos írásmóddal tartjuk külön; az ékezet nélküli keresés csak kényelmi visszakeresés, nem von össze rekordokat.</li>
           <li>A naptári rekordokban az ismételt azonos dátumokat kiszűrjük, a hibás vagy hiányzó jelentést pedig nem pótoljuk találgatással.</li>
           <li>A forrás nélküli statisztikai állításokat nem közöljük. Változó adatoknál elsődleges forrást és az adat évét is megadjuk.</li>
@@ -101,7 +101,7 @@ const jsonLd = [
 
       <section aria-labelledby="corrections-heading">
         <h2 id="corrections-heading" class="text-2xl md:text-3xl font-extrabold tracking-tight">Javítás kérése</h2>
-        <p class="mt-4 leading-relaxed text-zinc-700 dark:text-zinc-300">Ha eltérést találsz, írd meg a pontos oldal címét, a kifogásolt adatot és lehetőleg egy ellenőrizhető forrást a <a href="mailto:bogarrenato@gmail.com" class="text-primary-600 dark:text-primary-400 hover:underline">bogarrenato@gmail.com</a> címre. A javításnál előnyt élveznek a hatályos jogszabályok, intézményi adatbázisok és más elsődleges források. A lényegi módosításokat a kapcsolódó cikk vagy tájékoztató frissítési dátumával jelezzük.</p>
+        <p class="mt-4 leading-relaxed text-nx-muted">Ha eltérést találsz, írd meg a pontos oldal címét, a kifogásolt adatot és lehetőleg egy ellenőrizhető forrást a <a href="mailto:bogarrenato@gmail.com" class="text-nx-accent hover:underline">bogarrenato@gmail.com</a> címre. A javításnál előnyt élveznek a hatályos jogszabályok, intézményi adatbázisok és más elsődleges források. A lényegi módosításokat a kapcsolódó cikk vagy tájékoztató frissítési dátumával jelezzük.</p>
       </section>
     </section>
   </article>

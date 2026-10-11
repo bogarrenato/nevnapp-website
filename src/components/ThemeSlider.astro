@@ -1,94 +1,63 @@
 ---
 /**
- * Accessible day/night toggle styled as a slider (knob slides between
- * a sun and a moon icon). Replaces the older single-icon button.
+ * Accessible day/night toggle: a single 44px icon button (sun ⇄ moon).
+ * The header renders it twice (desktop bar + mobile menu), so everything is
+ * wired by the `data-theme-toggle` attribute, never by id.
  *
  * a11y notes:
  *  - <button role="switch" aria-checked="..."> per WAI-ARIA APG pattern
- *  - aria-label describes the action; the sun/moon icons themselves are
- *    decorative (aria-hidden)
- *  - Works with keyboard (Space/Enter) just like any <button>
+ *  - aria-label describes the action; the icons are decorative (aria-hidden)
  *  - prefers-reduced-motion is honored globally via global.css
  */
 import type { Lang } from '../i18n/strings';
 
-interface Props { lang: Lang }
-const { lang } = Astro.props;
+interface Props { lang: Lang; class?: string }
+const { lang, class: className = '' } = Astro.props;
 const label = lang === 'hu' ? 'Sötét mód váltása' : 'Toggle dark mode';
 ---
 
 <button
   type="button"
-  id="theme-slider"
+  data-theme-toggle
   role="switch"
-  aria-checked="false"
+  aria-checked="true"
   aria-label={label}
-  class="relative inline-flex items-center w-14 h-8 rounded-full bg-zinc-200 dark:bg-zinc-800 border border-zinc-300 dark:border-white/10 transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-primary-400"
+  class:list={['nx-iconbtn relative overflow-hidden', className]}
 >
-  <!-- Sun icon (left) -->
+  <!-- Moon: shown in dark mode -->
   <svg
-    class="absolute left-1.5 size-4 text-amber-500 transition-opacity duration-300 dark:opacity-30"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2.2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    aria-hidden="true"
-    focusable="false"
+    class="absolute size-[1.125rem] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] -rotate-90 scale-0 opacity-0 dark:rotate-0 dark:scale-100 dark:opacity-100"
+    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    aria-hidden="true" focusable="false"
+  >
+    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+  </svg>
+  <!-- Sun: shown in light mode -->
+  <svg
+    class="absolute size-[1.125rem] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] rotate-0 scale-100 opacity-100 dark:rotate-90 dark:scale-0 dark:opacity-0"
+    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    aria-hidden="true" focusable="false"
   >
     <circle cx="12" cy="12" r="4"/>
     <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
   </svg>
-
-  <!-- Moon icon (right) -->
-  <svg
-    class="absolute right-1.5 size-4 text-indigo-400 opacity-30 dark:opacity-100 transition-opacity duration-300"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2.2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    aria-hidden="true"
-    focusable="false"
-  >
-    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-  </svg>
-
-  <!-- Thumb -->
-  <span
-    aria-hidden="true"
-    data-thumb
-    class="absolute left-1 top-1 size-6 rounded-full bg-white shadow-md shadow-zinc-900/15 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
-  ></span>
-
-  <span class="sr-only">{label}</span>
 </button>
 
 <script>
   /**
-   * Wires up the slider:
-   *  - On click: toggles .dark on <html>, persists in localStorage, syncs
-   *    aria-checked + thumb position
-   *  - On load: reads current document state set by the inline bootstrap
-   *    script in BaseLayout so we never flash the wrong icon
+   * Toggles .dark on <html>, persists the choice and keeps every toggle's
+   * aria-checked in sync. The initial class is set by the inline bootstrap
+   * script in BaseLayout, so there is no flash of the wrong theme.
    */
-  function syncSlider() {
-    const btn = document.getElementById('theme-slider');
-    if (!btn) return;
+  const toggles = document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]');
+  const sync = () => {
     const isDark = document.documentElement.classList.contains('dark');
-    btn.setAttribute('aria-checked', isDark ? 'true' : 'false');
-    const thumb = btn.querySelector<HTMLElement>('[data-thumb]');
-    if (thumb) thumb.style.transform = isDark ? 'translateX(1.5rem)' : 'translateX(0)';
-  }
-
-  function onSliderClick() {
+    toggles.forEach((btn) => btn.setAttribute('aria-checked', String(isDark)));
+  };
+  toggles.forEach((btn) => btn.addEventListener('click', () => {
     const next = document.documentElement.classList.toggle('dark') ? 'dark' : 'light';
     try { localStorage.setItem('nevnap-theme', next); } catch (_) {}
-    syncSlider();
-  }
-
-  syncSlider();
-  document.getElementById('theme-slider')?.addEventListener('click', onSliderClick);
+    sync();
+  }));
+  sync();
 </script>

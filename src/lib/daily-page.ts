@@ -1,4 +1,4 @@
-import { strings, type Lang } from '../i18n/strings';
+import { strings, interpolate, type Lang } from '../i18n/strings';
 import { getAllNames, getBudapestCalendarDate, getTodayEntry, getUpcoming } from './names';
 import { buildFaqSchema, buildWebPageSchema, SEO_IDS } from './seo';
 
@@ -37,6 +37,23 @@ export function getDailyPage(lang: Lang, now = new Date()) {
     { q: 'How many Hungarian names are in NévnapTárX?', a: `The NévnapTárX database includes ${allNames.length} Hungarian first names with nameday dates and many name meanings.` },
     { q: 'What is a Hungarian nameday?', a: 'A Hungarian nameday is a calendar tradition where given names are associated with specific days of the year and celebrated socially, often similarly to a small birthday greeting.' },
   ];
+  // Hero copy that changes every day. Built here so the static shell (Hero.astro)
+  // and the edge renderer (functions/_middleware.js) can never drift apart.
+  const monthName = t.months[today.month - 1];
+  const dateLabel = lang === 'hu'
+    ? `${monthName.toLocaleLowerCase('hu')} ${today.day}.`
+    : `${monthName} ${today.day}`;
+  const joinedNames = primaryNames.join(lang === 'hu' ? ' és ' : ' & ');
+  const hero = {
+    kicker: interpolate(t.hero.kicker, { date: dateLabel }),
+    phoneDate: `${t.hero.phone.today} · ${dateLabel}`,
+    phoneName: primaryNames.length ? primaryNames.join(', ') : t.hero.titleEmpty,
+    phoneNotif: primaryNames.length
+      ? interpolate(t.hero.phone.notif, { name: joinedNames })
+      : t.today.noNameday,
+    tileMonth: t.monthsShort[today.month - 1].replace('.', '').toLocaleUpperCase(lang === 'hu' ? 'hu' : 'en'),
+    tileDay: String(today.day),
+  };
   const webPageSchema = buildWebPageSchema({
     path: lang === 'hu' ? '/' : '/en', name: pageTitle,
     description: pageDescription, lang,
@@ -44,7 +61,7 @@ export function getDailyPage(lang: Lang, now = new Date()) {
   });
   return {
     today, primaryNames, secondaryNames, allNames, daysInCurrentYear,
-    pageTitle, pageDescription, todayAnswer, faqEntries, webPageSchema,
+    pageTitle, pageDescription, todayAnswer, faqEntries, webPageSchema, hero,
     faqSchema: buildFaqSchema(faqEntries),
     upcoming: getUpcoming(8, now).slice(1),
   };

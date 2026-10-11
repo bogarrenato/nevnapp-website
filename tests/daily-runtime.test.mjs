@@ -42,8 +42,15 @@ test('the same built shell changes at Budapest midnight, without a rebuild', asy
   assert.match(before, /Mai névnap: Dénes — Október 9\./);
   assert.match(after, /Mai névnap: Gedeon — Október 10\./);
   assert.match(after, /datetime="2026-10-10"/);
-  assert.match(after, /Ma <span class="gradient-text">Gedeon<\/span> névnapja van/);
+  assert.match(after, /Ma <a class="hero-name" href="\/name\/Gedeon">Gedeon<\/a> névnapja van/);
   assert.match(after, /data-upcoming-names="1"[^>]*>Brigitta</);
+  assert.match(after, /data-upcoming-day="1"[^>]*>11</);
+  assert.match(after, /data-upcoming-mon="1"[^>]*>okt\.</);
+  // The hero illustration (phone, notification, calendar leaf) must not keep the build day.
+  assert.match(after, /data-daily="phone-name"[^>]*>Gedeon</);
+  assert.match(after, /data-daily="tile-day"[^>]*>10</);
+  assert.match(after, /data-daily="phone-notif"[^>]*>Ma Gedeon névnapja van/);
+  assert.doesNotMatch(after, /data-daily="phone-name"[^>]*>Dénes</);
   assert.match(after, /href="\/name\/Gedeon"/);
   assert.match(after, /href="\/name\/Bendeg%C3%BAz"/);
   const schemas = [...after.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>(.*?)<\/script>/gs)].map(m => JSON.parse(m[1]));
@@ -55,7 +62,7 @@ test('the same built shell changes at Budapest midnight, without a rebuild', asy
 test('English content and upcoming links also change the next day', async () => {
   const html = await page('2026-10-10T22:00:00Z', 'en');
   assert.match(html, /<title>Today's Hungarian nameday: Brigitta/);
-  assert.match(html, /Today is <span class="gradient-text">Brigitta<\/span>'s nameday/);
+  assert.match(html, /Today is <a class="hero-name" href="\/name\/Brigitta">Brigitta<\/a>'s nameday/);
   assert.match(html, /datetime="2026-10-11"/);
   assert.match(html, /Today in Hungary, Brigitta celebrate their nameday/);
 });
@@ -65,6 +72,8 @@ test('winter midnight and year rollover do not use a fixed UTC offset', async ()
   const jan = await page('2026-12-31T23:00:00Z');
   assert.match(dec, /Mai névnap: Szilveszter — December 31\./);
   assert.match(dec, /data-upcoming-date="1" datetime="2027-01-01"/);
+  assert.match(dec, /data-upcoming-day="1"[^>]*>1</);
+  assert.match(dec, /data-upcoming-mon="1"[^>]*>jan\.</);
   assert.match(jan, /Mai névnap: Fruzsina — Január 1\./);
   assert.match(jan, /datetime="2027-01-01"/);
 });

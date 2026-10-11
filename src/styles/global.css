@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
-/* Class-alapú dark mode — a ThemeSlider .dark osztályt kapcsolgat a <html>-en */
+/* Class-alapú dark mode — a téma-kapcsoló .dark osztályt kapcsolgat a <html>-en */
 @variant dark (&:where(.dark, .dark *));
 
 /* ============================================
-   Modern 2026 Design Tokens — NevnapTárX brand
+   Design tokens — NévnapTárX brand
    ============================================ */
 @theme {
   /* Brand colors — match the Flutter app palette */
@@ -39,7 +39,7 @@
   --color-border-dark: #2c2f4a;
   --color-border-light: #e5e1f4;
 
-  /* Modern radii */
+  /* Radii */
   --radius-xs: 0.5rem;
   --radius-sm: 0.75rem;
   --radius-md: 1rem;
@@ -47,9 +47,99 @@
   --radius-xl: 1.75rem;
   --radius-2xl: 2.25rem;
 
-  /* Modern fonts */
-  --font-display: "Geist", "Inter", system-ui, -apple-system, sans-serif;
-  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+  /* Self-hosted variable fonts (see BaseLayout imports) */
+  --font-display: "Bricolage Grotesque Variable", "Geist Variable", system-ui, -apple-system, sans-serif;
+  --font-body: "Geist Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* The page container tops out at 80rem so header, content and footer share one edge. */
+  --breakpoint-2xl: initial;
+
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Semantic, theme-aware tokens (prefix nx-). Light values on :root, dark on html.dark. */
+:root {
+  --nx-bg: #fafafd;
+  --nx-s1: #ffffff;
+  --nx-s2: #f3f2f9;
+  --nx-line: rgba(20, 21, 43, 0.1);
+  --nx-line2: rgba(20, 21, 43, 0.18);
+  --nx-ink: #14152b;
+  --nx-muted: #4e4c63;
+  --nx-subtle: #6a6880;
+  --nx-accent: #5240e0;
+  --nx-accent-ink: #4131b8;
+  --nx-accent-soft: rgba(110, 91, 255, 0.1);
+  --nx-accent-line: rgba(110, 91, 255, 0.35);
+  --nx-accent-panel: #f1eeff;
+  --nx-fill: #6e5bff;
+  --nx-amber: #8a5200;
+  --nx-amber-soft: rgba(255, 185, 92, 0.24);
+  --nx-amber-line: rgba(190, 120, 10, 0.45);
+  --nx-amber-panel: #fff7ea;
+  --nx-amber-muted: #6b5a3e;
+  --nx-invert-bg: #14152b;
+  --nx-invert-ink: #ffffff;
+  --nx-invert-sub: rgba(255, 255, 255, 0.68);
+  --nx-header-bg: rgba(250, 250, 253, 0.9);
+  --nx-scrim: rgba(20, 21, 43, 0.45);
+  --nx-grid: rgba(20, 21, 43, 0.06);
+  --nx-glow: rgba(110, 91, 255, 0.28);
+  --nx-shadow: 0 32px 64px -24px rgba(20, 21, 43, 0.28);
+}
+
+html.dark {
+  --nx-bg: #08080f;
+  --nx-s1: #101019;
+  --nx-s2: #171724;
+  --nx-line: rgba(255, 255, 255, 0.08);
+  --nx-line2: rgba(255, 255, 255, 0.14);
+  --nx-ink: #f4f3fa;
+  --nx-muted: #b1afc4;
+  --nx-subtle: #8c8aa3;
+  --nx-accent: #a08bff;
+  --nx-accent-ink: #c9beff;
+  --nx-accent-soft: rgba(110, 91, 255, 0.16);
+  --nx-accent-line: rgba(160, 139, 255, 0.4);
+  --nx-accent-panel: #14132a;
+  --nx-amber: #ffb95c;
+  --nx-amber-soft: rgba(255, 185, 92, 0.1);
+  --nx-amber-line: rgba(255, 185, 92, 0.38);
+  --nx-amber-panel: #15110a;
+  --nx-amber-muted: #c2bbae;
+  --nx-invert-bg: #f4f3fa;
+  --nx-invert-ink: #08080f;
+  --nx-invert-sub: #55536a;
+  --nx-header-bg: rgba(8, 8, 15, 0.88);
+  --nx-scrim: rgba(4, 4, 8, 0.72);
+  --nx-grid: rgba(255, 255, 255, 0.05);
+  --nx-glow: rgba(110, 91, 255, 0.55);
+  --nx-shadow: 0 32px 64px -24px rgba(0, 0, 0, 0.9);
+}
+
+@theme inline {
+  --color-nx-bg: var(--nx-bg);
+  --color-nx-s1: var(--nx-s1);
+  --color-nx-s2: var(--nx-s2);
+  --color-nx-line: var(--nx-line);
+  --color-nx-line2: var(--nx-line2);
+  --color-nx-ink: var(--nx-ink);
+  --color-nx-muted: var(--nx-muted);
+  --color-nx-subtle: var(--nx-subtle);
+  --color-nx-accent: var(--nx-accent);
+  --color-nx-accent-ink: var(--nx-accent-ink);
+  --color-nx-accent-soft: var(--nx-accent-soft);
+  --color-nx-accent-line: var(--nx-accent-line);
+  --color-nx-accent-panel: var(--nx-accent-panel);
+  --color-nx-fill: var(--nx-fill);
+  --color-nx-amber: var(--nx-amber);
+  --color-nx-amber-soft: var(--nx-amber-soft);
+  --color-nx-amber-line: var(--nx-amber-line);
+  --color-nx-amber-panel: var(--nx-amber-panel);
+  --color-nx-amber-muted: var(--nx-amber-muted);
+  --color-nx-invert-bg: var(--nx-invert-bg);
+  --color-nx-invert-ink: var(--nx-invert-ink);
+  --color-nx-invert-sub: var(--nx-invert-sub);
 }
 
 /* ============================================
@@ -60,6 +150,8 @@ html {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Sticky header must not cover in-page anchor targets. */
+  scroll-padding-top: 5.5rem;
 }
 
 /* ============================================
@@ -97,7 +189,7 @@ html {
 
 /* Global focus-visible: prominent, but only for keyboard users. */
 *:focus-visible {
-  outline: 2px solid var(--color-primary-500);
+  outline: 2px solid var(--nx-accent);
   outline-offset: 2px;
   border-radius: 0.5rem;
 }
@@ -108,30 +200,28 @@ html {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
     scroll-behavior: auto !important;
   }
 }
 
 body {
   font-family: var(--font-body);
-  font-feature-settings: "ss01", "cv11";
   background:
     radial-gradient(ellipse at top, var(--color-bg-light-a), transparent 60%),
     radial-gradient(ellipse at bottom right, var(--color-bg-light-b), transparent 60%),
-    #fbfaff;
+    var(--nx-bg);
   min-height: 100vh;
-  color: #14152b;
+  color: var(--nx-ink);
   letter-spacing: -0.005em;
+  overflow-x: clip;
 }
 
 html.dark body {
-  background:
-    radial-gradient(ellipse at top, var(--color-bg-dark-a), transparent 60%),
-    radial-gradient(ellipse at bottom right, var(--color-bg-dark-b), transparent 60%),
-    #0b0c18;
-  color: #f5f5fa;
+  background: var(--nx-bg);
 }
 
 h1, h2, h3, h4, h5 {
@@ -140,7 +230,7 @@ h1, h2, h3, h4, h5 {
 }
 
 /* ============================================
-   Custom animations
+   Legacy helpers still used by inner pages
    ============================================ */
 @keyframes blob-float {
   0%, 100% { transform: translate(0, 0) scale(1); }
@@ -158,44 +248,26 @@ h1, h2, h3, h4, h5 {
   to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-blob {
-  animation: blob-float 14s ease-in-out infinite;
-}
-
-.animate-blob-delay {
-  animation: blob-float 14s ease-in-out infinite;
-  animation-delay: -7s;
-}
-
-.animate-float-in {
-  animation: float-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
+.animate-blob { animation: blob-float 14s ease-in-out infinite; }
+.animate-blob-delay { animation: blob-float 14s ease-in-out infinite; animation-delay: -7s; }
+.animate-float-in { animation: float-in 0.7s var(--ease-out-expo) both; }
 
 .shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.2) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
   background-size: 200% 100%;
   animation: shimmer 3s ease-in-out infinite;
 }
 
-/* Glassmorphism */
 .glass {
   background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.8);
 }
-
 html.dark .glass {
-  background: rgba(24, 26, 44, 0.6);
+  background: rgba(23, 23, 36, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Hero gradient text */
 .gradient-text {
   background: linear-gradient(135deg, var(--color-primary-500), var(--color-coral-500), var(--color-violet-500));
   -webkit-background-clip: text;
@@ -204,29 +276,625 @@ html.dark .glass {
   color: transparent;
 }
 
-/* Card hover lift */
 .card-lift {
-  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
-              box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 220ms var(--ease-out-expo), box-shadow 220ms var(--ease-out-expo);
 }
-
 .card-lift:hover {
   transform: translateY(-4px);
   box-shadow: 0 24px 48px -16px rgba(110, 91, 255, 0.25);
 }
 
+/* ============================================
+   Redesign 2026 — shared components (nx-*)
+   ============================================ */
+/* Kept in the components layer so Tailwind utilities on the same element
+   (e.g. `nx-btn-primary h-16`) still win. */
+@layer components {
+
+/* ---- Header ---- */
+.nx-header { position: sticky; top: 0; z-index: 40; }
+/* Blur lives on a pseudo-element: backdrop-filter on the header itself would
+   turn it into the containing block of the fixed scrim underneath the menu. */
+.nx-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--nx-header-bg);
+  backdrop-filter: blur(18px) saturate(160%);
+  border-bottom: 1px solid var(--nx-line);
+  transition: box-shadow 300ms ease;
+}
+.nx-header[data-scrolled]::before { box-shadow: 0 12px 32px -20px rgba(0, 0, 0, 0.55); }
+
+.nx-navlink {
+  display: flex;
+  align-items: center;
+  height: 2.75rem;
+  padding: 0 0.875rem;
+  border-radius: 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--nx-muted);
+  transition: background 200ms ease, color 200ms ease;
+}
+.nx-navlink:hover { background: var(--nx-line); color: var(--nx-ink); }
+.nx-navlink[aria-current="page"] { background: var(--nx-line); color: var(--nx-ink); }
+
+.nx-iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: none;
+  border-radius: 999px;
+  border: 1px solid var(--nx-line2);
+  color: var(--nx-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: transform 220ms var(--ease-out-expo), border-color 200ms ease, color 200ms ease, background 200ms ease;
+}
+.nx-iconbtn:hover { color: var(--nx-ink); border-color: var(--nx-accent-line); transform: translateY(-1px); }
+.nx-iconbtn:active { transform: scale(0.96); }
+
+/* Support (Ko-fi) — always present in the header, icon-only below lg. */
+.nx-kofi {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 2.75rem;
+  min-width: 2.75rem;
+  flex: none;
+  border-radius: 999px;
+  border: 1px solid var(--nx-amber-line);
+  background: var(--nx-amber-soft);
+  color: var(--nx-amber);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: transform 220ms var(--ease-out-expo), background 200ms ease;
+}
+.nx-kofi:hover { transform: translateY(-1px); background: color-mix(in srgb, var(--nx-amber-soft) 60%, var(--nx-amber-line)); }
+@keyframes nx-beat {
+  0%, 70%, 100% { transform: scale(1); }
+  78% { transform: scale(1.18); }
+  86% { transform: scale(0.94); }
+  93% { transform: scale(1.06); }
+}
+@keyframes nx-steam {
+  0% { opacity: 0; transform: translateY(3px); }
+  40% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-4px); }
+}
+.nx-beat { animation: nx-beat 4.5s ease-in-out 2s infinite; transform-origin: center; }
+.nx-steam { animation: nx-steam 2.4s ease-in-out infinite; }
+
+/* Hamburger ⇄ close morph */
+.nx-burger { position: relative; width: 1.125rem; height: 0.875rem; }
+.nx-burger span {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 320ms var(--ease-out-expo), opacity 200ms ease, top 320ms var(--ease-out-expo);
+}
+.nx-burger span:nth-child(1) { top: 0; }
+.nx-burger span:nth-child(2) { top: 6px; }
+.nx-burger span:nth-child(3) { top: 12px; }
+[aria-expanded="true"] > .nx-burger span:nth-child(1) { top: 6px; transform: rotate(45deg); }
+[aria-expanded="true"] > .nx-burger span:nth-child(2) { opacity: 0; transform: scaleX(0.2); }
+[aria-expanded="true"] > .nx-burger span:nth-child(3) { top: 6px; transform: rotate(-45deg); }
+
+/* Mobile menu panel: anchored to the header, inset from both screen edges,
+   so it can never overflow the viewport regardless of where the button sits. */
+.nx-menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0.75rem;
+  right: 0.75rem;
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0.5rem;
+  max-height: calc(100dvh - 5.5rem);
+  overflow-y: auto;
+  border-radius: 1.5rem;
+  border: 1px solid var(--nx-line2);
+  background: var(--nx-s1);
+  box-shadow: var(--nx-shadow);
+  transform-origin: top right;
+  opacity: 0;
+  transform: translateY(-0.75rem) scale(0.97);
+  transition: opacity 220ms ease, transform 280ms var(--ease-out-expo);
+}
+.nx-menu.is-open { opacity: 1; transform: none; }
+.nx-menu[hidden] { display: none; }
+.nx-menu-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 3.5rem;
+  padding: 0 1rem;
+  border-radius: 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--nx-ink);
+  opacity: 0;
+  transform: translateX(-0.625rem);
+  transition: opacity 320ms ease, transform 320ms var(--ease-out-expo), background 200ms ease;
+  transition-delay: calc(var(--i, 0) * 40ms + 40ms);
+}
+.nx-menu.is-open .nx-menu-link { opacity: 1; transform: none; }
+.nx-menu-link:hover { background: var(--nx-line); }
+.nx-menu-link[aria-current="page"] { background: var(--nx-accent-soft); }
+.nx-menu-link[aria-current="page"]::after {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--nx-accent);
+}
+
+.nx-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  border: 0;
+  padding: 0;
+  background: var(--nx-scrim);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity 240ms ease;
+  cursor: pointer;
+}
+.nx-scrim.is-open { opacity: 1; }
+.nx-scrim[hidden] { display: none; }
+
+/* ---- Download popover (≥ sm) + bottom sheet (< sm) ---- */
+.nx-popover {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% + 0.5rem);
+  width: min(20rem, calc(100vw - 2rem));
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0.5rem;
+  border-radius: 1.25rem;
+  border: 1px solid var(--nx-line2);
+  background: var(--nx-s1);
+  color: var(--nx-ink);
+  box-shadow: var(--nx-shadow);
+  opacity: 0;
+  transform: translate(var(--nx-shift, 0px), -0.5rem) scale(0.97);
+  transition: opacity 180ms ease, transform 260ms var(--ease-out-expo);
+}
+.nx-popover.is-open { opacity: 1; transform: translate(var(--nx-shift, 0px), 0) scale(1); }
+.nx-popover[hidden] { display: none; }
+
+.nx-store-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 4rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.875rem;
+  color: var(--nx-ink);
+  text-align: left;
+  transition: background 200ms ease, transform 220ms var(--ease-out-expo);
+}
+.nx-store-row:hover, .nx-store-row:focus-visible { background: var(--nx-line); }
+.nx-store-row:active { transform: scale(0.985); }
+.nx-store-row-icon {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: none;
+  border-radius: 0.75rem;
+  background: var(--nx-invert-bg);
+  color: var(--nx-invert-ink);
+}
+
+.nx-sheet-root { position: fixed; inset: 0; z-index: 55; display: flex; flex-direction: column; justify-content: flex-end; }
+.nx-sheet-root[hidden] { display: none; }
+.nx-sheet-root .nx-scrim { position: absolute; z-index: 0; }
+.nx-sheet {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.625rem 0.75rem calc(1.75rem + env(safe-area-inset-bottom, 0px));
+  border-radius: 1.75rem 1.75rem 0 0;
+  border: 1px solid var(--nx-line2);
+  border-bottom: 0;
+  background: var(--nx-s1);
+  color: var(--nx-ink);
+  box-shadow: 0 -32px 64px -24px rgba(0, 0, 0, 0.6);
+  transform: translateY(100%);
+  transition: transform 360ms var(--ease-out-expo);
+  touch-action: none;
+}
+.nx-sheet-root.is-open .nx-sheet { transform: translateY(var(--nx-drag, 0px)); }
+.nx-sheet-root.is-dragging .nx-sheet { transition: none; }
+.nx-sheet .nx-store-row { min-height: 4.5rem; padding: 0.625rem 0.875rem; border-radius: 1.125rem; border: 1px solid var(--nx-line); background: var(--nx-s2); }
+.nx-sheet .nx-store-row-icon { width: 3rem; height: 3rem; border-radius: 0.875rem; }
+
+/* ---- Buttons & chips ---- */
+.nx-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  height: 2.75rem;
+  padding: 0 0.875rem 0 1.125rem;
+  flex: none;
+  border-radius: 999px;
+  background: var(--nx-fill);
+  color: #fff;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 24px -8px rgba(110, 91, 255, 0.8);
+  transition: transform 220ms var(--ease-out-expo), box-shadow 220ms ease, background 200ms ease;
+}
+.nx-btn-primary:hover { transform: translateY(-2px); background: #7d6bff; box-shadow: 0 14px 32px -10px rgba(110, 91, 255, 0.9); }
+.nx-btn-primary:active { transform: scale(0.97); }
+
+.nx-store {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  height: 3.5rem;
+  padding: 0 1.375rem 0 1.125rem;
+  border-radius: 1rem;
+  background: var(--nx-invert-bg);
+  color: var(--nx-invert-ink);
+  text-align: left;
+  transition: transform 220ms var(--ease-out-expo), box-shadow 220ms ease;
+}
+.nx-store:hover { transform: translateY(-2px); box-shadow: 0 18px 40px -18px color-mix(in srgb, var(--nx-invert-bg) 70%, transparent); }
+.nx-store:active { transform: scale(0.98); }
+.nx-store small { display: block; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--nx-invert-sub); line-height: 1.2; }
+.nx-store strong { display: block; font-size: 1rem; font-weight: 700; line-height: 1.2; white-space: nowrap; }
+/* Two badges share one row on phones: tighten them so both labels fit from 360px up. */
+@media (max-width: 39.99rem) { .nx-store { gap: 0.5rem; padding: 0 0.75rem; } }
+
+.nx-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 2.75rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--nx-line2);
+  background: color-mix(in srgb, var(--nx-ink) 4%, transparent);
+  color: var(--nx-ink);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  transition: transform 220ms var(--ease-out-expo), border-color 200ms ease, background 200ms ease;
+}
+.nx-chip:hover { transform: translateY(-2px); border-color: var(--nx-accent-line); background: var(--nx-accent-soft); }
+
+.nx-eyebrow { font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+.nx-h2 { font-weight: 700; font-size: clamp(1.75rem, 3.6vw, 2.75rem); line-height: 1.05; letter-spacing: -0.03em; text-wrap: balance; }
+
+/* ---- Hero ---- */
+.nx-hero-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--nx-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--nx-grid) 1px, transparent 1px);
+  background-size: 4.5rem 4.5rem;
+  -webkit-mask-image: radial-gradient(ellipse 60% 75% at 72% 45%, #000 15%, transparent 78%);
+  mask-image: radial-gradient(ellipse 60% 75% at 72% 45%, #000 15%, transparent 78%);
+}
+@media (max-width: 63.99rem) {
+  .nx-hero-grid {
+    background-size: 3.5rem 3.5rem;
+    -webkit-mask-image: radial-gradient(ellipse 90% 40% at 50% 78%, #000 15%, transparent 80%);
+    mask-image: radial-gradient(ellipse 90% 40% at 50% 78%, #000 15%, transparent 80%);
+  }
+}
+
+.nx-hero-title {
+  font-weight: 800;
+  font-size: clamp(2.75rem, 12.5vw, 5.5rem);
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+@media (min-width: 64rem) { .nx-hero-title { font-size: clamp(3.5rem, 6.2vw, 5.5rem); } }
+
+/* Today's name(s) inside the H1: a link to the name page, with a hand-drawn
+   underline that draws itself in. Emitted by Hero.astro AND functions/_middleware.js. */
+.hero-name {
+  position: relative;
+  /* Inline (not inline-block) so a following "'s" can never wrap away from the name. */
+  display: inline;
+  white-space: nowrap;
+  color: var(--nx-accent);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+.hero-name::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.1em;
+  height: 0.16em;
+  background: var(--nx-fill);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M2 8C50 2 120 2 198 7' fill='none' stroke='%23000' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M2 8C50 2 120 2 198 7' fill='none' stroke='%23000' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  animation: nx-draw 0.7s cubic-bezier(0.65, 0, 0.35, 1) 0.75s both;
+}
+.hero-name:hover { color: var(--nx-accent-ink); }
+@keyframes nx-draw {
+  from { clip-path: inset(-50% 100% -50% 0); }
+  to { clip-path: inset(-50% 0 -50% 0); }
+}
+
+/* Entrance choreography: stagger with --i. */
+@keyframes nx-rise {
+  from { opacity: 0; transform: translateY(1.75rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.nx-rise { animation: nx-rise 0.9s var(--ease-out-expo) both; animation-delay: calc(var(--i, 0) * 80ms); }
+
+/* Phone illustration (always dark: it depicts the app, not the page theme). */
+.nx-stage { position: relative; display: flex; align-items: center; justify-content: center; height: 36.25rem; }
+@media (min-width: 64rem) { .nx-stage { height: 41.25rem; } }
+.nx-glow {
+  position: absolute;
+  inset: 0 -2.5rem;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(closest-side, var(--nx-glow), transparent);
+  animation: nx-breathe 8s ease-in-out infinite;
+}
+@keyframes nx-breathe {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.12); }
+}
+.nx-phone-in { position: relative; animation: nx-phone-in 1.1s var(--ease-out-expo) 0.15s both; }
+@keyframes nx-phone-in {
+  from { opacity: 0; transform: translateY(5rem) rotate(2deg); }
+  to { opacity: 1; transform: translateY(0) rotate(-4deg); }
+}
+.nx-float { animation: nx-float 7s ease-in-out 1.3s infinite; }
+@keyframes nx-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-0.875rem); }
+}
+/* Pointer parallax: JS sets --px / --py (−1…1) on .nx-stage for fine pointers. */
+.nx-parallax { transform: translate3d(calc(var(--px, 0) * var(--depth, 0px)), calc(var(--py, 0) * var(--depth, 0px)), 0); transition: transform 500ms var(--ease-out-expo); }
+
+.nx-phone {
+  position: relative;
+  width: 16.5rem;
+  height: 33.75rem;
+  padding: 9px;
+  border-radius: 2.75rem;
+  background: #1b1b29;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 48px 96px -32px rgba(0, 0, 0, 0.75);
+  color: #f4f3fa;
+}
+.nx-phone-screen {
+  height: 100%;
+  /* Tall top inset: the notification card overlaps this area, like a banner dropping in. */
+  padding: 6rem 1rem 1rem;
+  border-radius: 2.2rem;
+  background: #0d0d16;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow: hidden;
+}
+@media (min-width: 64rem) {
+  .nx-phone { width: 18.75rem; height: 38.25rem; padding: 10px; border-radius: 3rem; }
+  .nx-phone-screen { padding: 6.75rem 1.125rem 1.125rem; border-radius: 2.4rem; gap: 0.875rem; }
+}
+.nx-phone-row { display: flex; align-items: center; gap: 0.625rem; padding: 0.5625rem; border-radius: 0.9375rem; background: #171724; }
+.nx-phone-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.07);
+  line-height: 1;
+}
+.nx-phone-row:first-child .nx-phone-date { background: rgba(110, 91, 255, 0.22); color: #c9beff; }
+
+/* Positioned wrapper carries the parallax transform; the card inside animates in. */
+.nx-notif-pos { position: absolute; top: 2rem; right: 0; }
+.nx-notif {
+  width: 16rem;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 1.125rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(27, 27, 41, 0.94);
+  color: #f4f3fa;
+  box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.7);
+  animation: nx-pop 0.7s var(--ease-out-expo) 0.85s both;
+}
+@media (min-width: 64rem) {
+  .nx-notif-pos { top: 2.5rem; right: -1rem; }
+  .nx-notif { width: 17rem; padding: 0.75rem; border-radius: 1.25rem; }
+}
+@keyframes nx-pop {
+  0% { opacity: 0; transform: translateY(-1.125rem) scale(0.86); }
+  60% { opacity: 1; transform: translateY(3px) scale(1.03); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.nx-tear {
+  position: absolute;
+  left: 0.25rem;
+  bottom: 2.25rem;
+  width: 5.25rem;
+  border-radius: 1.125rem;
+  overflow: hidden;
+  background: #f4f3fa;
+  color: #08080f;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.6);
+  animation: nx-tear 0.8s var(--ease-out-expo) 0.6s both;
+}
+@media (min-width: 64rem) { .nx-tear { left: 0; bottom: 3.5rem; width: 6.25rem; border-radius: 1.25rem; } }
+@keyframes nx-tear {
+  0% { opacity: 0; transform: rotate(-14deg) translateY(-1.875rem); }
+  60% { opacity: 1; transform: rotate(10deg) translateY(4px); }
+  100% { opacity: 1; transform: rotate(7deg) translateY(0); }
+}
+
+/* ---- Upcoming tiles ---- */
+.nx-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  height: 11.5rem;
+  padding: 1rem;
+  border-radius: 1.375rem;
+  border: 1px solid var(--nx-line);
+  background: var(--nx-s1);
+  color: var(--nx-ink);
+  transition: transform 300ms var(--ease-out-expo), border-color 300ms ease, background 300ms ease, box-shadow 300ms ease;
+}
+.nx-tile:hover { transform: translateY(-6px); border-color: var(--nx-accent-line); box-shadow: 0 24px 48px -24px rgba(110, 91, 255, 0.45); }
+.nx-tile[data-first] { border-color: var(--nx-accent-line); background: var(--nx-accent-panel); }
+.nx-tile-badge { align-self: flex-start; display: inline-flex; align-items: center; height: 1.625rem; padding: 0 0.625rem; border-radius: 999px; background: var(--nx-line); color: var(--nx-muted); font-size: 0.75rem; font-weight: 600; }
+.nx-tile[data-first] .nx-tile-badge { background: var(--nx-fill); color: #fff; }
+.nx-strip { scrollbar-width: none; }
+.nx-strip::-webkit-scrollbar { display: none; }
+
+/* ---- Inner pages (names, calendar, name, day, blog, legal) ---- */
+.nx-crumbs { font-size: 0.875rem; color: var(--nx-subtle); }
+/* One line: earlier crumbs keep their size, the current page truncates. */
+.nx-crumbs ol { display: flex; align-items: center; gap: 0 0.5rem; list-style: none; }
+.nx-crumbs li { display: inline-flex; align-items: center; flex: none; min-height: 2.75rem; }
+.nx-crumbs li[aria-current="page"] { display: block; flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 2.75rem; }
+.nx-crumbs a { display: inline-flex; align-items: center; min-height: 2.75rem; transition: color 200ms ease; }
+.nx-crumbs a:hover { color: var(--nx-ink); }
+.nx-crumbs [aria-current="page"] { color: var(--nx-muted); }
+@media (min-width: 64rem) { .nx-crumbs li, .nx-crumbs a { min-height: 2rem; } .nx-crumbs li[aria-current="page"] { line-height: 2rem; } }
+
+.nx-page-title { font-weight: 800; font-size: clamp(2.5rem, 9vw, 4.25rem); line-height: 1; letter-spacing: -0.04em; text-wrap: balance; }
+/* Long, sentence-like titles (articles, legal pages). */
+.nx-page-title--sm { font-size: clamp(2rem, 6.4vw, 3.25rem); line-height: 1.06; letter-spacing: -0.035em; }
+.nx-lead { font-size: 1.125rem; line-height: 1.55; color: var(--nx-muted); text-wrap: pretty; }
+
+/* "Short answer" summary box at the top of content pages. */
+.nx-answer { padding: 1.25rem 1.375rem; border-radius: 1.375rem; border: 1px solid var(--nx-accent-line); background: var(--nx-accent-panel); }
+.nx-card { border-radius: 1.5rem; border: 1px solid var(--nx-line); background: var(--nx-s1); }
+
+/* Compact chip for dense lists (1300+ names): 40px on touch layouts, 36px from lg up. */
+.nx-chip-sm {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  height: 2.5rem;
+  padding: 0 0.875rem;
+  border-radius: 999px;
+  border: 1px solid var(--nx-line);
+  background: color-mix(in srgb, var(--nx-ink) 5%, transparent);
+  color: var(--nx-ink);
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: transform 220ms var(--ease-out-expo), border-color 200ms ease, background 200ms ease, color 200ms ease;
+}
+.nx-chip-sm:hover { transform: translateY(-2px); border-color: var(--nx-accent-line); background: var(--nx-accent-soft); }
+@media (min-width: 64rem) { .nx-chip-sm { height: 2.25rem; } }
+/* Selected / primary chip (e.g. the main nameday date of a name). */
+.nx-chip-on, .nx-chip-on:hover { border-color: transparent; background: var(--nx-fill); color: #fff; }
+
+/* Question list separated by hairlines (homepage answers, name/day FAQ). */
+.nx-faq { display: flex; flex-direction: column; border-bottom: 1px solid var(--nx-line2); }
+.nx-faq > div { display: flex; flex-direction: column; gap: 0.5rem; padding: 1.25rem 0; border-top: 1px solid var(--nx-line2); }
+.nx-faq dt { font-size: 1.0625rem; font-weight: 600; line-height: 1.35; color: var(--nx-ink); }
+.nx-faq dd { line-height: 1.6; color: var(--nx-muted); }
+
+/* Sticky jump bar (letters on /names, months on /calendar): one scrollable row,
+   so it never eats several lines of a phone screen. */
+.nx-jump {
+  position: sticky;
+  top: 4rem;
+  z-index: 30;
+  margin-inline: -1.5rem;
+  padding: 0.5rem 1.5rem;
+  background: var(--nx-header-bg);
+  backdrop-filter: blur(18px) saturate(160%);
+  border-bottom: 1px solid var(--nx-line);
+}
+.nx-jump ul { display: flex; gap: 0.25rem; overflow-x: auto; scrollbar-width: none; scroll-padding-inline: 1.5rem; list-style: none; }
+.nx-jump ul::-webkit-scrollbar { display: none; }
+.nx-jump a {
+  display: grid;
+  place-items: center;
+  min-width: 2.75rem;
+  height: 2.75rem;
+  padding: 0 0.75rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--nx-muted);
+  transition: background 200ms ease, color 200ms ease;
+}
+.nx-jump a:hover { background: var(--nx-line); color: var(--nx-ink); }
+.nx-jump a[aria-current="true"] { background: var(--nx-fill); color: #fff; }
+@media (min-width: 64rem) {
+  .nx-jump { top: 4.5rem; margin-inline: 0; padding: 0.5rem; border: 1px solid var(--nx-line); border-radius: 999px; }
+  .nx-jump ul { flex-wrap: wrap; justify-content: center; overflow: visible; }
+  .nx-jump a { min-width: 2.25rem; height: 2.25rem; padding: 0 0.625rem; }
+}
+
+/* Today's row on /calendar (set in the browser, see calendar.astro). */
+[data-today] { margin-inline: -0.625rem; padding-inline: 0.625rem; background: var(--nx-accent-soft); box-shadow: inset 0 0 0 1px var(--nx-accent-line); }
+[data-today] a:first-child { color: var(--nx-accent); }
+
+/* ---- Footer ---- */
+.nx-footer-heading { margin-bottom: 0.25rem; font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--nx-subtle); }
+/* 44px tap targets on touch layouts, compact rows from lg up. */
+.nx-footer-link { display: flex; align-items: center; min-height: 2.75rem; color: var(--nx-muted); transition: color 200ms ease; }
+.nx-footer-link:hover { color: var(--nx-ink); }
+@media (min-width: 64rem) { .nx-footer-link { min-height: 2rem; } }
+
+/* ---- Scroll reveal (progressive enhancement; needs html.js) ---- */
+html.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(1.5rem);
+  transition: opacity 700ms ease, transform 800ms var(--ease-out-expo);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+html.js [data-reveal].is-in,
+html.reveal-all [data-reveal] { opacity: 1; transform: none; }
+} /* @layer components */
 
 /* ════════════════════════════════════════════════════════════════════════
    Blog content tipográfia — modern, olvasható, 2026
    ════════════════════════════════════════════════════════════════════════ */
 .blog-content {
-  color: rgb(63 63 70); /* zinc-700 */
+  color: var(--nx-muted);
   font-size: 1.0625rem;
   line-height: 1.75;
   max-width: 100%;
-}
-:where(html.dark) .blog-content {
-  color: rgb(212 212 216); /* zinc-300 */
 }
 
 /* Headings */
@@ -237,7 +905,7 @@ html.dark .glass {
   line-height: 1.2;
   margin-top: 3rem;
   margin-bottom: 1rem;
-  color: rgb(24 24 27);
+  color: var(--nx-ink);
   scroll-margin-top: 6rem;
 }
 .blog-content h3 {
@@ -247,7 +915,7 @@ html.dark .glass {
   line-height: 1.3;
   margin-top: 2.25rem;
   margin-bottom: 0.75rem;
-  color: rgb(24 24 27);
+  color: var(--nx-ink);
   scroll-margin-top: 6rem;
 }
 .blog-content h4 {
@@ -255,10 +923,7 @@ html.dark .glass {
   font-weight: 700;
   margin-top: 1.75rem;
   margin-bottom: 0.5rem;
-  color: rgb(24 24 27);
-}
-:where(html.dark) .blog-content :is(h2, h3, h4) {
-  color: rgb(244 244 245);
+  color: var(--nx-ink);
 }
 
 /* Paragraphs */
@@ -288,38 +953,32 @@ html.dark .glass {
   margin-bottom: 0.5rem;
 }
 .blog-content li::marker {
-  color: rgb(139 92 246); /* violet-500 */
+  color: var(--nx-accent);
   font-weight: 600;
 }
 
 /* Links */
 .blog-content a {
-  color: rgb(139 92 246);
+  color: var(--nx-accent);
   text-decoration: none;
   font-weight: 600;
   border-bottom: 1px solid transparent;
   transition: border-color 0.15s;
 }
 .blog-content a:hover {
-  border-bottom-color: rgb(139 92 246);
+  border-bottom-color: var(--nx-accent);
 }
 
 /* Strong / Bold */
 .blog-content strong {
   font-weight: 700;
-  color: rgb(24 24 27);
-}
-:where(html.dark) .blog-content strong {
-  color: rgb(244 244 245);
+  color: var(--nx-ink);
 }
 
 /* Emphasis / Italic */
 .blog-content em {
   font-style: italic;
-  color: rgb(82 82 91);
-}
-:where(html.dark) .blog-content em {
-  color: rgb(161 161 170);
+  color: var(--nx-muted);
 }
 
 /* Code */
@@ -327,12 +986,11 @@ html.dark .glass {
   font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
   font-size: 0.875em;
   padding: 0.125rem 0.375rem;
-  background: rgb(244 244 245);
+  background: var(--nx-line);
   border-radius: 0.375rem;
   color: rgb(244 63 94); /* rose-500 */
 }
 :where(html.dark) .blog-content code {
-  background: rgba(255 255 255 / 0.08);
   color: rgb(251 113 133);
 }
 
@@ -340,15 +998,11 @@ html.dark .glass {
 .blog-content blockquote {
   margin: 1.75rem 0;
   padding: 1rem 1.5rem;
-  border-left: 4px solid rgb(139 92 246);
-  background: rgba(139 92 246 / 0.05);
+  border-left: 4px solid var(--nx-fill);
+  background: var(--nx-accent-soft);
   font-style: italic;
-  color: rgb(63 63 70);
+  color: var(--nx-muted);
   border-radius: 0 0.75rem 0.75rem 0;
-}
-:where(html.dark) .blog-content blockquote {
-  background: rgba(139 92 246 / 0.1);
-  color: rgb(228 228 231);
 }
 .blog-content blockquote p:first-child { margin-top: 0; }
 .blog-content blockquote p:last-child { margin-bottom: 0; }
@@ -357,10 +1011,7 @@ html.dark .glass {
 .blog-content hr {
   margin: 3rem 0;
   border: none;
-  border-top: 1px solid rgb(228 228 231);
-}
-:where(html.dark) .blog-content hr {
-  border-top-color: rgba(255 255 255 / 0.1);
+  border-top: 1px solid var(--nx-line2);
 }
 
 /* Tables */
@@ -371,29 +1022,20 @@ html.dark .glass {
   font-size: 0.9375rem;
 }
 .blog-content thead {
-  border-bottom: 2px solid rgb(228 228 231);
-}
-:where(html.dark) .blog-content thead {
-  border-bottom-color: rgba(255 255 255 / 0.15);
+  border-bottom: 2px solid var(--nx-line2);
 }
 .blog-content th {
   padding: 0.75rem 0.5rem;
   text-align: left;
   font-weight: 700;
-  color: rgb(24 24 27);
-}
-:where(html.dark) .blog-content th {
-  color: rgb(244 244 245);
+  color: var(--nx-ink);
 }
 .blog-content td {
   padding: 0.75rem 0.5rem;
-  border-bottom: 1px solid rgba(228 228 231 / 0.6);
-}
-:where(html.dark) .blog-content td {
-  border-bottom-color: rgba(255 255 255 / 0.05);
+  border-bottom: 1px solid var(--nx-line);
 }
 .blog-content tr:hover td {
-  background: rgba(139 92 246 / 0.04);
+  background: var(--nx-accent-soft);
 }
 
 /* Images */

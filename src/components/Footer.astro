@@ -17,87 +17,85 @@ const t = strings[lang];
 const year = new Date().getFullYear();
 ---
 
-<footer class="border-t border-zinc-200/60 dark:border-white/5 mt-24 bg-white/30 dark:bg-zinc-950/50 backdrop-blur-sm">
-  <div class="container mx-auto px-6 py-12 grid gap-10 md:grid-cols-4">
-    <div class="md:col-span-1">
-      <div class="flex items-center gap-2">
-        <img src="/icons/app-icon.png" alt="" width="36" height="36" class="rounded-xl" />
-        <span class="font-display text-lg font-extrabold">{t.brand}</span>
+<footer class="border-t border-nx-line bg-nx-s2 dark:bg-[#06060b]">
+  <div class="container mx-auto px-6 pt-10 lg:pt-16 pb-8 flex flex-col gap-8 lg:gap-10">
+    <div class="grid grid-cols-2 gap-x-4 gap-y-7 lg:grid-cols-4 lg:gap-10">
+      <div class="col-span-2 lg:col-span-1 flex flex-col gap-3">
+        <div class="flex items-center gap-2.5">
+          <img src="/icons/app-icon.png" alt="" width="36" height="36" loading="lazy" class="rounded-[0.625rem]" />
+          <span class="font-display text-[1.1875rem] font-bold tracking-tight">{t.brand}</span>
+        </div>
+        <p class="text-[0.9375rem] text-nx-muted">{t.footer.tagline}</p>
       </div>
-      <p class="mt-3 text-sm text-zinc-600 dark:text-zinc-400">{t.footer.tagline}</p>
+
+      <nav aria-labelledby="footer-product" class="text-[0.9375rem]">
+        <h2 id="footer-product" class="nx-footer-heading">{t.footer.sections.product}</h2>
+        <ul class="list-none">
+          <li><a href={STORE_LINKS.appStore} rel="noopener" class="nx-footer-link">App Store</a></li>
+          <li><a href={STORE_LINKS.playStore} rel="noopener" class="nx-footer-link">Google Play</a></li>
+          <li><a href={localizedPath(lang, '/')} class="nx-footer-link">{t.footer.links.today}</a></li>
+        </ul>
+      </nav>
+
+      <nav aria-labelledby="footer-explore" class="text-[0.9375rem]">
+        <h2 id="footer-explore" class="nx-footer-heading">{t.footer.sections.explore}</h2>
+        <ul class="list-none">
+          <li><a href={localizedPath(lang, '/names')} class="nx-footer-link">{t.footer.links.allNames}</a></li>
+          <li><a href={localizedPath(lang, '/calendar')} class="nx-footer-link">{t.footer.links.calendar}</a></li>
+          <li><a href="/blog" class="nx-footer-link">{lang === 'hu' ? 'Blog' : 'Blog (Hungarian)'}</a></li>
+          {lang === 'hu' && <li><a href="/adatbazis" class="nx-footer-link">Adatbázis és források</a></li>}
+        </ul>
+      </nav>
+
+      <nav aria-labelledby="footer-social" class="col-span-2 lg:col-span-1 text-[0.9375rem]">
+        <h2 id="footer-social" class="nx-footer-heading">{t.footer.sections.social}</h2>
+        <ul class="list-none grid grid-cols-2 gap-x-4 lg:grid-cols-1">
+          <li>
+            <a href={SOCIAL.tiktok} rel="me noopener" class="nx-footer-link gap-2">
+              <svg class="size-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.43z"/></svg>
+              TikTok
+            </a>
+          </li>
+          <li>
+            <a href={SOCIAL.instagram} rel="me noopener" class="nx-footer-link gap-2">
+              <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              Instagram
+            </a>
+          </li>
+          <li>
+            <a href={SOCIAL.beacons} rel="me noopener" class="nx-footer-link gap-2">
+              <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              Beacons
+            </a>
+          </li>
+          <li class="col-span-2 lg:col-span-1">
+            <a href={`mailto:${BRAND.email}`} class="nx-footer-link break-all">{BRAND.email}</a>
+          </li>
+        </ul>
+      </nav>
     </div>
 
-    <nav aria-labelledby="footer-product" class="text-sm">
-      <h2 id="footer-product" class="text-xs uppercase tracking-widest font-semibold text-zinc-500">{t.footer.sections.product}</h2>
-      <ul class="mt-4 space-y-2">
-        <li><a href={STORE_LINKS.appStore} rel="noopener" class="hover:text-primary-500 transition">App Store</a></li>
-        <li><a href={STORE_LINKS.playStore} rel="noopener" class="hover:text-primary-500 transition">Google Play</a></li>
-        <li><a href={localizedPath(lang, '/')} class="hover:text-primary-500 transition">{t.footer.links.today}</a></li>
-      </ul>
-    </nav>
-
-    <nav aria-labelledby="footer-explore" class="text-sm">
-      <h2 id="footer-explore" class="text-xs uppercase tracking-widest font-semibold text-zinc-500">{t.footer.sections.explore}</h2>
-      <ul class="mt-4 space-y-2">
-        <li><a href={localizedPath(lang, '/names')} class="hover:text-primary-500 transition">{t.footer.links.allNames}</a></li>
-        <li><a href={localizedPath(lang, '/calendar')} class="hover:text-primary-500 transition">{t.footer.links.calendar}</a></li>
-        <li><a href="/blog" class="hover:text-primary-500 transition">{lang === 'hu' ? 'Blog' : 'Blog (Hungarian)'}</a></li>
-        {lang === 'hu' && <li><a href="/adatbazis" class="hover:text-primary-500 transition">Adatbázis és források</a></li>}
-      </ul>
-    </nav>
-
-    <nav aria-labelledby="footer-social" class="text-sm">
-      <h2 id="footer-social" class="text-xs uppercase tracking-widest font-semibold text-zinc-500">{t.footer.sections.social}</h2>
-      <ul class="mt-4 space-y-2">
-        <li>
-          <a href={SOCIAL.tiktok} rel="me noopener" class="hover:text-primary-500 transition inline-flex items-center gap-2">
-            <svg class="size-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.43z"/></svg>
-            TikTok
-          </a>
-        </li>
-        <li>
-          <a href={SOCIAL.instagram} rel="me noopener" class="hover:text-primary-500 transition inline-flex items-center gap-2">
-            <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-            Instagram
-          </a>
-        </li>
-        <li>
-          <a href={SOCIAL.beacons} rel="me noopener" class="hover:text-primary-500 transition inline-flex items-center gap-2">
-            <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-            Beacons
-          </a>
-        </li>
-        <li>
-          <a href={`mailto:${BRAND.email}`} class="hover:text-primary-500 transition">{BRAND.email}</a>
-        </li>
-      </ul>
-    </nav>
-  </div>
-
-  <div class="border-t border-zinc-200/60 dark:border-white/5">
-    <div class="container mx-auto px-6 py-5 text-xs text-zinc-500 flex flex-col sm:flex-row items-center justify-between gap-3">
-      <p>{interpolate(t.footer.copyright, { year })}</p>
-      <p>
-        Made with <span class="text-coral-500">♥</span> in Budapest — <a href="https://nevnap.app" class="hover:text-primary-500">nevnap.app</a>
-      </p>
-    </div>
-  </div>
-
-  <!-- Legal & Compliance Links -->
-  <div class="container mx-auto px-6 mt-8 pt-8 border-t border-zinc-200/60 dark:border-white/5">
-    <nav aria-label={lang === 'hu' ? 'Jogi információk' : 'Legal'} class="flex flex-wrap gap-x-5 gap-y-2 text-xs text-zinc-500">
-      <a href={lang === 'hu' ? '/about' : '/en/about'} class="hover:text-primary-500">{lang === 'hu' ? 'Rólunk' : 'About'}</a>
-      <a href={lang === 'hu' ? '/contact' : '/en/contact'} class="hover:text-primary-500">{lang === 'hu' ? 'Kapcsolat' : 'Contact'}</a>
-      <a href={lang === 'hu' ? '/privacy' : '/en/privacy'} class="hover:text-primary-500">{lang === 'hu' ? 'Adatvédelem' : 'Privacy Policy'}</a>
-      <a href={lang === 'hu' ? '/cookies' : '/en/cookies'} class="hover:text-primary-500">{lang === 'hu' ? 'Sütik' : 'Cookies'}</a>
-      <a href={lang === 'hu' ? '/terms' : '/en/terms'} class="hover:text-primary-500">{lang === 'hu' ? 'Felhasználási feltételek' : 'Terms of Service'}</a>
-      <a href={lang === 'hu' ? '/app-terms' : '/en/app-terms'} class="hover:text-primary-500">{lang === 'hu' ? 'Mobil app feltételei' : 'App Terms'}</a>
-      <a href={lang === 'hu' ? '/app-privacy' : '/en/app-privacy'} class="hover:text-primary-500">{lang === 'hu' ? 'Mobil app adatvédelem' : 'App Privacy'}</a>
-      {lang === 'hu' && <a href="/adatbazis" class="hover:text-primary-500">Adatbázis és források</a>}
-      {lang === 'hu' && <a href="/impresszum" class="hover:text-primary-500">Impresszum</a>}
-      <button type="button" class="hover:text-primary-500 cursor-pointer" onclick="window.nevnapConsent?.reopen()">
+    <!-- Legal & Compliance Links -->
+    <nav aria-label={lang === 'hu' ? 'Jogi információk' : 'Legal'} class="pt-4 lg:pt-6 border-t border-nx-line grid grid-cols-2 gap-x-4 text-sm lg:flex lg:flex-wrap lg:gap-x-5 lg:text-[0.8125rem]">
+      <a href={lang === 'hu' ? '/about' : '/en/about'} class="nx-footer-link">{lang === 'hu' ? 'Rólunk' : 'About'}</a>
+      <a href={lang === 'hu' ? '/contact' : '/en/contact'} class="nx-footer-link">{lang === 'hu' ? 'Kapcsolat' : 'Contact'}</a>
+      <a href={lang === 'hu' ? '/privacy' : '/en/privacy'} class="nx-footer-link">{lang === 'hu' ? 'Adatvédelem' : 'Privacy Policy'}</a>
+      <a href={lang === 'hu' ? '/cookies' : '/en/cookies'} class="nx-footer-link">{lang === 'hu' ? 'Sütik' : 'Cookies'}</a>
+      <a href={lang === 'hu' ? '/terms' : '/en/terms'} class="nx-footer-link">{lang === 'hu' ? 'Felhasználási feltételek' : 'Terms of Service'}</a>
+      <a href={lang === 'hu' ? '/app-terms' : '/en/app-terms'} class="nx-footer-link">{lang === 'hu' ? 'Mobil app feltételei' : 'App Terms'}</a>
+      <a href={lang === 'hu' ? '/app-privacy' : '/en/app-privacy'} class="nx-footer-link">{lang === 'hu' ? 'Mobil app adatvédelem' : 'App Privacy'}</a>
+      {lang === 'hu' && <a href="/adatbazis" class="nx-footer-link">Adatbázis és források</a>}
+      {lang === 'hu' && <a href="/impresszum" class="nx-footer-link">Impresszum</a>}
+      <button type="button" class="nx-footer-link cursor-pointer text-left" onclick="window.nevnapConsent?.reopen()">
         {lang === 'hu' ? 'Süti beállítások' : 'Cookie settings'}
       </button>
     </nav>
+
+    <div class="text-[0.8125rem] text-nx-subtle flex flex-col sm:flex-row sm:items-center justify-between gap-x-6 gap-y-1.5">
+      <p>{interpolate(t.footer.copyright, { year })}</p>
+      <p>
+        Made with <span class="text-coral-500" aria-hidden="true">♥</span><span class="sr-only">love</span> in Budapest — <a href="https://nevnap.app" class="hover:text-nx-ink transition-colors">nevnap.app</a>
+      </p>
+    </div>
   </div>
 </footer>

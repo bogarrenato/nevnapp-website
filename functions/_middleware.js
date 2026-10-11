@@ -9,36 +9,47 @@ const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (c) => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 })[c]);
 
-function nameLinks(names, lang, primary) {
-  return names.map((name) => {
-    const href = escapeHtml(localizedPath(lang, `/name/${encodeURIComponent(name)}`));
-    if (!primary) return `<li><a href="${href}" class="px-3 py-1 rounded-full text-sm bg-white/10 hover:bg-white/20 transition">${escapeHtml(name)}</a></li>`;
-    const label = lang === 'hu' ? `${name} névnap részletei` : `Details for ${name}`;
-    return `<li><a href="${href}" aria-label="${escapeHtml(label)}" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur text-sm font-semibold transition">${escapeHtml(name)}<svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a></li>`;
-  }).join('');
+const nameHref = (name, lang) => escapeHtml(localizedPath(lang, `/name/${encodeURIComponent(name)}`));
+
+// These two builders must emit exactly the markup of src/components/Hero.astro.
+/** Today's name(s) inside the H1: each one links to its own page. */
+function heroNameLinks(names, lang) {
+  return names
+    .map((name) => `<a class="hero-name" href="${nameHref(name, lang)}">${escapeHtml(name)}</a>`)
+    .join(lang === 'hu' ? ' és ' : ' &amp; ');
+}
+
+/** "Other names today" chips under the hero copy. */
+function secondaryChips(names, lang) {
+  return names
+    .map((name) => `<li><a href="${nameHref(name, lang)}" class="nx-chip">${escapeHtml(name)}</a></li>`)
+    .join('');
 }
 
 /** Rewrites the prebuilt shell on the edge; no browser JS or daily build needed. */
 export function renderDailyResponse(response, lang, now = new Date()) {
   const daily = getDailyPage(lang, now);
   const t = strings[lang];
-  const dateLabel = `${t.months[daily.today.month - 1]} ${daily.today.day}${lang === 'hu' ? '.' : ''}`;
-  const names = escapeHtml(daily.primaryNames.join(lang === 'hu' ? ' és ' : ' & '));
+  const links = heroNameLinks(daily.primaryNames, lang);
   const hero = daily.primaryNames.length
-    ? (lang === 'hu' ? `Ma <span class="gradient-text">${names}</span> névnapja van` : `Today is <span class="gradient-text">${names}</span>'s nameday`)
-    : `<span class="gradient-text">${escapeHtml(t.hero.titleEmpty)}</span>`;
+    ? (lang === 'hu' ? `Ma ${links} névnapja van` : `Today is ${links}'s nameday`)
+    : escapeHtml(t.hero.titleEmpty);
+  const noNameday = lang === 'hu' ? 'Nincs névnap' : 'No nameday';
   const texts = {
-    'hero-date': interpolate(t.hero.kicker, { date: dateLabel }),
-    'today-date': dateLabel,
-    primary: daily.primaryNames.length ? daily.primaryNames.join(lang === 'hu' ? ' és ' : ' and ') : t.today.noNameday,
+    'hero-date': daily.hero.kicker,
     answer: daily.todayAnswer,
     iso: daily.today.iso,
     'year-days': String(daily.daysInCurrentYear),
+    // Hero illustration (phone, notification, calendar leaf)
+    'phone-date': daily.hero.phoneDate,
+    'phone-name': daily.hero.phoneName,
+    'phone-notif': daily.hero.phoneNotif,
+    'tile-month': daily.hero.tileMonth,
+    'tile-day': daily.hero.tileDay,
   };
   const html = {
     'hero-title': hero,
-    'primary-links': nameLinks(daily.primaryNames, lang, true),
-    'secondary-links': nameLinks(daily.secondaryNames, lang, false),
+    'secondary-links': secondaryChips(daily.secondaryNames, lang),
   };
   const rewriter = new HTMLRewriter()
     .on('title', { element(e) { e.setInnerContent(daily.pageTitle); } })
@@ -51,10 +62,9 @@ export function renderDailyResponse(response, lang, now = new Date()) {
       const key = e.getAttribute('data-daily');
       if (key in texts) e.setInnerContent(texts[key]);
       if (key in html) e.setInnerContent(html[key], { html: true });
-      if (['hero-date', 'today-date'].includes(key)) e.setAttribute('datetime', daily.today.iso);
-      if (key === 'primary-links' || key === 'secondary-section') {
-        const visible = key === 'primary-links' ? daily.primaryNames.length : daily.secondaryNames.length;
-        if (visible) e.removeAttribute('hidden'); else e.setAttribute('hidden', '');
+      if (key === 'hero-date') e.setAttribute('datetime', daily.today.iso);
+      if (key === 'secondary-section') {
+        if (daily.secondaryNames.length) e.removeAttribute('hidden'); else e.setAttribute('hidden', '');
       }
     } })
     .on('[data-upcoming-link]', { element(e) {
@@ -64,17 +74,25 @@ export function renderDailyResponse(response, lang, now = new Date()) {
       const href = names[0] ? `/name/${encodeURIComponent(names[0])}` : `/day/${dateKey(u.date.month, u.date.day)}`;
       const label = u.daysAhead === 1 ? t.upcoming.tomorrow : interpolate(t.upcoming.inDays, { n: u.daysAhead });
       e.setAttribute('href', localizedPath(lang, href));
-      e.setAttribute('aria-label', `${label}, ${t.monthsShort[u.date.month - 1]} ${u.date.day}. — ${names.join(', ') || (lang === 'hu' ? 'Nincs névnap' : 'No nameday')}`);
+      e.setAttribute('aria-label', `${label}, ${t.monthsShort[u.date.month - 1]} ${u.date.day}. — ${names.join(', ') || noNameday}`);
     } })
     .on('[data-upcoming-date]', { element(e) {
       const u = daily.upcoming[Number(e.getAttribute('data-upcoming-date')) - 1];
       if (!u) return;
+      // Only the attribute: the visible day and month are separate child hooks below.
       e.setAttribute('datetime', u.date.iso);
-      e.setInnerContent(`${t.monthsShort[u.date.month - 1]} ${u.date.day}.`);
+    } })
+    .on('[data-upcoming-day]', { element(e) {
+      const u = daily.upcoming[Number(e.getAttribute('data-upcoming-day')) - 1];
+      if (u) e.setInnerContent(String(u.date.day));
+    } })
+    .on('[data-upcoming-mon]', { element(e) {
+      const u = daily.upcoming[Number(e.getAttribute('data-upcoming-mon')) - 1];
+      if (u) e.setInnerContent(t.monthsShort[u.date.month - 1]);
     } })
     .on('[data-upcoming-names]', { element(e) {
       const u = daily.upcoming[Number(e.getAttribute('data-upcoming-names')) - 1];
-      if (u) e.setInnerContent(u.entry?.primary.join(', ') || (lang === 'hu' ? 'Nincs névnap' : 'No nameday'));
+      if (u) e.setInnerContent(u.entry?.primary.join(', ') || noNameday);
     } })
     .on('script[data-schema-type]', { element(e) {
       const type = e.getAttribute('data-schema-type');

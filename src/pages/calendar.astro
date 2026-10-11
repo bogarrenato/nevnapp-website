@@ -51,36 +51,42 @@ const jsonLd = [
 ---
 
 <BaseLayout lang="hu" title={title} description={description} jsonLd={jsonLd}>
-  <section class="container mx-auto px-6 pt-12 md:pt-16">
+  <section class="container mx-auto px-6 pt-6 lg:pt-14">
     <header class="max-w-3xl">
-      <p class="text-sm uppercase tracking-widest font-semibold text-primary-600 dark:text-primary-400">{calendarYear}</p>
-      <h1 class="mt-2 text-5xl md:text-6xl font-extrabold tracking-tight">
-        <span class="gradient-text">{t.calendarPage.heading}</span>
-      </h1>
-      <p class="mt-3 text-zinc-600 dark:text-zinc-400 text-lg">
+      <p class="nx-eyebrow text-nx-accent nx-rise">{calendarYear}</p>
+      <h1 class="mt-3 nx-page-title nx-rise" style="--i:1">{t.calendarPage.heading}</h1>
+      <p class="mt-4 nx-lead nx-rise" style="--i:2">
         Minden napra a magyar névnap-naptár szerinti névnap — koppints egy névre a részletekért.
       </p>
     </header>
 
-    <section class="mt-8 rounded-2xl border border-primary-500/20 bg-primary-50/70 dark:bg-primary-500/10 p-5 max-w-3xl" aria-labelledby="calendar-summary-heading">
-      <h2 id="calendar-summary-heading" class="text-sm uppercase tracking-widest font-semibold text-primary-700 dark:text-primary-300">
+    <section class="mt-8 nx-answer max-w-3xl nx-rise" style="--i:3" aria-labelledby="calendar-summary-heading">
+      <h2 id="calendar-summary-heading" class="nx-eyebrow font-body text-nx-accent-ink">
         Rövid válasz
       </h2>
-      <p class="mt-3 text-zinc-700 dark:text-zinc-300 leading-relaxed">
+      <p class="mt-3 text-nx-muted leading-relaxed">
         Ez a {calendarYear}-es magyar névnap-naptár hónapokra és napokra bontva mutatja a névnapokat. A teljes adatbázis {nameCount} külön névalakot kapcsol egy vagy több dátumhoz; a névjelentések lefedettségét és a forrásokat külön dokumentáljuk.
       </p>
     </section>
 
-    <div class="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+    <nav class="nx-jump mt-8" aria-label="Ugrás hónap szerint" data-jump>
+      <ul>
+        {months.map((m) => (
+          <li><a href={`#month-${m.index}`}>{m.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-5">
       {months.map((m) => (
-        <article class="glass rounded-3xl p-6" aria-labelledby={`month-${m.index}-heading`}>
-          <h2 id={`month-${m.index}-heading`} class="text-2xl font-extrabold tracking-tight gradient-text">{m.label}</h2>
-          <ul class="mt-4 space-y-1.5 text-sm list-none">
+        <article id={`month-${m.index}`} class="nx-card scroll-mt-16 px-5 pt-5 pb-3 sm:px-6 sm:pt-6" aria-labelledby={`month-${m.index}-heading`} data-jump-section data-reveal>
+          <h2 id={`month-${m.index}-heading`} class="text-[1.75rem] font-extrabold leading-none tracking-tight">{m.label}</h2>
+          <ul class="mt-4 text-[0.9375rem] list-none divide-y divide-nx-line">
             {m.days.map((d) => (
-              <li class="flex items-baseline justify-between gap-2">
+              <li class="flex items-center justify-between gap-3 min-h-10 rounded-lg" data-day={d.dateKey}>
                 <a
                   href={`/day/${d.dateKey}`}
-                  class="tabular-nums text-zinc-500 hover:text-primary-500 transition w-8 shrink-0"
+                  class="shrink-0 inline-flex items-center min-h-10 w-9 font-display font-bold tabular-nums text-nx-subtle hover:text-nx-accent transition-colors"
                   aria-label={`${m.label} ${d.day}. — napi névnap részletek`}
                 >
                   {d.day}.
@@ -88,11 +94,10 @@ const jsonLd = [
                 <span class="text-right flex-1 truncate">
                   {d.primary.length ? d.primary.map((n, i) => (
                     <>
-                      <a href={`/name/${encodeURIComponent(n)}`} class="hover:text-primary-500 transition font-medium">{n}</a>
-                      {i < d.primary.length - 1 && <span aria-hidden="true">, </span>}
+                      <a href={`/name/${encodeURIComponent(n)}`} class="inline-flex items-center min-h-10 font-medium hover:text-nx-accent transition-colors">{n}</a>{i < d.primary.length - 1 && <span aria-hidden="true">, </span>}
                     </>
                   )) : (
-                    <span class="text-zinc-400 dark:text-zinc-600" aria-label="Nincs névnap">—</span>
+                    <span class="text-nx-subtle" aria-label="Nincs névnap">—</span>
                   )}
                 </span>
               </li>
@@ -102,4 +107,12 @@ const jsonLd = [
       ))}
     </div>
   </section>
+
+  <script>
+    // Mark today's row (Budapest calendar day). Done in the browser so the
+    // highlight is right even when the static build is a day old.
+    const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Budapest', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
+    const key = `${parts.find((p) => p.type === 'month')?.value}-${parts.find((p) => p.type === 'day')?.value}`;
+    document.querySelector<HTMLElement>(`[data-day="${key}"]`)?.setAttribute('data-today', '');
+  </script>
 </BaseLayout>

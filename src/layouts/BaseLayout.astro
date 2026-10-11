@@ -9,6 +9,9 @@
  *    BEFORE the body renders)
  *  - Slots for header / page content / footer
  */
+// Self-hosted variable fonts (latin + latin-ext for ő/ű): no third-party font request.
+import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource-variable/geist';
 import '../styles/global.css';
 import { strings, SITE_URL, type Lang } from '../i18n/strings';
 import CookieBanner from '../components/CookieBanner.astro';
@@ -17,6 +20,7 @@ import { CREATOR_NAME, buildIdentityGraph } from '../lib/seo';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import StoreBadge from '../components/StoreBadge.astro';
+import DownloadSheet from '../components/DownloadSheet.astro';
 
 interface Props {
   lang?: Lang;
@@ -69,8 +73,8 @@ const jsonLdEntries = jsonLd
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fbfaff" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0c18" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafafd" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#08080f" />
 
     <title>{title}</title>
     <meta name="description" content={metaDescription} />
@@ -120,19 +124,17 @@ const jsonLdEntries = jsonLd
     <link rel="icon" type="image/png" href="/icons/app-icon.png" />
     <link rel="apple-touch-icon" href="/icons/app-icon.png" />
 
-    <!-- Fonts: Geist (display) + Inter (body). Both via Google Fonts with preconnect. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" />
-
-    <!-- Theme bootstrap (no FOUC) -->
+    <!-- Theme bootstrap (no FOUC). Dark is the default; a saved choice wins.
+         `js` enables the scroll-reveal styles; `reveal-all` is the safety net
+         that shows everything if the reveal script never runs. -->
     <script is:inline>
       (function () {
-        try {
-          const saved = localStorage.getItem('nevnap-theme');
-          const theme = saved ?? 'dark';
-          if (theme === 'dark') document.documentElement.classList.add('dark');
-        } catch (_) {}
+        var root = document.documentElement;
+        var theme = 'dark';
+        try { theme = localStorage.getItem('nevnap-theme') || 'dark'; } catch (_) {}
+        if (theme === 'dark') root.classList.add('dark');
+        root.classList.add('js');
+        setTimeout(function () { if (!root.hasAttribute('data-reveal-ready')) root.classList.add('reveal-all'); }, 2500);
       })();
     </script>
 
@@ -210,22 +212,21 @@ const jsonLdEntries = jsonLd
     </main>
 
     {!hideDownloadStrip && (
-      <section
-        aria-labelledby="download-heading"
-        class="border-t border-zinc-200/60 dark:border-white/5 mt-24 py-16"
-      >
-        <div class="container mx-auto px-6 text-center">
-          <h2 id="download-heading" class="text-3xl md:text-4xl font-extrabold tracking-tight">
+      <section aria-labelledby="download-heading" class="relative overflow-hidden mt-20 lg:mt-28 border-t border-nx-line">
+        <div aria-hidden="true" class="absolute inset-0 pointer-events-none opacity-45" style="background: radial-gradient(ellipse 50% 70% at 50% 100%, var(--nx-glow), transparent);"></div>
+        <div class="container mx-auto px-6 py-16 lg:py-24 relative flex flex-col items-center text-center gap-4">
+          <img src="/icons/app-icon.png" alt="" width="72" height="72" loading="lazy" class="size-16 lg:size-[4.5rem] rounded-[1.125rem] lg:rounded-[1.25rem] shadow-[0_24px_48px_-16px_rgba(110,91,255,0.8)]" data-reveal />
+          <h2 id="download-heading" class="mt-2 max-w-3xl font-extrabold text-[clamp(2rem,4.4vw,3.5rem)] leading-[1.02] tracking-[-0.035em] text-balance" data-reveal>
             {lang === 'hu'
               ? 'Töltsd le a NévnapTárX appot ingyen'
               : 'Download NévnapTárX free'}
           </h2>
-          <p class="mt-3 text-zinc-600 dark:text-zinc-300 max-w-xl mx-auto">
+          <p class="max-w-xl text-[1.0625rem] leading-relaxed text-nx-muted text-pretty" data-reveal>
             {lang === 'hu'
               ? '1300+ név napjai, több száz név jelentése és napi értesítés — egy modern app a zsebedben.'
               : 'Namedays for 1,300+ names, hundreds of name meanings and daily reminders — a modern app in your pocket.'}
           </p>
-          <div class="mt-8 flex items-center justify-center gap-4 flex-wrap" role="group" aria-label={lang === 'hu' ? 'Letöltési linkek' : 'Download links'}>
+          <div class="mt-3 w-full max-w-sm sm:w-auto sm:max-w-none grid grid-cols-1 min-[22.5rem]:grid-cols-2 gap-2.5 sm:flex sm:gap-3 justify-center" role="group" aria-label={lang === 'hu' ? 'Letöltési linkek' : 'Download links'} data-reveal>
             <StoreBadge store="apple" href={STORE_LINKS.appStore} lang={lang} />
             <StoreBadge store="google" href={STORE_LINKS.playStore} lang={lang} />
           </div>
@@ -233,7 +234,92 @@ const jsonLdEntries = jsonLd
       </section>
     )}
 
+    {hideDownloadStrip && <div class="mt-24" aria-hidden="true"></div>}
     <Footer lang={lang} />
-      <CookieBanner lang={lang} />
+    <DownloadSheet lang={lang} />
+    <CookieBanner lang={lang} />
+
+    <script>
+      /**
+       * Scroll choreography (progressive enhancement, see global.css):
+       *  - [data-reveal] fades/rises in when it enters the viewport; elements
+       *    that arrive together are staggered, later ones are not delayed
+       *  - [data-countup] counts up to the number it already contains
+       * With reduced motion the content is simply shown.
+       */
+      const root = document.documentElement;
+      const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const revealables = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
+
+      const countUp = (el: HTMLElement) => {
+        const target = Number(el.textContent?.trim());
+        if (!Number.isFinite(target) || target <= 0) return;
+        const started = performance.now();
+        const duration = 1400;
+        const tick = (now: number) => {
+          const t = Math.min(1, (now - started) / duration);
+          const eased = 1 - Math.pow(1 - t, 4);
+          el.textContent = String(Math.round(target * eased));
+          if (t < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      };
+
+      if (calm || !('IntersectionObserver' in window)) {
+        root.classList.add('reveal-all');
+      } else {
+        const observer = new IntersectionObserver((entries) => {
+          let order = 0;
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            const el = entry.target as HTMLElement;
+            el.style.setProperty('--i', String(Math.min(order++, 6)));
+            el.classList.add('is-in');
+            el.querySelectorAll<HTMLElement>('[data-countup]').forEach(countUp);
+            if (el.matches('[data-countup]')) countUp(el);
+            observer.unobserve(el);
+          }
+        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+        revealables.forEach((el) => observer.observe(el));
+      }
+      root.setAttribute('data-reveal-ready', '');
+
+      /**
+       * Jump bar scroll-spy (/names letters, /calendar months): highlights the
+       * section being read and keeps its link visible in the scrolling row.
+       */
+      const jump = document.querySelector<HTMLElement>('[data-jump]');
+      if (jump && 'IntersectionObserver' in window) {
+        const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-jump-section]'));
+        const links = new Map<string, HTMLAnchorElement>();
+        jump.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((a) => links.set(decodeURIComponent(a.hash.slice(1)), a));
+        const list = jump.querySelector<HTMLElement>('ul');
+        const visible = new Set<string>();
+        let current = '';
+
+        const setCurrent = (id: string) => {
+          if (id === current) return;
+          links.get(current)?.removeAttribute('aria-current');
+          current = id;
+          const link = links.get(id);
+          if (!link) return;
+          link.setAttribute('aria-current', 'true');
+          if (list && list.scrollWidth > list.clientWidth) {
+            const delta = link.getBoundingClientRect().left - list.getBoundingClientRect().left;
+            list.scrollTo({ left: list.scrollLeft + delta - (list.clientWidth - link.offsetWidth) / 2, behavior: calm ? 'auto' : 'smooth' });
+          }
+        };
+        // A thin band just below the sticky header + jump bar decides which section
+        // counts as "current" (anchor jumps land a section's top at ~150px).
+        const spy = new IntersectionObserver((entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) visible.add(entry.target.id); else visible.delete(entry.target.id);
+          }
+          const first = sections.find((section) => visible.has(section.id));
+          if (first) setCurrent(first.id);
+        }, { rootMargin: '-170px 0px -70% 0px' });
+        sections.forEach((section) => spy.observe(section));
+      }
+    </script>
   </body>
 </html>

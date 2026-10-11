@@ -7,7 +7,6 @@
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
-import TodayCard from '../components/TodayCard.astro';
 import UpcomingStrip from '../components/UpcomingStrip.astro';
 import { strings } from '../i18n/strings';
 import { getDailyPage } from '../lib/daily-page';
@@ -33,91 +32,96 @@ const jsonLd = [
   adsEligible
 >
   <Hero lang="hu" />
-  <TodayCard lang="hu" />
   <UpcomingStrip lang="hu" />
 
-  <section class="container mx-auto px-6 mt-20 max-w-4xl" aria-labelledby="direct-answers-heading">
-    <p class="text-sm uppercase tracking-widest font-semibold text-primary-600 dark:text-primary-400">Rövid válaszok</p>
-    <h2 id="direct-answers-heading" class="mt-2 text-3xl md:text-4xl font-extrabold tracking-tight">
-      Mai névnap és magyar névnap-adatbázis
-    </h2>
-    <dl class="mt-6 grid gap-4 md:grid-cols-3">
-      {faqEntries.map((entry, i) => (
-        <div class="rounded-2xl border border-zinc-200 dark:border-white/10 bg-white/70 dark:bg-white/5 p-5">
-          <dt class="font-bold text-zinc-900 dark:text-zinc-100">{entry.q}</dt>
-          <dd data-daily={i === 0 ? 'answer' : undefined} class="mt-2 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">{entry.a}</dd>
-        </div>
-      ))}
-    </dl>
-    <p class="mt-3 text-sm text-zinc-500 dark:text-zinc-500">
-      Adatforrás: a NévnapTárX tájékoztató jellegű magyar névnap-naptára. Lefedettség és módszertan: <a href="/adatbazis" class="text-primary-600 dark:text-primary-400 hover:underline">adatbázis és források</a>. Aktuális nap: <span data-daily="iso">{today.iso}</span>.
-    </p>
+  <section class="container mx-auto px-6 mt-20 lg:mt-28 grid gap-x-16 gap-y-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]" aria-labelledby="direct-answers-heading">
+    <div class="lg:sticky lg:top-28 self-start" data-reveal>
+      <p class="nx-eyebrow text-nx-accent">Rövid válaszok</p>
+      <h2 id="direct-answers-heading" class="nx-h2 mt-3">Mai névnap és magyar névnap-adatbázis</h2>
+    </div>
+    <div>
+      <dl class="flex flex-col border-b border-nx-line2">
+        {faqEntries.map((entry, i) => (
+          <div class="flex flex-col gap-2 py-5 lg:py-6 border-t border-nx-line2" data-reveal>
+            <dt class="text-lg lg:text-[1.1875rem] font-semibold leading-snug">{entry.q}</dt>
+            <dd data-daily={i === 0 ? 'answer' : undefined} class="leading-relaxed text-nx-muted">{entry.a}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="mt-5 text-sm leading-relaxed text-nx-subtle" data-reveal>
+        Adatforrás: a NévnapTárX tájékoztató jellegű magyar névnap-naptára. Lefedettség és módszertan: <a href="/adatbazis" class="text-nx-accent hover:underline">adatbázis és források</a>. Aktuális nap: <span data-daily="iso">{today.iso}</span>.
+      </p>
+    </div>
   </section>
 
   <!-- SEO content block — visible explanatory copy for users and crawlers -->
-  <section class="container mx-auto px-6 mt-24 max-w-3xl">
-    <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">{t.homeSeo.heading}</h2>
-    <div class="mt-6 space-y-4 text-zinc-700 dark:text-zinc-300 leading-relaxed">
-      <p>{t.homeSeo.p1}</p>
-      <p>{t.homeSeo.p2}</p>
+  <section class="container mx-auto px-6 mt-20 lg:mt-28" aria-labelledby="home-seo-heading">
+    <div class="grid gap-x-16 gap-y-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]">
+      <h2 id="home-seo-heading" class="nx-h2" data-reveal>{t.homeSeo.heading}</h2>
+      <div class="flex flex-col gap-4 text-[1.0625rem] leading-relaxed text-nx-muted text-pretty" data-reveal>
+        <p>{t.homeSeo.p1}</p>
+        <p>{t.homeSeo.p2}</p>
+      </div>
     </div>
 
-    <div class="mt-12 grid sm:grid-cols-3 gap-4">
+    <div class="mt-9 lg:mt-12 grid sm:grid-cols-3 sm:gap-3 max-sm:rounded-3xl max-sm:border max-sm:border-nx-line max-sm:bg-nx-s1 max-sm:divide-y max-sm:divide-nx-line">
       {[
-        { label: String(allNames.length), text: t.homeSeo.statNames },
-        { label: String(daysInCurrentYear), text: t.homeSeo.statDays },
-        { label: '0 Ft', text: t.homeSeo.statFree },
+        { label: String(allNames.length), text: t.homeSeo.statNames, count: true },
+        { label: String(daysInCurrentYear), text: t.homeSeo.statDays, count: true, daily: 'year-days' },
+        { label: '0 Ft', text: t.homeSeo.statFree, accent: true },
       ].map((stat) => (
-        <div class="glass rounded-2xl p-5 text-center">
-          <p data-daily={stat.text === t.homeSeo.statDays ? 'year-days' : undefined} class="text-3xl font-extrabold gradient-text">{stat.label}</p>
-          <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">{stat.text}</p>
+        <div
+          data-reveal
+          class:list={[
+            'flex items-baseline justify-between gap-4 px-5 py-[1.125rem] sm:flex-col sm:items-start sm:justify-start sm:gap-1.5 sm:p-7 sm:rounded-3xl sm:border',
+            stat.accent ? 'sm:border-nx-accent-line sm:bg-nx-accent-panel' : 'sm:border-nx-line sm:bg-nx-s1',
+          ]}
+        >
+          <p
+            data-daily={stat.daily}
+            data-countup={stat.count ? '' : undefined}
+            class:list={['font-display font-extrabold leading-none tracking-tight tabular-nums text-[2.5rem] sm:text-[clamp(3rem,6vw,5rem)]', stat.accent && 'text-nx-accent']}
+          >{stat.label}</p>
+          <p class="text-[0.9375rem] sm:text-base text-nx-muted max-sm:text-right">{stat.text}</p>
         </div>
       ))}
     </div>
   </section>
 
   <!-- Ko-fi Support Section -->
-  <section class="container mx-auto px-6 mt-20 max-w-4xl" aria-labelledby="support-heading">
-    <div class="relative overflow-hidden rounded-3xl p-8 md:p-12 bg-gradient-to-br from-amber-500/10 via-orange-400/5 to-yellow-400/10 border border-amber-400/20">
-      <!-- Decorative ambient blobs -->
-      <div aria-hidden="true" class="absolute -top-16 -right-16 size-56 rounded-full bg-amber-400/15 blur-3xl pointer-events-none"></div>
-      <div aria-hidden="true" class="absolute -bottom-12 -left-12 size-40 rounded-full bg-orange-400/10 blur-2xl pointer-events-none"></div>
+  <section class="container mx-auto px-6 mt-20 lg:mt-28" aria-labelledby="support-heading">
+    <div class="flex flex-col lg:flex-row lg:items-center gap-x-10 gap-y-5 p-6 sm:p-10 lg:p-14 rounded-[1.75rem] lg:rounded-[2rem] border border-nx-amber-line bg-nx-amber-panel" data-reveal>
+      <div aria-hidden="true" class="shrink-0 size-14 lg:size-[4.5rem] grid place-items-center rounded-[1.125rem] lg:rounded-[1.375rem] border border-nx-amber-line bg-nx-amber-soft text-nx-amber">
+        <svg class="size-7 lg:size-[2.125rem]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+          <path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9z"/>
+          <path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17"/>
+          <path class="nx-steam" d="M8 3v2.5M12 3v2.5"/>
+        </svg>
+      </div>
 
-      <div class="relative flex flex-col md:flex-row items-start md:items-center gap-8">
-        <!-- Icon -->
-        <div aria-hidden="true" class="shrink-0 size-20 rounded-2xl bg-amber-400/15 border border-amber-400/30 grid place-items-center text-4xl shadow-lg shadow-amber-400/10">
-          ☕
-        </div>
+      <div class="flex-1 min-w-0 flex flex-col gap-2.5">
+        <p class="nx-eyebrow text-nx-amber">{t.support.eyebrow}</p>
+        <h2 id="support-heading" class="font-bold text-[1.625rem] lg:text-[2.125rem] leading-[1.12] tracking-tight text-balance">
+          {t.support.heading}
+        </h2>
+        <p class="max-w-[37.5rem] leading-relaxed text-nx-amber-muted text-pretty">
+          {t.support.body}
+        </p>
+      </div>
 
-        <!-- Text -->
-        <div class="flex-1 min-w-0">
-          <p class="text-xs uppercase tracking-widest font-semibold text-amber-500 dark:text-amber-400">{t.support.eyebrow}</p>
-          <h2 id="support-heading" class="mt-2 text-2xl md:text-3xl font-extrabold tracking-tight">
-            {t.support.heading}
-          </h2>
-          <p class="mt-3 text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-xl">
-            {t.support.body}
-          </p>
-        </div>
-
-        <!-- CTA -->
-        <div class="shrink-0 flex flex-col items-start md:items-end gap-2">
-          <a
-            href="https://ko-fi.com/bogarrenato"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="group relative inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-amber-400 hover:bg-amber-300 active:bg-amber-500 text-zinc-900 font-extrabold text-sm shadow-xl shadow-amber-400/30 hover:shadow-amber-400/50 hover:scale-105 transition-all"
-          >
-            <!-- Animated ring behind button -->
-            <span aria-hidden="true" class="pointer-events-none absolute -inset-1 rounded-full bg-amber-400/30 animate-ping opacity-60 group-hover:opacity-80"></span>
-            <span aria-hidden="true" class="text-lg">☕</span>
-            {t.support.cta}
-            <svg class="size-4 transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" focusable="false">
-              <path d="M5 12h14M13 6l6 6-6 6"/>
-            </svg>
-          </a>
-          <p class="text-xs text-zinc-500 dark:text-zinc-500 pl-1">{t.support.subtext}</p>
-        </div>
+      <div class="shrink-0 flex flex-col items-stretch lg:items-start gap-2.5 max-lg:mt-2">
+        <a
+          href="https://ko-fi.com/bogarrenato"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group inline-flex items-center justify-center gap-2.5 h-14 px-6 rounded-full bg-[#ffb95c] hover:bg-[#ffc87f] text-[#1a1206] font-bold shadow-[0_16px_40px_-16px_rgba(255,185,92,0.7)] transition-[transform,background-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 active:scale-[0.98]"
+        >
+          {t.support.cta}
+          <svg class="size-[1.125rem] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M5 12h14M13 6l6 6-6 6"/>
+          </svg>
+        </a>
+        <p class="text-[0.8125rem] text-nx-amber-muted max-lg:text-center lg:pl-1">{t.support.subtext}</p>
       </div>
     </div>
   </section>

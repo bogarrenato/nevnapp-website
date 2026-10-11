@@ -1,0 +1,119 @@
+---
+/**
+ * Mobile download panel: one bottom sheet for the whole page.
+ *
+ * Every "Download" trigger (see DownloadDropdown) opens this sheet on small
+ * screens instead of a floating dropdown, so nothing can hang off the edge of
+ * the viewport. Rendered once by BaseLayout.
+ *
+ * a11y notes:
+ *  - role="dialog" aria-modal="true", labelled by its heading
+ *  - Focus moves into the sheet, Tab is trapped, Escape and the scrim close it
+ *  - Focus returns to the trigger that opened it
+ */
+import { STORE_LINKS } from '../lib/constants';
+import StoreIcon from './StoreIcon.astro';
+import type { Lang } from '../i18n/strings';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const title = lang === 'hu' ? 'Töltsd le ingyen' : 'Download free';
+const closeLabel = lang === 'hu' ? 'Bezárás' : 'Close';
+const stores = [
+  { store: 'apple', name: 'App Store', tag: lang === 'hu' ? 'iPhone és iPad' : 'iPhone & iPad', href: STORE_LINKS.appStore },
+  { store: 'google', name: 'Google Play', tag: 'Android', href: STORE_LINKS.playStore },
+] as const;
+---
+
+<div id="download-sheet" class="nx-sheet-root" hidden>
+  <button type="button" class="nx-scrim" data-sheet-close tabindex="-1" aria-label={closeLabel}></button>
+  <div class="nx-sheet" role="dialog" aria-modal="true" aria-labelledby="download-sheet-title">
+    <div data-sheet-handle class="self-center w-10 h-1 rounded-full bg-nx-line2" aria-hidden="true"></div>
+    <div class="flex items-center justify-between gap-3 mt-1 ml-2">
+      <h2 id="download-sheet-title" class="text-2xl font-bold tracking-tight">{title}</h2>
+      <button type="button" data-sheet-close class="nx-iconbtn border-0 bg-nx-line" aria-label={closeLabel}>
+        <svg class="size-[1.125rem]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false">
+          <path d="M6 6l12 12M18 6L6 18"/>
+        </svg>
+      </button>
+    </div>
+    {stores.map((s) => (
+      <a href={s.href} rel="noopener" class="nx-store-row">
+        <span class="nx-store-row-icon"><StoreIcon store={s.store} class="size-[1.375rem]" /></span>
+        <span class="flex-1 leading-tight">
+          <span class="block text-[1.0625rem] font-semibold">{s.name}</span>
+          <span class="block text-sm text-nx-muted">{s.tag}</span>
+        </span>
+        <svg class="size-[1.125rem] text-nx-subtle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M5 12h14M13 6l6 6-6 6"/>
+        </svg>
+      </a>
+    ))}
+  </div>
+</div>
+
+<script>
+  /**
+   * Bottom-sheet controller. Opened with a `nx:download-sheet` window event
+   * (detail.trigger = the button to refocus on close). Supports scrim / close
+   * button / Escape, a simple focus trap and drag-down-to-dismiss.
+   */
+  const root = document.getElementById('download-sheet');
+  const sheet = root?.querySelector<HTMLElement>('.nx-sheet');
+  if (root && sheet) {
+    let trigger: HTMLElement | null = null;
+    let closeTimer: number | undefined;
+    const focusables = () => Array.from(sheet.querySelectorAll<HTMLElement>('a[href], button'));
+
+    const open = (from: HTMLElement | null) => {
+      trigger = from;
+      window.clearTimeout(closeTimer);
+      root.hidden = false;
+      document.documentElement.style.overflow = 'hidden';
+      trigger?.setAttribute('aria-expanded', 'true');
+      // Next frame, so the slide-up transition starts from translateY(100%).
+      requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('is-open')));
+      sheet.querySelector<HTMLElement>('a[href]')?.focus({ preventScroll: true });
+    };
+    const close = () => {
+      if (root.hidden) return;
+      root.classList.remove('is-open', 'is-dragging');
+      sheet.style.removeProperty('--nx-drag');
+      document.documentElement.style.overflow = '';
+      trigger?.setAttribute('aria-expanded', 'false');
+      closeTimer = window.setTimeout(() => { root.hidden = true; }, 360);
+      trigger?.focus({ preventScroll: true });
+    };
+
+    window.addEventListener('nx:download-sheet', (e) => open((e as CustomEvent).detail?.trigger ?? null));
+    root.querySelectorAll('[data-sheet-close]').forEach((el) => el.addEventListener('click', close));
+    // A sheet left open would cover the page after rotating / resizing to desktop.
+    window.matchMedia('(min-width: 640px)').addEventListener('change', (e) => { if (e.matches) close(); });
+
+    document.addEventListener('keydown', (e) => {
+      if (root.hidden) return;
+      if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+      if (e.key !== 'Tab') return;
+      const items = focusables();
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+
+    // Drag down to dismiss (touch only; links stay tappable because a tap never moves).
+    let startY = 0;
+    let delta = 0;
+    sheet.addEventListener('touchstart', (e) => { startY = e.touches[0].clientY; delta = 0; }, { passive: true });
+    sheet.addEventListener('touchmove', (e) => {
+      delta = Math.max(0, e.touches[0].clientY - startY);
+      if (delta > 6) root.classList.add('is-dragging');
+      sheet.style.setProperty('--nx-drag', `${delta}px`);
+    }, { passive: true });
+    sheet.addEventListener('touchend', () => {
+      root.classList.remove('is-dragging');
+      if (delta > 90) close();
+      else sheet.style.removeProperty('--nx-drag');
+    });
+  }
+</script>
