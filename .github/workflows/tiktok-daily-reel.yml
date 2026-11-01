@@ -20,7 +20,8 @@ jobs:
       workflow: tiktok-daily-reel.yml
 
   post:
-    runs-on: ubuntu-latest
+    # Keep the reel renderer on an OS supported by the pinned Playwright version.
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     concurrency:
       group: daily-tiktok-nameday-reel
